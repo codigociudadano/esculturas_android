@@ -3,10 +3,18 @@
 
     <string name="app_name">ResistenciaARte</string>
     <string name="hello_world">Hello world!</string>
+    
+    <string name="org_name">(c) Codigo Ciudadano - Fundacion Urunday</string>
+    
     <string name="action_settings">Settings</string>
     
-    <string name="map">Mapa de Esculturas</string>
+    <string name="map">Mapa</string>
+    <string name="catalog">Catalogo</string>
+    <string name="news">Novedades</string>
+    <string name="news_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus pretium semper varius. Mauris porta est et luctus porta. Suspendisse potenti. Praesent congue feugiat urna in hendrerit. Nulla in magna interdum, tincidunt urna vitae, rutrum tellus. Suspendisse suscipit, velit sed pharetra molestie, eros odio scelerisque turpis, quis sollicitudin est leo et est. Etiam pharetra egestas libero quis scelerisque. Nullam tempor fermentum diam a blandit. Fusce a magna eget odio convallis rutrum ac vitae eros. Etiam rutrum, neque blandit dapibus dictum, eros metus malesuada leo, sit amet congue dui diam vitae ipsum. Morbi volutpat laoreet elit vitae tincidunt. Etiam vehicula turpis eget mauris ullamcorper pellentesque. Cras viverra, sapien non vehicula pellentesque, tellus dolor tincidunt magna, vitae accumsan velit metus et enim. Sed non quam imperdiet, tincidunt erat vel, rutrum enim.</string>
     <string name="autores">Autores</string>
+    
+    <string name="search_esc">Identificar Obra</string>
     
 	
 </resources>

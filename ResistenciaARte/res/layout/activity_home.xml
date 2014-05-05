@@ -10,14 +10,105 @@
         android:id="@+id/home_form"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:background="@drawable/home" >
+        android:background="#000000" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:gravity="center_horizontal"
+            android:layout_gravity="top"
+            android:gravity="top"
             android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="#032847"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:scrollbarSize="15dp"
+                android:scrollbarStyle="insideOverlay"
+                android:scrollbars="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|top"
+                    android:padding="5dp"
+                    android:shadowColor="#000000"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:shadowRadius="2"
+                    android:text="@string/obra_destacada"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal" >
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/left_arrow"
+                        android:padding="5dp"
+                        android:textColor="#FFFFFF" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/destac"
+                        android:textColor="#FFFFFF" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/right_arrow"
+                        android:padding="5dp"
+                        android:textColor="#FFFFFF" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="5dp"
+                        android:shadowColor="#000000"
+                        android:shadowDx="2"
+                        android:shadowDy="2"
+                        android:shadowRadius="2"
+                        android:text="@string/obra_destacada_details"
+                        android:textColor="#FFFFFF"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:hint="@string/obra_destacada_details_more"
+                        android:padding="5dp"
+                        android:shadowColor="#000000"
+                        android:shadowDx="2"
+                        android:shadowDy="2"
+                        android:shadowRadius="2"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -27,6 +118,7 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:scrollbarSize="15dp"
+                android:padding="10dp"
                 android:scrollbarStyle="insideOverlay"
                 android:scrollbars="vertical" >
 
@@ -69,7 +161,7 @@
                     android:shadowRadius="2"
                     android:text="@string/org_name"
                     android:textColor="#FFFFFF"
-                    android:textSize="15sp"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -85,7 +177,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left|top"
-                    android:orientation="vertical" >
+                    android:orientation="vertical" 
+                    android:padding="10dp">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -99,8 +192,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:gravity="center_horizontal"
-                            android:orientation="vertical" 
-                            android:padding="3dp">
+                            android:orientation="vertical"
+                            android:padding="5dp" >
 
                             <Button
                                 android:layout_width="wrap_content"
@@ -130,7 +223,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:gravity="center_horizontal"
-                            android:orientation="vertical" >
+                            android:orientation="vertical"
+                             android:padding="5dp" >
 
                             <Button
                                 android:layout_width="wrap_content"
@@ -153,13 +247,14 @@
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
-                        
+
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:gravity="center_horizontal"
-                            android:orientation="vertical" >
+                            android:orientation="vertical" 
+                             android:padding="5dp">
 
                             <Button
                                 android:layout_width="wrap_content"
@@ -185,36 +280,36 @@
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left|top"
-                    android:background="#4c4c4c"
-                    android:orientation="horizontal" >
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:background="@drawable/lupa"
-                        android:textColor="#FFFFFF" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:shadowColor="#000000"
-                        android:shadowDx="2"
-                        android:shadowDy="2"
-                        android:shadowRadius="2"
-                        android:text="@string/search_esc"
-                        android:textColor="#FFFFFF"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="#4c4c4c"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/lupa"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:shadowColor="#000000"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="2"
+            android:text="@string/search_esc"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
 </FrameLayout>

@@ -11,6 +11,11 @@
     <string name="map">Mapa</string>
     <string name="catalog">Catalogo</string>
     <string name="news">Novedades</string>
+    
+    <string name="obra_destacada">Obra Destacada</string>
+    <string name="obra_destacada_details">El Hombre Pensante</string>
+    <string name="obra_destacada_details_more">(Ver mas...)</string>
+    
     <string name="news_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus pretium semper varius. Mauris porta est et luctus porta. Suspendisse potenti. Praesent congue feugiat urna in hendrerit. Nulla in magna interdum, tincidunt urna vitae, rutrum tellus. Suspendisse suscipit, velit sed pharetra molestie, eros odio scelerisque turpis, quis sollicitudin est leo et est. Etiam pharetra egestas libero quis scelerisque. Nullam tempor fermentum diam a blandit. Fusce a magna eget odio convallis rutrum ac vitae eros. Etiam rutrum, neque blandit dapibus dictum, eros metus malesuada leo, sit amet congue dui diam vitae ipsum. Morbi volutpat laoreet elit vitae tincidunt. Etiam vehicula turpis eget mauris ullamcorper pellentesque. Cras viverra, sapien non vehicula pellentesque, tellus dolor tincidunt magna, vitae accumsan velit metus et enim. Sed non quam imperdiet, tincidunt erat vel, rutrum enim.</string>
     <string name="autores">Autores</string>
     

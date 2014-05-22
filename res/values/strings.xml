@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Resistenciarte</string>
+    <string name="title_section1">Destacado</string>
+    <string name="title_section2">Esculturas</string>
+    <string name="title_section3">Novedades</string>
+    <string name="action_settings">Configuracion</string>
+    <string name="action_search">Buscar</string>
+    <string name="drawer_open">Abrir Menu</string>
+    <string name="drawer_close">Cerrar Menu</string>
+    <string name="map">Mapa de Esculturas</string>
+    <string name="autores">Perfiles de Autores</string>
+    <string name="about">Acerca de&#8230;</string>
+    <string name="identificar">Identificar Escultura</string>
+
+</resources>

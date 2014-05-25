@@ -1,0 +1,179 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.jmv.codigociudadano.resistenciarte.NearbyLocations"
+    tools:ignore="MergeRootFrame" >
+
+    <ScrollView
+        android:id="@+id/login_status"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:orientation="vertical"
+            android:padding="6dip" >
+
+            <TextView
+                android:id="@+id/message"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:gravity="center_horizontal"
+                android:paddingBottom="6dip"
+                android:text="@string/loading_data"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#000000" />
+
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:focusable="true" />
+        </LinearLayout>
+    </ScrollView>
+
+    <ScrollView
+        android:id="@+id/home_form"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:background="#e5e5e5" >
+
+       <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:gravity="top"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/add_place"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="top|center"
+                android:gravity="top|center"
+                android:orientation="horizontal" >
+            </LinearLayout>
+
+           
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="#4B4B4D"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:shadowColor="#000000"
+                    android:shadowDx="2"
+                    android:paddingTop="10dp"
+                    android:shadowDy="2"
+                    android:shadowRadius="2"
+                    android:text="@string/title_activity_nearby_locations"
+                    android:textColor="#009681"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="#4B4B4D"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:scrollbarSize="15dp"
+                    android:scrollbarStyle="insideOverlay"
+                    android:scrollbars="vertical" >
+
+                    <TextView
+                        android:id="@+id/cuurent_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:shadowColor="#000000"
+                        android:shadowDx="2"
+                        android:shadowDy="2"
+                        android:shadowRadius="2"
+                        android:text="@string/current_location"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <ProgressBar
+                        android:id="@+id/progress_street"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:focusable="true"
+                        android:paddingLeft="10dp"
+                        android:scaleX="0.3"
+                        android:scaleY="0.3" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/cuurent_location_by_gps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:shadowColor="#000000"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:shadowRadius="2"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="italic" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="#005962"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="5dp"
+                android:scrollbarSize="5dp"
+                android:scrollbarStyle="insideOverlay"
+                android:scrollbars="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center"
+                    android:shadowColor="#000000"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:shadowRadius="2"
+                    android:text="@string/how_to_get"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/text_view_place"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:scrollbarSize="15dp"
+                android:scrollbarStyle="insideOverlay"
+                android:scrollbars="vertical" >
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

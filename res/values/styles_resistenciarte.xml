@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- File created by the Android Action Bar Style Generator
+<!--
+     File created by the Android Action Bar Style Generator
 
      Copyright (C) 2011 The Android Open Source Project
      Copyright (C) 2012 readyState Software Ltd
@@ -30,27 +31,30 @@
         <item name="actionModeSplitBackground">@drawable/cab_background_bottom_resistenciarte</item>
         <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Resistenciarte</item>
 
-                <!-- Light.DarkActionBar specific -->
+        <!-- Light.DarkActionBar specific -->
         <item name="actionBarWidgetTheme">@style/Theme.Resistenciarte.Widget</item>
-
     </style>
+    
+    
 
     <style name="ActionBar.Solid.Resistenciarte" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="background">@drawable/ab_solid_resistenciarte</item>
         <item name="backgroundStacked">@drawable/ab_stacked_solid_resistenciarte</item>
         <item name="backgroundSplit">@drawable/ab_bottom_solid_resistenciarte</item>
+        <item name="android:icon">@drawable/ic_launcher_custom</item>
         <item name="progressBarStyle">@style/ProgressBar.Resistenciarte</item>
     </style>
 
     <style name="ActionBar.Transparent.Resistenciarte" parent="@style/Widget.AppCompat.ActionBar">
         <item name="background">@drawable/ab_transparent_resistenciarte</item>
         <item name="progressBarStyle">@style/ProgressBar.Resistenciarte</item>
+        <item name="android:icon">@drawable/ic_launcher_custom</item>
     </style>
-	
-    <style name="PopupMenu.Resistenciarte" parent="@style/Widget.AppCompat.PopupMenu">	
-        <item name="android:popupBackground">@drawable/menu_dropdown_panel_resistenciarte</item>	
+
+    <style name="PopupMenu.Resistenciarte" parent="@style/Widget.AppCompat.PopupMenu">
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_resistenciarte</item>
     </style>
-	
+
     <style name="DropDownListView.Resistenciarte" parent="@style/Widget.AppCompat.ListView.DropDown">
         <item name="android:listSelector">@drawable/selectable_background_resistenciarte</item>
     </style>
@@ -58,21 +62,21 @@
     <style name="ActionBarTabStyle.Resistenciarte" parent="@style/Widget.AppCompat.ActionBar.TabView">
         <item name="android:background">@drawable/tab_indicator_ab_resistenciarte</item>
     </style>
-	
+
     <style name="DropDownNav.Resistenciarte" parent="@style/Widget.AppCompat.Spinner.DropDown.ActionBar">
         <item name="android:background">@drawable/spinner_background_ab_resistenciarte</item>
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_resistenciarte</item>
         <item name="android:dropDownSelector">@drawable/selectable_background_resistenciarte</item>
     </style>
-    
+
     <style name="ProgressBar.Resistenciarte" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_horizontal_resistenciarte</item>
     </style>
-    
+
     <style name="ActionButton.CloseMode.Resistenciarte" parent="@style/Widget.AppCompat.ActionButton.CloseMode">
         <item name="android:background">@drawable/btn_cab_done_resistenciarte</item>
     </style>
-    
+
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->
     <style name="Theme.Resistenciarte.Widget" parent="@style/Theme.AppCompat">
         <item name="popupMenuStyle">@style/PopupMenu.Resistenciarte</item>

@@ -12,6 +12,22 @@
     <string name="map">Mapa de Esculturas</string>
     <string name="autores">Perfiles de Autores</string>
     <string name="about">Acerca de&#8230;</string>
+     <string name="current_location">Obteniendo nombre de Calle&#8230;</string>
+     <string name="how_to_get">Selecciona un item para ver mas detalles!</string>
     <string name="identificar">Identificar Escultura</string>
+    <string name="loading_data">Descargando datos&#8230;</string>
+    <string name="confirm">Prender GPS/RED</string>
+     <string name="cancel">Cancelar</string>
+    <string name="author">Autor</string>
+    <string name="ubic">Ubicacion</string>
+    <string name="title_activity_splash">Resistenciarte</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_map">Mapa de Esculturas</string>
+    <string name="title_activity_nearby_locations">Esculturas Cercanas</string>
+    <string name="not_working_well">La funcion principal no estará habilitada hasta que prendas el gps!</string>
+    <string name="gps_not_turned_on">Tu GPS no esta prendido</string>
+    <string name="gps_not_turned_on_yet">Aun no prendiste tus servicios de ubicación (GPS/RED)</string>
+    <string name="gps_not_turned_on_details">No puedo saber donde estas, cambialo aquí!</string>
+    
 
 </resources>

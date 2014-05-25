@@ -2,19 +2,21 @@ package com.jmv.codigociudadano.resistenciarte;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import com.jmv.codigociudadano.resistenciarte.drawercomps.CustomDrawerAdapter;
 import com.jmv.codigociudadano.resistenciarte.drawercomps.DrawerItem;
-import com.jmv.codigociudadano.resistenciarte.fragments.PlaceholderFragment;
+import com.jmv.codigociudadano.resistenciarte.fragments.sections.SectionsPagerAdapter;
+import com.jmv.codigociudadano.resistenciarte.net.ImageLoader;
+import com.jmv.codigociudadano.resistenciarte.net.WaveLocker;
+import com.jmv.codigociudadano.resistenciarte.utils.AppRater;
 
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ConfigurationInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -24,32 +26,48 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
-public class HomeActivity extends ActionBarActivity implements
+public class HomeActivity extends ActionBarCustomActivity implements
 		ActionBar.TabListener {
-
-	public static final String ARG_SECTION_NUMBER = "section_number";
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
 	private CustomDrawerAdapter adapter;
+	private List<DrawerItem> dataList;
+	private SectionsPagerAdapter mSectionsPagerAdapter;
+	private ViewPager mViewPager;
+	private WaveLocker locker;
 
-	List<DrawerItem> dataList;
+	private static HomeActivity instance;
 
-	SectionsPagerAdapter mSectionsPagerAdapter;
+	private ImageLoader imageLoaderService;
 
-	/**
-	 * The {@link ViewPager} that will host the section contents.
-	 */
-	ViewPager mViewPager;
+	public static HomeActivity getInstance() {
+		return instance;
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		instance = this;
+
 		setContentView(R.layout.activity_home);
+
+		// Set up the action bar.
+		final ActionBar actionBar = getSupportActionBar();
+
+		AppRater.app_launched(this);
+
+		// initialize the locker
+		locker = WaveLocker.getInstance(this);
+
+		// initialize tthe image loader service
+		// ImageLoader class instance
+		imageLoaderService = ImageLoader.getInstance(getApplicationContext());
 
 		// Initializing
 		dataList = new ArrayList<DrawerItem>();
@@ -63,11 +81,10 @@ public class HomeActivity extends ActionBarActivity implements
 				R.drawable.ic_action_usr));
 		dataList.add(new DrawerItem(getString(R.string.about),
 				R.drawable.ic_action_about));
-		
 
 		adapter = new CustomDrawerAdapter(this, R.layout.custom_drawer_item,
-				dataList);
-		
+				dataList, locker);
+
 		// mPlanetTitles = getResources().getStringArray(R.array.planets_array);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -79,9 +96,6 @@ public class HomeActivity extends ActionBarActivity implements
 		// set up the drawer's list view with items and click listener
 		mDrawerList.setAdapter(adapter);
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-		// Set up the action bar.
-		final ActionBar actionBar = getSupportActionBar();
 
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the sliding drawer and the action bar app icon
@@ -116,7 +130,7 @@ public class HomeActivity extends ActionBarActivity implements
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the activity.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
-				getSupportFragmentManager());
+				getSupportFragmentManager(), this, locker, imageLoaderService);
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -144,6 +158,11 @@ public class HomeActivity extends ActionBarActivity implements
 					.setTabListener(this));
 		}
 	}
+	
+	public static void showHome(Context home) {
+		Intent intent = new Intent(home, HomeActivity.class);
+		home.startActivity(intent);
+	}
 
 	/* Called whenever we call invalidateOptionsMenu() */
 	@Override
@@ -153,6 +172,22 @@ public class HomeActivity extends ActionBarActivity implements
 		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
 		menu.findItem(R.id.action_search).setVisible(!drawerOpen);
 		return super.onPrepareOptionsMenu(menu);
+	}
+
+	public WaveLocker getLocker() {
+		return locker;
+	}
+
+	public ImageLoader getImageLoaderService() {
+		return imageLoaderService;
+	}
+
+	public void setImageLoaderService(ImageLoader imageLoaderService) {
+		this.imageLoaderService = imageLoaderService;
+	}
+
+	public void setLocker(WaveLocker locker) {
+		this.locker = locker;
 	}
 
 	@Override
@@ -212,10 +247,39 @@ public class HomeActivity extends ActionBarActivity implements
 		}
 	}
 
+	public boolean checkOpenGL(){
+		final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+		final ConfigurationInfo configurationInfo = activityManager
+				.getDeviceConfigurationInfo();
+		final boolean supportsEs2 = configurationInfo.reqGlEsVersion >= 0x20000;
+		if (supportsEs2) {
+			return true;
+		} else {
+			Toast.makeText(
+					this,
+					"Tu cel no soporta OpenGl, Este modulo no funciona! :S",
+					Toast.LENGTH_LONG).show();
+			return false;
+		}
+	}
+	
 	private void selectItem(int position) {
-		// set the current view
-		// mViewPager.setCurrentItem(position);
-		// update selected item and title, then close the drawer
+		
+		switch (position) {
+		case 0:
+			if (checkOpenGL()){
+				NearbyLocations.showHome(this);
+			}
+			break;
+		case 1:
+			if (checkOpenGL()){
+				MapActivity.showHome(this);
+			}
+			break;
+		case 2:
+			break;
+		}
+		
 		mDrawerList.setItemChecked(position, true);
 		mDrawerLayout.closeDrawer(mDrawerList);
 	}
@@ -237,60 +301,6 @@ public class HomeActivity extends ActionBarActivity implements
 		super.onConfigurationChanged(newConfig);
 		// Pass any configuration change to the drawer toggls
 		mDrawerToggle.onConfigurationChanged(newConfig);
-	}
-
-	/**
-	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-	 * one of the sections/tabs/pages.
-	 */
-	public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-		public SectionsPagerAdapter(FragmentManager fm) {
-			super(fm);
-		}
-
-		@Override
-		public Fragment getItem(int position) {
-			// getItem is called to instantiate the fragment for the given page.
-			// Return a PlaceholderFragment (defined as a static inner class
-			// below).
-			PlaceholderFragment p = new PlaceholderFragment();
-			switch (position) {
-			case 0:
-				p.setFragmentId(R.layout.fragment_home);
-				break;
-			case 1:
-				p.setFragmentId(R.layout.fragment_home2);
-				break;
-			case 2:
-				p.setFragmentId(R.layout.fragment_home3);
-				break;
-			}
-			Bundle args = new Bundle();
-			args.putInt(ARG_SECTION_NUMBER, position);
-			p.setArguments(args);
-			return p;
-		}
-
-		@Override
-		public int getCount() {
-			// Show 3 total pages.
-			return 3;
-		}
-
-		@Override
-		public CharSequence getPageTitle(int position) {
-			Locale l = Locale.getDefault();
-			switch (position) {
-			case 0:
-				return getString(R.string.title_section1).toUpperCase(l);
-			case 1:
-				return getString(R.string.title_section2).toUpperCase(l);
-			case 2:
-				return getString(R.string.title_section3).toUpperCase(l);
-			}
-			return null;
-		}
 	}
 
 }

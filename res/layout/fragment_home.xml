@@ -3,19 +3,180 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
+    android:background="#000000"
     android:gravity="center"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.jmv.codigociudadano.resistenciarte.HomeActivity$PlaceholderFragment" >
 
-    <TextView
-        android:id="@+id/section_label"
+    <LinearLayout
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
         android:gravity="center"
-        android:textSize="56sp"
-        android:text="56"
+        android:orientation="vertical" >
+
+        <ScrollView
+            android:id="@+id/login_status"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin" >
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:layout_below="@+id/pbDownload"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="23dp"
+                    android:src="@drawable/ic_launcher_web" />
+
+                <TextView
+                    android:id="@+id/loading_status_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:shadowColor="@android:color/darker_gray"
+                    android:shadowRadius="20"
+                    android:text="@string/loading_data"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+
+                <ProgressBar
+                    android:id="@+id/pbDownload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/image"
+                    android:layout_alignRight="@+id/image"
+                    android:layout_below="@+id/loading_status_message"
+                    android:layout_marginTop="15dp" />
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <!-- Login form -->
+
+    <LinearLayout
+        android:id="@+id/login_form"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:gravity="center" >
+
+            <ImageView
+                android:id="@+id/img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:gravity="center"
+                android:src="@drawable/not_found" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/login_form_detailed"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:gravity="bottom|right"
+        android:padding="5dp"
+        android:visibility="gone" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/background_with_shadow"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp" >
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|center_horizontal"
+                    android:gravity="top|center_horizontal"
+                    android:text="56"
+                    android:textColor="#009681"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="-5dip"
+                android:layout_marginTop="-5dip"
+                android:orientation="horizontal"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp" >
+
+                <Button
+                    android:id="@+id/loading_status_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="16dp"
+                    android:background="@android:color/transparent"
+                    android:drawableLeft="@drawable/ic_action_usr"
+                    android:gravity="center"
+                    android:shadowColor="#FFFFFF"
+                    android:text="@string/author"
+                    android:textColor="#009681"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/loading_status_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="16dp"
+                    android:background="@android:color/transparent"
+                    android:drawableLeft="@drawable/ic_action_map"
+                    android:gravity="center"
+                    android:shadowColor="#FFFFFF"
+                    android:text="@string/ubic"
+                    android:textColor="#009681"
+                    android:textSize="20sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
 
 </FrameLayout>

@@ -10,13 +10,67 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.jmv.codigociudadano.resistenciarte.HomeActivity$PlaceholderFragment" >
 
-    <TextView
-        android:id="@+id/section_label"
-        android:gravity="center"
-        android:textSize="56sp"
-        android:text="56"
-        android:textColor="#FFFFFF"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    
+     <LinearLayout
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <ScrollView
+            android:id="@+id/login_status"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:padding="6dip" >
+
+                <ProgressBar
+                    android:id="@+id/progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:focusable="true" />
+
+                <TextView
+                    android:id="@+id/loading_status_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_marginBottom="16dp"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center_horizontal"
+                    android:shadowColor="#000000"
+                    android:shadowRadius="2"
+                    android:text="@string/loading_data"
+                    android:textColor="#FFFFFF"/>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <!-- Login form -->
+
+    <ScrollView
+        android:id="@+id/login_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/section_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="56"
+            android:textSize="56sp" />
+    </ScrollView>
 </RelativeLayout>

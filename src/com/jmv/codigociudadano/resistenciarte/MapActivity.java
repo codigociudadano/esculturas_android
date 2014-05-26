@@ -166,7 +166,7 @@ public class MapActivity extends ActionBarCustomActivity implements IRequester {
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
 			return true;
-		} else if (id == R.id.home) {
+		} else if (id == android.R.id.home) {
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
 		}

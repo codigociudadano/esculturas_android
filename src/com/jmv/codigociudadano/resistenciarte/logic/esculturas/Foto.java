@@ -6,7 +6,6 @@ public class Foto {
 	private int uid;
 	private String filename;
 	private int filesize;
-	private String title;
 	private int width;
 	private int height;
 	private String uri;
@@ -34,12 +33,6 @@ public class Foto {
 	}
 	public void setFilesize(int filesize) {
 		this.filesize = filesize;
-	}
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
 	}
 	public int getWidth() {
 		return width;

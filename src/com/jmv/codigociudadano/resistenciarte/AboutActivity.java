@@ -1,0 +1,93 @@
+package com.jmv.codigociudadano.resistenciarte;
+
+import com.jmv.codigociudadano.resistenciarte.comps.TextViewEx;
+
+import android.support.v4.app.NavUtils;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+
+public class AboutActivity extends ActionBarCustomActivity {
+
+	private TextViewEx txtViewEx;
+	private TextViewEx txtViewEx2;
+	private TextViewEx txtViewEx3;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_about);
+
+		txtViewEx = (TextViewEx) findViewById(R.id.text_detailed);
+	    txtViewEx.setText(getString(R.string.detailed_about), true);
+	    
+	    txtViewEx2 = (TextViewEx) findViewById(R.id.text_cc);
+	    txtViewEx2.setText(getString(R.string.cc_detail), true);
+	    
+	    txtViewEx3 = (TextViewEx) findViewById(R.id.text_mv);
+	    txtViewEx3.setText(getString(R.string.mv_detail), true);
+	    
+	    TextViewEx txtViewEx4 = (TextViewEx) findViewById(R.id.text_mv_header);
+	    txtViewEx4.setText(getString(R.string.disenio), false);
+	    
+	    TextViewEx txtViewEx5 = (TextViewEx) findViewById(R.id.text_cc_header);
+	    txtViewEx5.setText(getString(R.string.idea), false);
+	    
+	    TextViewEx txtViewEx6 = (TextViewEx) findViewById(R.id.text_mm);
+	    txtViewEx6.setText(getString(R.string.mm_detail), true);
+	    
+	    TextViewEx txtViewEx7 = (TextViewEx) findViewById(R.id.text_mm_header);
+	    txtViewEx7.setText(getString(R.string.servidor), false);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.about, menu);
+		return true;
+	}
+	
+	public void goMariano(View v){
+		goToUrl("https://www.facebook.com/marianovargasdg");
+	}
+	
+	public void goCC(View v){
+		goToUrl("http://www.codigociudadano.com.ar/");
+	}
+	
+	public void go42(View v){
+		goToUrl("http://www.42mate.com/");
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
+			return true;
+		} else if (id == android.R.id.home) {
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	public static void showHome(Context home) {
+		Intent intent = new Intent(home, AboutActivity.class);
+		home.startActivity(intent);
+	}
+	
+	private void goToUrl (String url) {
+        Uri uriUrl = Uri.parse(url);
+        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+        startActivity(launchBrowser);
+    }
+
+}

@@ -30,6 +30,12 @@ public class RestClientResistenciarte {
 			return scrapper.fecthHtmlGetString(params[0]);
 		}
 
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			requester.onResponse("");
+		}
+
 		protected void onPostExecute(String result) {
 			requester.onResponse(result);
 		}
@@ -53,6 +59,12 @@ public class RestClientResistenciarte {
 			return inputStream;
 		}
 
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			requester.onResponse("");
+		}
+		
 		protected void onPostExecute(InputStream result) {
 			requester.onResponse(result);
 		}

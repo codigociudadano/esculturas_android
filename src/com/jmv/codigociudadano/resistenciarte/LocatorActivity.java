@@ -112,7 +112,7 @@ public abstract class LocatorActivity extends ActionBarCustomActivity implements
 		}
 		
 		if (locationManager != null){
-			locationManager.requestLocationUpdates(provider, 2000, 1, this);
+			locationManager.requestLocationUpdates(provider, 2500, 100, this);
 		}
 	}
 

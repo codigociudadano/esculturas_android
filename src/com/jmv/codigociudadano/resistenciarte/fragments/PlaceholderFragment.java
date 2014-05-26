@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import com.jmv.codigociudadano.resistenciarte.R;
 import com.jmv.codigociudadano.resistenciarte.net.IRequester;
 import com.jmv.codigociudadano.resistenciarte.net.ImageLoader;
-import com.jmv.codigociudadano.resistenciarte.net.WaveLocker;
 
 public abstract class PlaceholderFragment extends Fragment implements
 		IRequester {
@@ -21,7 +20,6 @@ public abstract class PlaceholderFragment extends Fragment implements
 	protected View mLoginFormView;
 	protected View mLoginStatusView;
 	
-	private WaveLocker locker;
 	private ImageLoader imageLoaderService;
 
 	protected String codeName;
@@ -38,14 +36,6 @@ public abstract class PlaceholderFragment extends Fragment implements
 		this.fragmentId = fragmentId;
 	}
 
-	public WaveLocker getLocker() {
-		return locker;
-	}
-
-	public void setLocker(WaveLocker locker) {
-		this.locker = locker;
-	}
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -56,7 +46,7 @@ public abstract class PlaceholderFragment extends Fragment implements
 				mLoginStatusView = rootView.findViewById(R.id.login_status);
 				showProgress(true);
 			} catch (InflateException e) {
-
+				
 			}
 		} else {
 			ViewGroup parent = (ViewGroup) rootView.getParent();

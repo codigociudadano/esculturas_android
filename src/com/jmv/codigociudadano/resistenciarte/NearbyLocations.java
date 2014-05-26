@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.common.base.Function;
+import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Autor;
+import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Foto;
 import com.jmv.codigociudadano.resistenciarte.logic.esculturas.GeoEscultura;
 import com.jmv.codigociudadano.resistenciarte.net.IRequester;
 import com.jmv.codigociudadano.resistenciarte.net.RestClientResistenciarte;
@@ -18,17 +21,15 @@ import com.jmv.codigociudadano.resistenciarte.utils.Utils;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -62,6 +63,8 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 
 		mAddress.setVisibility(View.GONE);
 
+		Utils.addTouchEffectoToButtons(mLoginFormView);
+		
 		showProgress(true);
 		init();
 	}
@@ -87,7 +90,7 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
 			return true;
-		} else if (id == R.id.home) {
+		} else if (id == android.R.id.home) {
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
 		}
@@ -127,7 +130,7 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 	public String getRequestURI() {
 		return Constants.BASE_URL + "/api/v1/closest_nodes_by_coord?lat="
 				+ myLocation.getLatitude() + "&lon="
-				+ myLocation.getLongitude() + "&qty_nodes=100&dist=12000";
+				+ myLocation.getLongitude() + "&qty_nodes=10&dist=12000";
 	}
 
 	@Override
@@ -141,7 +144,7 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 
 			listaEsculturas = new ArrayList<GeoEscultura>();
 
-			for (int i = 0; i < 21; i++) {
+			for (int i = 0; i < max; i++) {
 				JSONObject jsonObject = jsonArray.optJSONObject(i);
 
 				GeoEscultura localReg = new GeoEscultura();
@@ -161,29 +164,26 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 		int number = 1;
 
 		for (GeoEscultura distancias2 : listaEsculturas) {
-			final TextView rowTextView = new TextView(NearbyLocations.this);
 
-			// set some properties of rowTextView or something
-			rowTextView.setText("    " + number + " - "
-					+ distancias2.getNode_title() + "; "
-					+ (Utils.toDecimalFormat(distancias2.getDistance() / 1000)) + " metros aprox.");
+			View v = View.inflate(NearbyLocations.this,
+					R.layout.fragment_escultura, null);
 
-			number++;
-
-			final LatLng pos = new LatLng(distancias2.getNode_latitude(),
+			final LatLng lt = new LatLng(distancias2.getNode_latitude(),
 					distancias2.getNode_longitude());
 
-			LinearLayout LL = new LinearLayout(NearbyLocations.this);
-			LL.setOrientation(LinearLayout.HORIZONTAL);
-			LL.setBackgroundColor(number % 2 == 0 ? Color.parseColor("#bfbfbf")
-					: Color.parseColor("#d8d8d8"));
+			final ImageView imgView = (ImageView) v.findViewById(R.id.image);
 
-			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-					LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-			params.gravity = Gravity.CENTER;
+			addIMage(v, distancias2);
 
-			LL.setLayoutParams(params);
-			LL.setOnClickListener(new OnClickListener() {
+			final TextView texto = (TextView) v.findViewById(R.id.tittle);
+			texto.setText(" " + number + " - " + distancias2.getNode_title());
+			number++;
+			final Button textoUbic = (Button) v.findViewById(R.id.ubicacion);
+			textoUbic
+					.setText((Utils.toDecimalFormat(distancias2.getDistance() * 1000))
+							+ " metros aprox.");
+			
+			textoUbic.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
@@ -192,7 +192,7 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 							Uri.parse("http://maps.google.com/maps?   saddr="
 									+ currentLocation.latitude + ","
 									+ currentLocation.longitude + "&daddr="
-									+ pos.latitude + "," + pos.longitude));
+									+ lt.latitude + "," + lt.longitude));
 					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					intent.addCategory(Intent.CATEGORY_LAUNCHER);
 					intent.setClassName("com.google.android.apps.maps",
@@ -201,81 +201,143 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 				}
 			});
 
-			LinearLayout linearForText = new LinearLayout(NearbyLocations.this);
-			linearForText.setOrientation(LinearLayout.HORIZONTAL);
-			LinearLayout.LayoutParams paramsT = new LinearLayout.LayoutParams(
-					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-			paramsT.gravity = Gravity.CENTER | Gravity.LEFT;
-			linearForText.setLayoutParams(paramsT);
 
-			linearForText.addView(rowTextView);
-
-			// creo la imagen
-
-			LinearLayout linearForIMG = new LinearLayout(NearbyLocations.this);
-			linearForIMG.setOrientation(LinearLayout.HORIZONTAL);
-			LinearLayout.LayoutParams paramsIMG = new LinearLayout.LayoutParams(
-					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-			paramsIMG.gravity = Gravity.CENTER | Gravity.LEFT;
-			linearForIMG.setLayoutParams(paramsIMG);
-
-			final ImageView imgView = new ImageView(NearbyLocations.this);
-
-			imgView.setVisibility(View.VISIBLE);
-
-			linearForIMG.addView(imgView);
-
-			LL.addView(linearForIMG);
-
-			// Image url
-			String image_url = Constants.BASE_URL
-					+ "/sites/default/files/esculturas/imagefield_VSgeIF.jpeg";
-
-			Function<Bitmap, Void> afterLogin = new Function<Bitmap, Void>() {
-				@Override
-				public Void apply(Bitmap bmap) {
-
-					int height = 36;
-					int width = 36;
-
-					float bmapWidth = bmap.getWidth();
-					float bmapHeight = bmap.getHeight();
-
-					float wRatio = width / bmapWidth;
-					float hRatio = height / bmapHeight;
-
-					float ratioMultiplier = wRatio;
-					// Untested conditional though I expect this might work for
-					// landscape mode
-					if (hRatio < wRatio) {
-						ratioMultiplier = hRatio;
-					}
-
-					int newBmapWidth = (int) (bmapWidth * ratioMultiplier);
-					int newBmapHeight = (int) (bmapHeight * ratioMultiplier);
-
-					imgView.setLayoutParams(new LinearLayout.LayoutParams(
-							newBmapWidth, newBmapHeight));
-					imgView.setVisibility(View.VISIBLE);
-					return null;
-				}
-			};
-
-			HomeActivity.getInstance().getImageLoaderService()
-					.DisplayImage(image_url, imgView, afterLogin);
-
-			LL.addView(linearForText);
-
-			// add the textview to the linearlayout
-			float scale = getResources().getDisplayMetrics().density;
-			int dpAsPixels = (int) (5*scale + 0.5f);
-			
-			LL.setPadding(dpAsPixels, dpAsPixels, dpAsPixels, dpAsPixels);
-			myLinearLayout.addView(LL);
+			myLinearLayout.addView(v);
 
 		}
 
 		showProgress(false);
+	}
+
+	private void addIMage(final View view, final GeoEscultura distancias2) {
+		IRequester r = new IRequester() {
+
+			@Override
+			public void onResponse(String response) {
+				try {
+					JSONObject jsonObject = new JSONObject(response);
+					JSONArray fotosArrays = jsonObject.getJSONObject(
+							"field_fotos").getJSONArray("und");
+
+					addAutorName(jsonObject,
+							(Button) view.findViewById(R.id.author));
+
+					ArrayList<Foto> fotos = new ArrayList<Foto>();
+					for (int i = 0; i < fotosArrays.length(); i++) {
+						Foto foto = new Foto();
+						JSONObject jsonObjectFoto = fotosArrays
+								.getJSONObject(i);
+						Utils.extractFromResponseToObject(foto, jsonObjectFoto);
+						fotos.add(foto);
+					}
+
+					// Image url
+					String image_url = Constants.BASE_URL
+							+ "/sites/default/files/"
+							+ fotos.get(0).getUri()
+									.replaceFirst("public://", "");
+					;
+
+					Function<Bitmap, Void> afterLogin = new Function<Bitmap, Void>() {
+						@Override
+						public Void apply(Bitmap bmap) {
+							View p = view.findViewById(R.id.progress);
+							p.setVisibility(View.GONE);
+							View iV = view.findViewById(R.id.default_image);
+							iV.setVisibility(View.GONE);
+							return null;
+						}
+					};
+
+					HomeActivity
+							.getInstance()
+							.getImageLoaderService()
+							.DisplayImage(image_url,
+									(ImageView) view.findViewById(R.id.image),
+									afterLogin);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			@Override
+			public String getRequestURI() {
+				return Constants.BASE_URL + "/api/v1/node/"
+						+ distancias2.getNid();
+			}
+
+			@Override
+			public void onResponse(InputStream result) {
+			}
+		};
+
+		RestClientResistenciarte internalCall = new RestClientResistenciarte(r);
+		internalCall.makeJsonRestRequest();
+	}
+
+	private void addAutorName(JSONObject response, final Button textAuthor) {
+		JSONArray aYs;
+		try {
+			if (response.isNull("field_autor")){
+				textAuthor.setText(Constants.ANONIMO);
+				return;
+			}
+			
+			JSONObject auhtorObject;
+			
+			try{
+				auhtorObject = response.getJSONObject("field_autor");
+			} catch (JSONException e){
+				//the author is null
+				textAuthor.setText(Constants.ANONIMO);
+				return;
+			}
+			
+			aYs = auhtorObject.isNull("und")? null:auhtorObject.getJSONArray("und");
+			
+			if (aYs == null){
+				textAuthor.setText(Constants.ANONIMO);
+			} else {
+				final int autorId = aYs.getJSONObject(0).getInt("target_id");
+
+				final Autor author = new Autor();
+
+				IRequester authorRequest = new IRequester() {
+
+					@Override
+					public void onResponse(String response) {
+						try {
+							JSONArray jsonArray;
+							jsonArray = new JSONArray(response);
+							JSONObject jsonObject = jsonArray.optJSONObject(0);
+							Utils.extractFromResponseToObject(author, jsonObject);
+							textAuthor.setText(author.getTitle().trim());
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+
+					@Override
+					public String getRequestURI() {
+						return Constants.BASE_URL + "/api/v1/node?parameters[nid]="
+								+ autorId;
+					}
+
+					@Override
+					public void onResponse(InputStream result) {
+					}
+				};
+
+				RestClientResistenciarte internalCall = new RestClientResistenciarte(
+						authorRequest);
+				internalCall.makeJsonRestRequest();
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	@Override

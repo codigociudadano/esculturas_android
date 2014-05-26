@@ -31,4 +31,7 @@ public class Constants {
     public static final String COMMA = ",";
     public static final String DOT=".";
 	public static final String BASE_URL = "http://dev.resistenciarte.org";
+	public static final String ANONIMO = "Anonimo";
+	public static final String PATTERN_REPLACE = "[escultura]";
+	public static final CharSequence NOVEDAD = "Novedad";
 }

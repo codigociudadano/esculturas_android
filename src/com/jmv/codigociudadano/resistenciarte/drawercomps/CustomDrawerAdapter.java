@@ -3,7 +3,6 @@ package com.jmv.codigociudadano.resistenciarte.drawercomps;
 import java.util.List;
 
 import com.jmv.codigociudadano.resistenciarte.R;
-import com.jmv.codigociudadano.resistenciarte.net.WaveLocker;
 
 import android.app.Activity;
 import android.content.Context;
@@ -21,15 +20,13 @@ public class CustomDrawerAdapter extends ArrayAdapter<DrawerItem> {
 	private Context context;
 	private List<DrawerItem> drawerItemList;
 	private int layoutResID;
-	private WaveLocker locker;
 	
 	public CustomDrawerAdapter(Context context, int layoutResourceID,
-			List<DrawerItem> listItems, WaveLocker locker) {
+			List<DrawerItem> listItems) {
 		super(context, layoutResourceID, listItems);
 		this.context = context;
 		this.drawerItemList = listItems;
 		this.layoutResID = layoutResourceID;
-		this.locker = locker;
 	}
 
 	@Override

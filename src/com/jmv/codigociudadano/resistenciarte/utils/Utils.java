@@ -18,9 +18,13 @@ import java.util.Locale;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.jmv.codigociudadano.resistenciarte.R;
+import com.jmv.codigociudadano.resistenciarte.fragments.sections.EsculturaItem;
 import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Escultura;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -42,13 +46,16 @@ public class Utils {
 	public static final String TARJEBUS_APP = "com.jmv.tarje_bus_nea.";
 	public static final String FIRST_TIME = TARJEBUS_APP + "first_time";
 	public static final String LAST_UPDATE = "last_update";
+	public static final String LAST_PAGE = "last_page";
 	public static final String FILE_NAME = "systemTB";
 	public static final String CONTENTS = "contents";
 
 	public static String GOOGLE_ACCOUNT_USERNAME = "tarjebusapp@gmail.com";
 	public static String GOOGLE_ACCOUNT_PASSWORD = "cajetaquemada123";
 	public static String EMPRESA_SELECTED = "empresa_selected";
+	public static String CURRENT_ESCULTURA = "escultura_actual";
 	public static final int GPS_NOT_TURNED_ON = 2;
+	public static final String LAST_NID = "last_nid";
 
 	
 	
@@ -99,6 +106,16 @@ public class Utils {
         String methodName = Constants.GET + firstWithCapitalLetter + restOfMethodName;
         return methodName;
     }
+    
+    public void shareEscultura(Activity activity, EsculturaItem escultura) {
+		Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+		sharingIntent.setType("text/plain");
+		String shareBody = "http://goo.gl/x8w50A";
+		sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+				activity.getString(R.string.share_tittle).replaceAll(Constants.PATTERN_REPLACE, escultura.getEscultura().getTitle()));
+		sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+		activity.startActivity(Intent.createChooser(sharingIntent, "Compartilo en..."));
+	}
     
     public static String toDecimalFormat(Double d){
     	return new DecimalFormat("##.##").format(d);
@@ -182,9 +199,15 @@ public class Utils {
 	}
 
 	public static  <T> void extractFromResponseToObject(T localReg, JSONObject jsonObject) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, JSONException, NoSuchMethodException {
-		for (Field f : localReg.getClass().getDeclaredFields()) {
+		Class<?> classToUse = localReg.getClass();
+		Field[] fields = classToUse.getDeclaredFields();
+		if (fields.length == 0){
+			classToUse = localReg.getClass().getSuperclass();
+			fields = classToUse.getDeclaredFields();
+		}
+		for (Field f : fields) {
 			Method method;
-			method = localReg.getClass().getDeclaredMethod(
+			method = classToUse.getDeclaredMethod(
 					Utils.getSetMethod(f.getName()), f.getType());
 			method.invoke(
 					localReg,

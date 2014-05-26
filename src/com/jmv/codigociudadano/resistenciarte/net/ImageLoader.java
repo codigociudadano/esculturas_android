@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.google.common.base.Function;
+import com.jmv.codigociudadano.resistenciarte.ActionBarCustomActivity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -27,7 +28,6 @@ public class ImageLoader {
 
 	private static ImageLoader ins;
 	
-	MemoryCache memoryCache = new MemoryCache();
 	FileCache fileCache;
 	private Map<ImageView, String> imageViews = Collections
 			.synchronizedMap(new WeakHashMap<ImageView, String>());
@@ -49,12 +49,7 @@ public class ImageLoader {
 
 	public void DisplayImage(String url, ImageView imageView, Function<Bitmap, Void> nextFunction) {
 		imageViews.put(imageView, url);
-		Bitmap bitmap = memoryCache.get(url);
-		if (bitmap != null)
-			imageView.setImageBitmap(bitmap);
-		else {
-			queuePhoto(url, imageView, nextFunction);
-		}
+		queuePhoto(url, imageView, nextFunction);
 	}
 
 	private void queuePhoto(String url, ImageView imageView, Function<Bitmap, Void> nextFunction) {
@@ -171,12 +166,11 @@ public class ImageLoader {
 			if (imageViewReused(photoToLoad))
 				return;
 			Bitmap bmp = getBitmap(photoToLoad.url);
-			memoryCache.put(photoToLoad.url, bmp);
-			if (imageViewReused(photoToLoad))
-				return;
 			BitmapDisplayer bd = new BitmapDisplayer(bmp, photoToLoad);
-			Activity a = (Activity) photoToLoad.imageView.getContext();
-			a.runOnUiThread(bd);
+			ActionBarCustomActivity a = (ActionBarCustomActivity) photoToLoad.imageView.getContext();
+			if (!a.isFinishing() && a.isActive()){
+				a.runOnUiThread(bd);
+			}
 		}
 	}
 
@@ -200,7 +194,7 @@ public class ImageLoader {
 		public void run() {
 			if (imageViewReused(photoToLoad))
 				return;
-			if (bitmap != null){
+			if (bitmap != null && photoToLoad.imageView != null){
 				photoToLoad.imageView.setImageBitmap(bitmap);
 			}			
 			photoToLoad.nextFunction.apply(bitmap);
@@ -208,7 +202,6 @@ public class ImageLoader {
 	}
 
 	public void clearCache() {
-		memoryCache.clear();
 		fileCache.clear();
 	}
 

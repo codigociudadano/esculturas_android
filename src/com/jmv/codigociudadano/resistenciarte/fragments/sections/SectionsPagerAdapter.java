@@ -6,7 +6,6 @@ import java.util.Locale;
 import com.jmv.codigociudadano.resistenciarte.R;
 import com.jmv.codigociudadano.resistenciarte.fragments.PlaceholderFragment;
 import com.jmv.codigociudadano.resistenciarte.net.ImageLoader;
-import com.jmv.codigociudadano.resistenciarte.net.WaveLocker;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -20,15 +19,13 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 	private ArrayList<PlaceholderFragment> fragments;
 	private Context context;
-	private WaveLocker locker;
 
 	private ImageLoader imageLoaderService;
 
-	public SectionsPagerAdapter(FragmentManager fm, Context context, WaveLocker locker, ImageLoader imageLoaderService) {
+	public SectionsPagerAdapter(FragmentManager fm, Context context,ImageLoader imageLoaderService) {
 		super(fm);
 		this.context = context;
 		fragments = new ArrayList<PlaceholderFragment>(3);
-		this.locker = locker;
 		this.imageLoaderService = imageLoaderService;
 	}
 
@@ -40,21 +37,17 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 			switch (position) {
 			case 0:
 				p = new HighlightsSectionFragment();
-				p.setFragmentId(R.layout.fragment_home);
 				break;
 			case 1:
 				p = new EsculturasSectionFragment();
-				p.setFragmentId(R.layout.fragment_home2);
 				break;
 			case 2:
-				p = new EsculturasSectionFragment();
-				p.setFragmentId(R.layout.fragment_home3);
+				p = new NovedadesSectionFragment();
 				break;
 			}
 			Bundle args = new Bundle();
 			args.putInt(ARG_SECTION_NUMBER, position);
 			p.setArguments(args);
-			p.setLocker(locker);
 			p.setImageLoaderService(imageLoaderService);
 			fragments.add(position, p);
 		}

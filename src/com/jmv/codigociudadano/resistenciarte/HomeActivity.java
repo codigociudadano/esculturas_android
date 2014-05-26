@@ -7,7 +7,6 @@ import com.jmv.codigociudadano.resistenciarte.drawercomps.CustomDrawerAdapter;
 import com.jmv.codigociudadano.resistenciarte.drawercomps.DrawerItem;
 import com.jmv.codigociudadano.resistenciarte.fragments.sections.SectionsPagerAdapter;
 import com.jmv.codigociudadano.resistenciarte.net.ImageLoader;
-import com.jmv.codigociudadano.resistenciarte.net.WaveLocker;
 import com.jmv.codigociudadano.resistenciarte.utils.AppRater;
 
 import android.support.v7.app.ActionBar;
@@ -39,7 +38,6 @@ public class HomeActivity extends ActionBarCustomActivity implements
 	private List<DrawerItem> dataList;
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ViewPager mViewPager;
-	private WaveLocker locker;
 
 	private static HomeActivity instance;
 
@@ -62,9 +60,6 @@ public class HomeActivity extends ActionBarCustomActivity implements
 
 		AppRater.app_launched(this);
 
-		// initialize the locker
-		locker = WaveLocker.getInstance(this);
-
 		// initialize tthe image loader service
 		// ImageLoader class instance
 		imageLoaderService = ImageLoader.getInstance(getApplicationContext());
@@ -77,13 +72,13 @@ public class HomeActivity extends ActionBarCustomActivity implements
 				R.drawable.ic_action_target));
 		dataList.add(new DrawerItem(getString(R.string.map),
 				R.drawable.ic_action_map));
-		dataList.add(new DrawerItem(getString(R.string.autores),
-				R.drawable.ic_action_usr));
+		/*dataList.add(new DrawerItem(getString(R.string.autores),
+				R.drawable.ic_action_usr));*/
 		dataList.add(new DrawerItem(getString(R.string.about),
 				R.drawable.ic_action_about));
 
 		adapter = new CustomDrawerAdapter(this, R.layout.custom_drawer_item,
-				dataList, locker);
+				dataList);
 
 		// mPlanetTitles = getResources().getStringArray(R.array.planets_array);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -130,7 +125,7 @@ public class HomeActivity extends ActionBarCustomActivity implements
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the activity.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
-				getSupportFragmentManager(), this, locker, imageLoaderService);
+				getSupportFragmentManager(), this, imageLoaderService);
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -170,13 +165,11 @@ public class HomeActivity extends ActionBarCustomActivity implements
 		// If the nav drawer is open, hide action items related to the content
 		// view
 		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-		menu.findItem(R.id.action_search).setVisible(!drawerOpen);
+		//la lupa de buscar
+		//menu.findItem(R.id.action_search).setVisible(!drawerOpen);
 		return super.onPrepareOptionsMenu(menu);
 	}
 
-	public WaveLocker getLocker() {
-		return locker;
-	}
 
 	public ImageLoader getImageLoaderService() {
 		return imageLoaderService;
@@ -184,10 +177,6 @@ public class HomeActivity extends ActionBarCustomActivity implements
 
 	public void setImageLoaderService(ImageLoader imageLoaderService) {
 		this.imageLoaderService = imageLoaderService;
-	}
-
-	public void setLocker(WaveLocker locker) {
-		this.locker = locker;
 	}
 
 	@Override
@@ -277,6 +266,7 @@ public class HomeActivity extends ActionBarCustomActivity implements
 			}
 			break;
 		case 2:
+			AboutActivity.showHome(this);
 			break;
 		}
 		

@@ -166,7 +166,7 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 		for (GeoEscultura distancias2 : listaEsculturas) {
 
 			View v = View.inflate(NearbyLocations.this,
-					R.layout.fragment_escultura, null);
+					R.layout.fragment_escultura_nearby, null);
 
 			final LatLng lt = new LatLng(distancias2.getNode_latitude(),
 					distancias2.getNode_longitude());

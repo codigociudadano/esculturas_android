@@ -1,5 +1,6 @@
 package com.jmv.codigociudadano.resistenciarte.utils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
@@ -21,19 +22,26 @@ import org.json.JSONObject;
 import com.jmv.codigociudadano.resistenciarte.R;
 import com.jmv.codigociudadano.resistenciarte.fragments.sections.EsculturaItem;
 import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Escultura;
+import com.jmv.codigociudadano.resistenciarte.net.FileCache;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.provider.MediaStore.Images;
+import android.text.Html;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.animation.AlphaAnimation;
 import android.widget.Button;
+import android.widget.ImageView;
 
 public class Utils {
 
@@ -50,83 +58,104 @@ public class Utils {
 	public static final String FILE_NAME = "systemTB";
 	public static final String CONTENTS = "contents";
 
-	public static String GOOGLE_ACCOUNT_USERNAME = "tarjebusapp@gmail.com";
-	public static String GOOGLE_ACCOUNT_PASSWORD = "cajetaquemada123";
 	public static String EMPRESA_SELECTED = "empresa_selected";
 	public static String CURRENT_ESCULTURA = "escultura_actual";
 	public static final int GPS_NOT_TURNED_ON = 2;
 	public static final String LAST_NID = "last_nid";
 
-	
-	
 	@SuppressWarnings("unchecked")
 	public static <T> T tranformAccordingType(Class<T> type, Object object) {
 
-        if (type.isAssignableFrom(String.class)) {
-            return (T) object;
-        } else if (type.isAssignableFrom(Date.class)) {
-            String[] date = String.valueOf(object).split(Constants.DATE_SEPARATOR);
-            int year = Integer.parseInt(date[2].trim());
-            int month = Integer.parseInt(date[1].trim());
-            int day = Integer.parseInt(date[0].trim());
-            Date d;
-            Calendar cal = GregorianCalendar.getInstance();
-            cal.set( year, month, day);
-            d = cal.getTime();
-            return (T) d;
-        }  else if (type.isAssignableFrom(double.class) || (type.isAssignableFrom(Double.class))) {
-            return (T) Double.valueOf(String.valueOf(object).trim().replaceAll(Constants.COMMA, Constants.DOT));
-        } else if (type.isAssignableFrom(float.class) || type.isAssignableFrom(Float.class)) {
-            return (T) Double.valueOf(String.valueOf(object).trim().replaceAll(Constants.COMMA, Constants.DOT));
-        } else if (type.isAssignableFrom(int.class) || type.isAssignableFrom(Integer.class)) {
-            //takeout all spaces
-            return (T) Integer.valueOf(String.valueOf(object).trim());
-        }
-        return null;
-        //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    public static <T> T[] copyArray(T[] vector){
-        T[] another = (T[]) Array.newInstance(vector.getClass().getComponentType(), vector.length);
-        System.arraycopy(vector, 0, another, 0, vector.length);
-        return another;
-    }
-
-    public static String getSetMethod(String fieldName) {
-        // TODO Auto-generated method stub
-        String firstWithCapitalLetter = fieldName.toUpperCase().substring(0, 1);
-        String restOfMethodName = fieldName.substring(1, fieldName.length());
-        return Constants.SET + firstWithCapitalLetter + restOfMethodName;
-    }
-    
-    public static String getGetMethod(String fieldName) {
-        // TODO Auto-generated method stub
-        String firstWithCapitalLetter = fieldName.toUpperCase().substring(0, 1);
-        String restOfMethodName = fieldName.substring(1, fieldName.length());
-        String methodName = Constants.GET + firstWithCapitalLetter + restOfMethodName;
-        return methodName;
-    }
-    
-    public void shareEscultura(Activity activity, EsculturaItem escultura) {
-		Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-		sharingIntent.setType("text/plain");
-		String shareBody = "http://goo.gl/x8w50A";
-		sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-				activity.getString(R.string.share_tittle).replaceAll(Constants.PATTERN_REPLACE, escultura.getEscultura().getTitle()));
-		sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-		activity.startActivity(Intent.createChooser(sharingIntent, "Compartilo en..."));
+		if (type.isAssignableFrom(String.class)) {
+			return (T) object;
+		} else if (type.isAssignableFrom(Date.class)) {
+			String[] date = String.valueOf(object).split(
+					Constants.DATE_SEPARATOR);
+			int year = Integer.parseInt(date[2].trim());
+			int month = Integer.parseInt(date[1].trim());
+			int day = Integer.parseInt(date[0].trim());
+			Date d;
+			Calendar cal = GregorianCalendar.getInstance();
+			cal.set(year, month, day);
+			d = cal.getTime();
+			return (T) d;
+		} else if (type.isAssignableFrom(double.class)
+				|| (type.isAssignableFrom(Double.class))) {
+			return (T) Double.valueOf(String.valueOf(object).trim()
+					.replaceAll(Constants.COMMA, Constants.DOT));
+		} else if (type.isAssignableFrom(float.class)
+				|| type.isAssignableFrom(Float.class)) {
+			return (T) Double.valueOf(String.valueOf(object).trim()
+					.replaceAll(Constants.COMMA, Constants.DOT));
+		} else if (type.isAssignableFrom(int.class)
+				|| type.isAssignableFrom(Integer.class)) {
+			// takeout all spaces
+			return (T) Integer.valueOf(String.valueOf(object).trim());
+		}
+		return null;
+		// To change body of generated methods, choose Tools | Templates.
 	}
-    
-    public static String toDecimalFormat(Double d){
-    	return new DecimalFormat("##.##").format(d);
-    }
 
-    static void handleException(Exception ex) {
-        System.out.println(Constants.EXCEPCION_OCURRIDA_ + ex.getClass().getName()+" "+ex.getMessage());
-    }
+	public static <T> T[] copyArray(T[] vector) {
+		T[] another = (T[]) Array.newInstance(vector.getClass()
+				.getComponentType(), vector.length);
+		System.arraycopy(vector, 0, another, 0, vector.length);
+		return another;
+	}
+
+	public static String getSetMethod(String fieldName) {
+		// TODO Auto-generated method stub
+		String firstWithCapitalLetter = fieldName.toUpperCase().substring(0, 1);
+		String restOfMethodName = fieldName.substring(1, fieldName.length());
+		return Constants.SET + firstWithCapitalLetter + restOfMethodName;
+	}
+
+	public static String getGetMethod(String fieldName) {
+		// TODO Auto-generated method stub
+		String firstWithCapitalLetter = fieldName.toUpperCase().substring(0, 1);
+		String restOfMethodName = fieldName.substring(1, fieldName.length());
+		String methodName = Constants.GET + firstWithCapitalLetter
+				+ restOfMethodName;
+		return methodName;
+	}
+
+	public static void shareEscultura(Activity activity, EsculturaItem escultura) {
+		Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+		FileCache cache = new FileCache(activity);
+		Uri uri = Uri.fromFile(cache.getFile(escultura.getImage()));
+		String shareBody = " Buscala en Google Play, Resistenciarte!!";
+		sharingIntent.setType("image/*");
+
+		String toShare = Constants.REPLACCER.replaceFirst(
+				Constants.PATTERN_REPLACE, escultura.getEscultura().getTitle().trim());
+
+		sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+		sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, shareBody);
+
+		sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, toShare);
+
+		activity.startActivity(Intent.createChooser(sharingIntent,
+				"Compartilo en..."));
+	}
+
+	public static Uri getImageUri(Context inContext, Bitmap image) {
+		String path = Images.Media.insertImage(inContext.getContentResolver(),
+				image, "Title", null);
+		return Uri.parse(path);
+	}
+
+	public static String toDecimalFormat(Double d) {
+		return new DecimalFormat("##.##").format(d);
+	}
+
+	static void handleException(Exception ex) {
+		System.out.println(Constants.EXCEPCION_OCURRIDA_
+				+ ex.getClass().getName() + " " + ex.getMessage());
+	}
 
 	public static long getDaysCountFromLastUpdate(String lastUpdate) {
-		SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
+		SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy",
+				Locale.getDefault());
 		Date startDate;
 		try {
 			startDate = formatter.parse(lastUpdate);
@@ -153,9 +182,9 @@ public class Utils {
 		return activeNetworkInfo != null;
 	}
 
-	
 	public static String getDateAsString() {
-		SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
+		SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy",
+				Locale.getDefault());
 		return formatter.format(new Date());
 	}
 
@@ -198,10 +227,13 @@ public class Utils {
 		}
 	}
 
-	public static  <T> void extractFromResponseToObject(T localReg, JSONObject jsonObject) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, JSONException, NoSuchMethodException {
+	public static <T> void extractFromResponseToObject(T localReg,
+			JSONObject jsonObject) throws IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, JSONException,
+			NoSuchMethodException {
 		Class<?> classToUse = localReg.getClass();
 		Field[] fields = classToUse.getDeclaredFields();
-		if (fields.length == 0){
+		if (fields.length == 0) {
 			classToUse = localReg.getClass().getSuperclass();
 			fields = classToUse.getDeclaredFields();
 		}

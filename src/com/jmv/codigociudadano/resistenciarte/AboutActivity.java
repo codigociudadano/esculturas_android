@@ -6,6 +6,7 @@ import android.support.v4.app.NavUtils;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,13 +24,16 @@ public class AboutActivity extends ActionBarCustomActivity {
 		setContentView(R.layout.activity_about);
 
 		txtViewEx = (TextViewEx) findViewById(R.id.text_detailed);
-	    txtViewEx.setText(getString(R.string.detailed_about), true);
-	    
+		
+		boolean useJustified = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
+		
+		txtViewEx.setText(getString(R.string.detailed_about), useJustified);
+		
 	    txtViewEx2 = (TextViewEx) findViewById(R.id.text_cc);
-	    txtViewEx2.setText(getString(R.string.cc_detail), true);
+	    txtViewEx2.setText(getString(R.string.cc_detail), useJustified);
 	    
 	    txtViewEx3 = (TextViewEx) findViewById(R.id.text_mv);
-	    txtViewEx3.setText(getString(R.string.mv_detail), true);
+	    txtViewEx3.setText(getString(R.string.mv_detail), useJustified);
 	    
 	    TextViewEx txtViewEx4 = (TextViewEx) findViewById(R.id.text_mv_header);
 	    txtViewEx4.setText(getString(R.string.disenio), false);
@@ -38,7 +42,7 @@ public class AboutActivity extends ActionBarCustomActivity {
 	    txtViewEx5.setText(getString(R.string.idea), false);
 	    
 	    TextViewEx txtViewEx6 = (TextViewEx) findViewById(R.id.text_mm);
-	    txtViewEx6.setText(getString(R.string.mm_detail), true);
+	    txtViewEx6.setText(getString(R.string.mm_detail), useJustified);
 	    
 	    TextViewEx txtViewEx7 = (TextViewEx) findViewById(R.id.text_mm_header);
 	    txtViewEx7.setText(getString(R.string.servidor), false);
@@ -60,7 +64,7 @@ public class AboutActivity extends ActionBarCustomActivity {
 		goToUrl("http://www.codigociudadano.com.ar/");
 	}
 	
-	public void go42(View v){
+	public void go42mate(View v){
 		goToUrl("http://www.42mate.com/");
 	}
 

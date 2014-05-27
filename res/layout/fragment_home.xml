@@ -19,8 +19,7 @@
         android:layout_height="fill_parent"
         android:layout_gravity="center"
         android:gravity="center"
-        android:orientation="vertical"
-         >
+        android:orientation="vertical" >
 
         <ScrollView
             android:id="@+id/login_status"
@@ -75,8 +74,8 @@
         android:layout_height="fill_parent"
         android:layout_gravity="center"
         android:gravity="center"
-        android:visibility="gone"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:visibility="gone" >
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -86,32 +85,32 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                                android:paddingTop="2dp"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:paddingTop="2dp" >
 
                 <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/background_white_with_shadow"
-                android:gravity="center_horizontal"
-                android:orientation="vertical" >
-                
-                <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:padding="15dp"
-                    android:shadowColor="#C2C2A3"
-                    android:shadowDx="2"
-                    android:shadowDy="2"
-                    android:shadowRadius="2"
-                    android:text="@string/obra"
-                    android:textColor="#000000"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/background_white_with_shadow"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="15dp"
+                        android:shadowColor="#C2C2A3"
+                        android:shadowDx="2"
+                        android:shadowDy="2"
+                        android:shadowRadius="2"
+                        android:text="@string/obra"
+                        android:textColor="#000000"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -127,7 +126,7 @@
                         android:layout_gravity="center"
                         android:adjustViewBounds="true"
                         android:gravity="center"
-                        android:src="@drawable/not_found" />
+                        android:src="@drawable/ic_author_default" />
                 </LinearLayout>
             </LinearLayout>
         </FrameLayout>
@@ -152,7 +151,7 @@
                     android:orientation="vertical" >
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
@@ -165,9 +164,13 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="top|center_horizontal"
                             android:gravity="top|center_horizontal"
+                            android:shadowColor="#000000"
+                            android:shadowDx="2"
+                            android:shadowDy="2"
+                            android:shadowRadius="2"
                             android:text="56"
                             android:textColor="#009681"
-                            android:textSize="20sp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -176,53 +179,44 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:orientation="horizontal"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp" >
+                        android:orientation="horizontal" >
 
                         <Button
                             android:id="@+id/author_main"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginBottom="16dp"
-                            android:layout_weight="0.5"
-                            android:background="@android:color/transparent"
                             android:drawableLeft="@drawable/ic_autor"
                             android:gravity="center"
-                            android:padding="5dp"
-                            android:shadowColor="#FFFFFF"
-                            android:text="@string/author"
+                            android:shadowColor="#000000"
+                            android:shadowDx="2"
+                            android:shadowDy="2"
+                            android:text="@string/author_getting"
+                            android:shadowRadius="2"
                             android:textColor="#009681"
-                            android:textSize="20sp" />
+                            android:textSize="14sp" />
 
                         <Button
                             android:id="@+id/ubic_main"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginBottom="16dp"
-                            android:layout_weight="0.5"
-                            android:background="@android:color/transparent"
+                            android:paddingLeft="10dp"
                             android:drawableLeft="@drawable/ic_pin"
                             android:gravity="center"
-                            android:padding="5dp"
-                            android:shadowColor="#FFFFFF"
+                            android:shadowColor="#000000"
                             android:text="@string/ubic"
+                            android:shadowDx="2"
+                            android:shadowDy="2"
+                            android:shadowRadius="2"
                             android:textColor="#009681"
-                            android:textSize="20sp" />
-                    </LinearLayout>
+                            android:textSize="14sp" />
 
-                  
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </FrameLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-        </LinearLayout>
     </FrameLayout>
 
 </FrameLayout>

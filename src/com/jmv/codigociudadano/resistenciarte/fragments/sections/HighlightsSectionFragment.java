@@ -52,8 +52,6 @@ public class HighlightsSectionFragment extends PlaceholderFragment {
 	public HighlightsSectionFragment() {
 		super();
 		codeName = getClass().getName();
-		prefs = HomeActivity.getInstance().getSharedPreferences(Utils.TARJEBUS_APP, 0);
-		checkNidUpdate();
 	}
 
 	private void checkNidUpdate() {
@@ -85,6 +83,9 @@ public class HighlightsSectionFragment extends PlaceholderFragment {
 		setFragmentId(R.layout.fragment_home);
 		
 		super.onCreateView(inflater, container, savedInstanceState);
+		
+		prefs = HomeActivity.getInstance().getSharedPreferences(Utils.TARJEBUS_APP, 0);
+		checkNidUpdate();
 		
 		img = (ImageView) rootView.findViewById(R.id.img);
 		
@@ -158,7 +159,7 @@ public class HighlightsSectionFragment extends PlaceholderFragment {
 				}
 
 				// Image url
-				String image_url = Constants.BASE_URL + "/sites/default/files/"
+				final String image_url = Constants.BASE_URL + "/sites/default/files/"
 						+ fotos.get(0).getFilename();
 
 				Function<Bitmap, Void> afterLogin = new Function<Bitmap, Void>() {
@@ -190,6 +191,8 @@ public class HighlightsSectionFragment extends PlaceholderFragment {
 
 						img.setLayoutParams(new LinearLayout.LayoutParams(
 								newBmapWidth, newBmapHeight));
+						
+						
 						showProgress(false);
 						mDeatailedView.setVisibility(View.VISIBLE);
 						return null;
@@ -268,6 +271,8 @@ public class HighlightsSectionFragment extends PlaceholderFragment {
 	private void setAuthor(JSONObject response, final Button textAuthor) {
 		JSONArray aYs;
 		try {
+			//textAuthor.setVisibility(View.GONE);
+			
 			if (response.isNull("field_autor")) {
 				textAuthor.setText(Constants.ANONIMO);
 				return;
@@ -304,6 +309,7 @@ public class HighlightsSectionFragment extends PlaceholderFragment {
 							Utils.extractFromResponseToObject(author,
 									jsonObject);
 							textAuthor.setText(author.getTitle().trim());
+							textAuthor.setVisibility(View.VISIBLE);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

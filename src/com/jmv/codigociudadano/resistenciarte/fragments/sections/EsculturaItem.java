@@ -1,7 +1,5 @@
 package com.jmv.codigociudadano.resistenciarte.fragments.sections;
 
-import android.graphics.Bitmap;
-
 import com.google.android.gms.maps.model.LatLng;
 import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Autor;
 import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Escultura;
@@ -12,7 +10,7 @@ public class EsculturaItem {
 	private Foto foto;
 	private Escultura escultura;
 	private Autor autor;
-	private Bitmap image;
+	private String image;
 	private LatLng ubicacion;
 	
 	
@@ -49,11 +47,11 @@ public class EsculturaItem {
 		this.escultura = escultura;
 	}
 
-	public Bitmap getImage() {
+	public String getImage() {
 		return image;
 	}
 
-	public void setImage(Bitmap image) {
+	public void setImage(String image) {
 		this.image = image;
 	}
 	

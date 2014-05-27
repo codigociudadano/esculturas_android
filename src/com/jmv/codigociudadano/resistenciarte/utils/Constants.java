@@ -30,8 +30,10 @@ public class Constants {
     public static final String NOT_SUPPORTED="Not supported yet.";
     public static final String COMMA = ",";
     public static final String DOT=".";
-	public static final String BASE_URL = "http://dev.resistenciarte.org";
+	public static final String BASE_URL = "http://resistenciarte.org";
 	public static final String ANONIMO = "Anonimo";
-	public static final String PATTERN_REPLACE = "[escultura]";
-	public static final CharSequence NOVEDAD = "Novedad";
+	public static final String PATTERN_REPLACE = "fFfFfF";
+	public static final CharSequence NOVEDAD = "Evento";
+	public static final int MAX_NUMBER_ITEMS = 5;
+	public static final String REPLACCER = "Estoy viendo la obra: \"fFfFfF\" de la ciudad de Resistencia usando Resistenciarte! Usala vos tambien!";
 }

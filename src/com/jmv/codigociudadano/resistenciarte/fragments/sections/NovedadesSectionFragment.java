@@ -4,12 +4,14 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.google.common.base.Function;
 import com.jmv.codigociudadano.resistenciarte.HomeActivity;
@@ -114,6 +117,10 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 				return;
 			}
 			
+			if (max < Constants.MAX_NUMBER_ITEMS){
+				button.setVisibility(View.GONE);
+			}
+			
 			for (int i = 0; i < max; i++) {
 				JSONObject jsonObject = jsonArray.optJSONObject(i);
 
@@ -169,9 +176,30 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 			public void onResponse(String response) {
 				try {
 					JSONObject jsonObject = new JSONObject(response);
+					
+					setDescription(jsonObject, (TextView) view.findViewById(R.id.description));
+					
+					if (!jsonObject.isNull("field_fotos")) {
+						try {
+							jsonObject.getJSONArray("field_fotos");
+							ImageView viewImg = (ImageView) view
+									.findViewById(R.id.image);
+							viewImg.setBackgroundResource(R.drawable.ic_launcher_custom);
+							setInvisibleToDefaultImages();
+							return;
+						} catch (Exception e) {
+							//everything goes well!
+						}
+					} else {
+						ImageView viewImg = (ImageView) view
+								.findViewById(R.id.image);
+						viewImg.setBackgroundResource(R.drawable.ic_launcher_custom);
+						setInvisibleToDefaultImages();
+						return;
+					}
+					
 					JSONArray fotosArrays = jsonObject.getJSONObject(
 							"field_fotos").getJSONArray("und");
-
 					
 					ArrayList<Foto> fotos = new ArrayList<Foto>();
 					for (int i = 0; i < fotosArrays.length(); i++) {
@@ -192,10 +220,7 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 					Function<Bitmap, Void> afterLogin = new Function<Bitmap, Void>() {
 						@Override
 						public Void apply(Bitmap bmap) {
-							View p = view.findViewById(R.id.progress);
-							p.setVisibility(View.GONE);
-							View iV = view.findViewById(R.id.default_image);
-							iV.setVisibility(View.GONE);
+							setInvisibleToDefaultImages();
 							return null;
 						}
 					};
@@ -212,6 +237,53 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 				}
 			}
 			
+			private void setDescription(JSONObject jsonObject,
+					TextView descriptionBtn) {
+				/*
+				 * "":{"und":[{"lat":"-27.4492586","lon":"-58.9922044",
+				 * "map_width":null,"map_height":null,"zoom":"17","name":""}]}
+				 * 
+				 * field_ubicacion":{"und":[{"value":"Perón, Juan Domingo Nº
+				 * 454\t\t\t\t",
+				 * "safe_value":"Perón, Juan Domingo Nº 454\t\t\t\t"
+				 * ,"format":null}]}
+				 */
+				JSONArray aYs;
+				try {
+					if (jsonObject.isNull("body")) {
+						descriptionBtn.setVisibility(View.GONE);
+						return;
+					}
+					JSONObject auhtorObject;
+					auhtorObject = jsonObject.getJSONObject("body");
+
+					aYs = auhtorObject.isNull("und") ? null : auhtorObject
+							.getJSONArray("und");
+
+					if (aYs == null) {
+						descriptionBtn.setVisibility(View.GONE);
+					} else {
+						final String value = String
+								.valueOf(
+										aYs.getJSONObject(0).getString("value"))
+								.trim().substring(0, 50).concat("... <b>[Leer mas..]</b>");
+						descriptionBtn.setText(value.contains("Fuente :")?Html.fromHtml("<b>[Leer mas...]</b>"):Html.fromHtml(value));
+					}
+				} catch (JSONException e) {
+					// the author is null
+					descriptionBtn.setVisibility(View.GONE);
+					return;
+				}
+
+			}
+			
+			private void setInvisibleToDefaultImages() {
+				View p = view.findViewById(R.id.progress);
+				p.setVisibility(View.GONE);
+				View iV = view.findViewById(R.id.default_image);
+				iV.setVisibility(View.GONE);
+			}
+
 			@Override
 			public String getRequestURI() {
 				return Constants.BASE_URL + "/api/v1/node/"
@@ -241,11 +313,7 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 		@Override
 		protected void onPreExecute() {
 			// Showing progress dialog before sending http request
-			pDialog = new ProgressDialog(HomeActivity.getInstance());
-			pDialog.setMessage("Cargando Datos del Servidor..");
-			pDialog.setIndeterminate(true);
-			pDialog.setCancelable(false);
-			pDialog.show();
+			showProgress(true);
 			if (currentPage == 0){
 				button2.setVisibility(View.GONE);
 			} else {
@@ -281,7 +349,11 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 							if(max == 0){
 								//no more results
 								currentPage--;
+								if (currentPage == 0){
+									button2.setVisibility(View.GONE);
+								}
 								button.setVisibility(View.GONE);
+								showProgress(false);
 								return;
 							}
 							
@@ -308,7 +380,7 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 							Escultura distancias2 = item;
 							
 							View v = View.inflate(HomeActivity.getInstance(),
-									R.layout.fragment_escultura, null);
+									R.layout.fragment_novedades, null);
 
 							final TextViewEx texto = (TextViewEx) v.findViewById(R.id.tittle);
 							texto.setText(distancias2.getTitle(), true);
@@ -325,21 +397,12 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 						
 						final ScrollView scroll = (ScrollView) mLoginFormView;
 						scroll.postDelayed(new Runnable() {
-						    @Override
-						    public void run() {
-						    	try {
-									Thread.sleep(500);
-								} catch (InterruptedException e) {
-								}
-						    	scroll.smoothScrollTo(0, 0);
-						        scroll.fullScroll(ScrollView.FOCUS_UP);
-						        scroll.postDelayed(new Runnable() {
-								    @Override
-								    public void run() {
-								        pDialog.dismiss();
-								    }
-								}, 1000);
-						    }
+							@Override
+							public void run() {
+								scroll.smoothScrollTo(0, 0);
+								scroll.fullScroll(ScrollView.FOCUS_UP);
+								showProgress(false);
+							}
 						}, 600);
 						
 					}
@@ -355,7 +418,7 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 		}
 
 		protected void onPostExecute( ArrayList<EsculturaItem>  unused) {
-			pDialog.dismiss();
+		
 		}
 	}
 }

@@ -2,15 +2,10 @@ package com.jmv.codigociudadano.resistenciarte.fragments.sections;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -18,39 +13,27 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.view.ViewTreeObserver;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
-import com.google.android.gms.internal.au;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.common.base.Function;
 import com.jmv.codigociudadano.resistenciarte.HomeActivity;
-import com.jmv.codigociudadano.resistenciarte.NearbyLocations;
 import com.jmv.codigociudadano.resistenciarte.R;
-import com.jmv.codigociudadano.resistenciarte.comps.lists.ListViewAdapter;
 import com.jmv.codigociudadano.resistenciarte.fragments.PlaceholderFragment;
 import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Autor;
 import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Escultura;
 import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Foto;
-import com.jmv.codigociudadano.resistenciarte.logic.esculturas.GeoEscultura;
 import com.jmv.codigociudadano.resistenciarte.net.IRequester;
 import com.jmv.codigociudadano.resistenciarte.net.RestClientResistenciarte;
 import com.jmv.codigociudadano.resistenciarte.utils.Constants;
-import com.jmv.codigociudadano.resistenciarte.utils.Generador;
 import com.jmv.codigociudadano.resistenciarte.utils.Utils;
-import com.jmv.codigociudadano.resistenciarte.utils.XMLParser;
 
 public class EsculturasSectionFragment extends PlaceholderFragment {
 
@@ -58,7 +41,6 @@ public class EsculturasSectionFragment extends PlaceholderFragment {
 	private LinearLayout myLinearLayout;
 	private int currentPage = 0;
 	private Button button2;
-	private ArrayList<EsculturaItem> listaEsculturas = new ArrayList<EsculturaItem>();
 	private Button button;
 
 
@@ -122,6 +104,10 @@ public class EsculturasSectionFragment extends PlaceholderFragment {
 			jsonArray = new JSONArray(response);
 			int max = jsonArray.length();
 			
+			if (max < Constants.MAX_NUMBER_ITEMS){
+				button.setVisibility(View.GONE);
+			}
+			
 			for (int i = 0; i < max; i++) {
 				JSONObject jsonObject = jsonArray.optJSONObject(i);
 
@@ -144,12 +130,14 @@ public class EsculturasSectionFragment extends PlaceholderFragment {
 
 		for (Escultura item : esculturas) {
 
-			Escultura distancias2 = item;
+			final Escultura distancias2 = item;
 			
 			View v = View.inflate(HomeActivity.getInstance(),
 					R.layout.fragment_escultura, null);
 
 			addIMage(v, item);
+			
+			
 
 			final TextView texto = (TextView) v.findViewById(R.id.tittle);
 			texto.setText(distancias2.getTitle());
@@ -193,7 +181,7 @@ public class EsculturasSectionFragment extends PlaceholderFragment {
 					}
 
 					// Image url
-					String image_url = Constants.BASE_URL
+					final String image_url = Constants.BASE_URL
 							+ "/sites/default/files/"
 							+ fotos.get(0).getUri()
 									.replaceFirst("public://", "");
@@ -201,11 +189,23 @@ public class EsculturasSectionFragment extends PlaceholderFragment {
 
 					Function<Bitmap, Void> afterLogin = new Function<Bitmap, Void>() {
 						@Override
-						public Void apply(Bitmap bmap) {
+						public Void apply(final Bitmap bmap) {
 							View p = view.findViewById(R.id.progress);
 							p.setVisibility(View.GONE);
 							View iV = view.findViewById(R.id.default_image);
 							iV.setVisibility(View.GONE);
+
+							Button shareButton = (Button) view.findViewById(R.id.share_btn);
+							shareButton.setOnClickListener(new OnClickListener() {
+								
+								@Override
+								public void onClick(View v) {
+									EsculturaItem item = new EsculturaItem();
+									item.setEscultura(distancias2);
+									item.setImage(image_url);
+									Utils.shareEscultura(HomeActivity.getInstance(), item);
+								}
+							});
 							return null;
 						}
 					};
@@ -384,12 +384,7 @@ public class EsculturasSectionFragment extends PlaceholderFragment {
 
 		@Override
 		protected void onPreExecute() {
-			// Showing progress dialog before sending http request
-			pDialog = new ProgressDialog(HomeActivity.getInstance());
-			pDialog.setMessage("Cargando Datos del Servidor..");
-			pDialog.setIndeterminate(true);
-			pDialog.setCancelable(false);
-			pDialog.show();
+			showProgress(true);
 			if (currentPage == 0){
 				button2.setVisibility(View.GONE);
 			} else {
@@ -425,6 +420,7 @@ public class EsculturasSectionFragment extends PlaceholderFragment {
 								//no more results
 								currentPage--;
 								button.setVisibility(View.GONE);
+								showProgress(false);
 								return;
 							}
 							
@@ -468,22 +464,13 @@ public class EsculturasSectionFragment extends PlaceholderFragment {
 						
 						final ScrollView scroll = (ScrollView) mLoginFormView;
 						scroll.postDelayed(new Runnable() {
-						    @Override
-						    public void run() {
-						    	try {
-									Thread.sleep(500);
-								} catch (InterruptedException e) {
-								}
-						    	scroll.smoothScrollTo(0, 0);
-						        scroll.fullScroll(ScrollView.FOCUS_UP);
-						        scroll.postDelayed(new Runnable() {
-								    @Override
-								    public void run() {
-								        pDialog.dismiss();
-								    }
-								}, 1500);
-						    }
-						}, 2000);
+							@Override
+							public void run() {
+								scroll.smoothScrollTo(0, 0);
+								scroll.fullScroll(ScrollView.FOCUS_UP);
+								showProgress(false);
+							}
+						}, 600);
 						
 					}
 
@@ -498,7 +485,7 @@ public class EsculturasSectionFragment extends PlaceholderFragment {
 		}
 
 		protected void onPostExecute( ArrayList<EsculturaItem>  unused) {
-			pDialog.dismiss();
+			
 		}
 	}
 }

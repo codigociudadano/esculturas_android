@@ -18,7 +18,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
             android:orientation="horizontal"
-            android:padding="14dp" >
+            android:paddingLeft="10dp"
+            android:paddingTop="35dp" >
 
             <FrameLayout
                 android:layout_width="96dp"
@@ -29,16 +30,16 @@
                     android:id="@+id/default_image"
                     android:layout_width="96dp"
                     android:layout_height="96dp"
+                    android:layout_gravity="center"
                     android:orientation="horizontal"
                     android:scrollbarSize="15dp"
-                    android:layout_gravity="center" 
                     android:scrollbarStyle="insideOverlay"
                     android:scrollbars="vertical" >
 
                     <ImageView
                         android:layout_width="96dp"
                         android:layout_height="96dp"
-                        android:layout_gravity="center" 
+                        android:layout_gravity="center"
                         android:background="@drawable/ic_action_pin"
                         android:scaleX="0.5"
                         android:scaleY="0.5" />
@@ -47,13 +48,13 @@
                 <FrameLayout
                     android:id="@+id/progress"
                     android:layout_width="96dp"
-                    android:layout_gravity="center" 
-                    android:layout_height="96dp" >
+                    android:layout_height="96dp"
+                    android:layout_gravity="center" >
 
                     <ProgressBar
                         android:layout_width="96dp"
-                        android:layout_gravity="center" 
                         android:layout_height="96dp"
+                        android:layout_gravity="center"
                         android:focusable="true"
                         android:paddingLeft="10dp"
                         android:scaleX="0.25"
@@ -62,41 +63,50 @@
 
                 <FrameLayout
                     android:layout_width="96dp"
-                    android:layout_gravity="center" 
-                    android:layout_height="96dp" >
+                    android:layout_height="96dp"
+                    android:layout_gravity="center" >
 
                     <ImageView
                         android:id="@+id/image"
-                        android:layout_gravity="center" 
                         android:layout_width="96dp"
-                        android:layout_height="96dp" />
+                        android:layout_height="96dp"
+                        android:layout_gravity="center" />
                 </FrameLayout>
             </FrameLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="5dp"
                 android:layout_gravity="center_horizontal|center_vertical"
                 android:orientation="vertical"
-                android:padding="6dip" >
+                android:padding="6dip"
+                android:paddingTop="5dp" >
 
                 <com.jmv.codigociudadano.resistenciarte.comps.TextViewEx
                     android:id="@+id/tittle"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
                     android:focusable="true"
                     android:gravity="center"
-                    android:layout_gravity="center"
-                    android:paddingBottom="6dip"
-                    android:paddingTop="15dp"
                     android:text="@string/title_obra"
                     android:textColor="#148273"
-                    android:textSize="15sp"
+                    android:textSize="18sp"
                     android:textStyle="bold|italic" />
-                
-                
 
+                <com.jmv.codigociudadano.resistenciarte.comps.TextViewEx
+                    android:id="@+id/description"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:text="@string/title_obra"
+                    android:textColor="#148273"
+                    android:textSize="14sp"
+                    android:textStyle="italic" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -111,7 +121,7 @@
             android:orientation="horizontal" >
 
             <Button
-                 android:id="@+id/novedad"
+                android:id="@+id/novedad"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"

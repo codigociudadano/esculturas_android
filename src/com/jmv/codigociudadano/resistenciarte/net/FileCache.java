@@ -19,7 +19,7 @@ public class FileCache {
     }
   
     public File getFile(String url){
-        String filename=String.valueOf(url.hashCode());
+        String filename=String.valueOf(url.hashCode())+".jpg";
         File f = new File(cacheDir, filename);
         return f;
   

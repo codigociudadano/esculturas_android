@@ -72,8 +72,8 @@ public class HomeActivity extends ActionBarCustomActivity implements
 				R.drawable.ic_action_target));
 		dataList.add(new DrawerItem(getString(R.string.map),
 				R.drawable.ic_action_map));
-		/*dataList.add(new DrawerItem(getString(R.string.autores),
-				R.drawable.ic_action_usr));*/
+		dataList.add(new DrawerItem(getString(R.string.autores),
+				R.drawable.ic_action_usr));
 		dataList.add(new DrawerItem(getString(R.string.about),
 				R.drawable.ic_action_about));
 
@@ -153,7 +153,7 @@ public class HomeActivity extends ActionBarCustomActivity implements
 					.setTabListener(this));
 		}
 	}
-	
+
 	public static void showHome(Context home) {
 		Intent intent = new Intent(home, HomeActivity.class);
 		home.startActivity(intent);
@@ -165,11 +165,10 @@ public class HomeActivity extends ActionBarCustomActivity implements
 		// If the nav drawer is open, hide action items related to the content
 		// view
 		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-		//la lupa de buscar
-		//menu.findItem(R.id.action_search).setVisible(!drawerOpen);
+		// la lupa de buscar
+		menu.findItem(R.id.action_search).setVisible(!drawerOpen);
 		return super.onPrepareOptionsMenu(menu);
 	}
-
 
 	public ImageLoader getImageLoaderService() {
 		return imageLoaderService;
@@ -202,9 +201,20 @@ public class HomeActivity extends ActionBarCustomActivity implements
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		// To-DO ver aca
-		/*
-		 * if (id == R.id.act) { return true; }
-		 */
+		if (id == R.id.action_search) {
+			Intent sharingIntent = new Intent(
+					android.content.Intent.ACTION_SEND);
+			sharingIntent.setType("text/plain");
+			String shareBody = "http://goo.gl/x8w50A";
+			sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+					"La mejor forma de encontrar esculturas en Resistencia! Usa esta app!!");
+			sharingIntent
+					.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+			startActivity(Intent.createChooser(sharingIntent,
+					"Compartilo en..."));
+			return true;
+		}
+
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -236,7 +246,7 @@ public class HomeActivity extends ActionBarCustomActivity implements
 		}
 	}
 
-	public boolean checkOpenGL(){
+	public boolean checkOpenGL() {
 		final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
 		final ConfigurationInfo configurationInfo = activityManager
 				.getDeviceConfigurationInfo();
@@ -244,32 +254,32 @@ public class HomeActivity extends ActionBarCustomActivity implements
 		if (supportsEs2) {
 			return true;
 		} else {
-			Toast.makeText(
-					this,
+			Toast.makeText(this,
 					"Tu cel no soporta OpenGl, Este modulo no funciona! :S",
 					Toast.LENGTH_LONG).show();
 			return false;
 		}
 	}
-	
+
 	private void selectItem(int position) {
-		
+
 		switch (position) {
 		case 0:
-			if (checkOpenGL()){
-				NearbyLocations.showHome(this);
-			}
+			NearbyLocations.showHome(this);
 			break;
 		case 1:
-			if (checkOpenGL()){
+			if (checkOpenGL()) {
 				MapActivity.showHome(this);
 			}
 			break;
 		case 2:
+			AutoresActivity.showHome(this);
+			break;
+		case 3:
 			AboutActivity.showHome(this);
 			break;
 		}
-		
+
 		mDrawerList.setItemChecked(position, true);
 		mDrawerLayout.closeDrawer(mDrawerList);
 	}

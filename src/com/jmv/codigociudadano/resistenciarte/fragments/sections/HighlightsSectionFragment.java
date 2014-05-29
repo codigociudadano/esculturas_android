@@ -23,6 +23,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.common.base.Function;
+import com.jmv.codigociudadano.resistenciarte.AutorActivity;
+import com.jmv.codigociudadano.resistenciarte.AutoresActivity;
 import com.jmv.codigociudadano.resistenciarte.HomeActivity;
 import com.jmv.codigociudadano.resistenciarte.R;
 import com.jmv.codigociudadano.resistenciarte.fragments.PlaceholderFragment;
@@ -310,6 +312,15 @@ public class HighlightsSectionFragment extends PlaceholderFragment {
 									jsonObject);
 							textAuthor.setText(author.getTitle().trim());
 							textAuthor.setVisibility(View.VISIBLE);
+							final int nid = autorId;
+							textAuthor.setOnClickListener(new OnClickListener() {
+
+								@Override
+								public void onClick(View v) {
+									
+									AutorActivity.showHome(HomeActivity.getInstance(), nid);
+								}
+							});
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

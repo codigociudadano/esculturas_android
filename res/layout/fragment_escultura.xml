@@ -11,115 +11,152 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical"
-        android:orientation="horizontal" >
+        android:orientation="vertical" >
 
-        <FrameLayout
-            android:layout_width="144dp"
-            android:layout_height="144dp"
-            android:layout_gravity="center_vertical" >
-
-            <FrameLayout
-                android:id="@+id/default_image"
-                android:layout_width="144dp"
-                android:layout_height="144dp"
-                android:orientation="horizontal"
-                android:scrollbarSize="15dp"
-                android:scrollbarStyle="insideOverlay"
-                android:scrollbars="vertical" >
-
-                <ImageView
-                    android:layout_width="144dp"
-                    android:layout_height="144dp"
-                    android:background="@drawable/ic_action_pin"
-                    android:scaleX="0.5"
-                    android:scaleY="0.5" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/progress"
-                android:layout_width="144dp"
-                android:layout_height="144dp" >
-
-                <ProgressBar
-                    android:layout_width="144dp"
-                    android:layout_height="144dp"
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:focusable="true"
-                    android:paddingLeft="10dp"
-                    android:scaleX="0.25"
-                    android:scaleY="0.25" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="144dp"
-                android:layout_height="144dp" >
-
-                <ImageView
-                    android:id="@+id/image"
-                    android:layout_width="144dp"
-                    android:layout_height="144dp" />
-            </FrameLayout>
-        </FrameLayout>
+        <TextView
+            android:id="@+id/tittle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
+            android:focusable="true"
+            android:gravity="top|center_horizontal"
+            android:paddingBottom="6dip"
+            android:shadowColor="#000000"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            android:text="@string/title_obra"
+            android:textColor="#148273"
+            android:textSize="20sp"
+            android:textStyle="bold|italic" />
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
-            android:orientation="vertical"
-            android:padding="6dip" >
+            android:orientation="horizontal" >
 
-            <TextView
-                android:id="@+id/tittle"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:focusable="true"
-                android:gravity="center_horizontal"
-                android:paddingBottom="6dip"
-                android:shadowColor="#000000"
-                android:shadowDx="1"
-                android:shadowDy="1"
-                            android:shadowRadius="1"
-                android:text="@string/title_obra"
-                android:textColor="#148273"
-                android:textSize="20sp"
-                android:textStyle="bold|italic" />
+            <FrameLayout
+                android:layout_width="144dp"
+                android:layout_height="144dp"
+                android:layout_gravity="center_vertical" >
 
-            <Button
-                android:id="@+id/author"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:drawableLeft="@drawable/ic_autor"
-                android:focusable="true"
-                android:gravity="center"
-                android:text="@string/title_obra"
-                android:textColor="#148273"
-                android:textSize="16sp"
-                android:textStyle="bold|italic" />
+                <FrameLayout
+                    android:id="@+id/default_image"
+                    android:layout_width="144dp"
+                    android:layout_height="144dp"
+                    android:orientation="horizontal"
+                    android:scrollbarSize="15dp"
+                    android:scrollbarStyle="insideOverlay"
+                    android:scrollbars="vertical" >
 
-            <Button
-                android:id="@+id/ubicacion"
+                    <ImageView
+                        android:layout_width="144dp"
+                        android:layout_height="144dp"
+                        android:background="@drawable/ic_action_pin"
+                        android:scaleX="0.5"
+                        android:scaleY="0.5" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/progress"
+                    android:layout_width="144dp"
+                    android:layout_height="144dp" >
+
+                    <ProgressBar
+                        android:layout_width="144dp"
+                        android:layout_height="144dp"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:focusable="true"
+                        android:paddingLeft="10dp"
+                        android:scaleX="0.25"
+                        android:scaleY="0.25" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="144dp"
+                    android:layout_height="144dp" >
+
+                    <ImageView
+                        android:id="@+id/image"
+                        android:layout_width="144dp"
+                        android:layout_height="144dp" />
+                </FrameLayout>
+            </FrameLayout>
+
+            <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_pin"
-                android:focusable="true"
-                android:gravity="center"
-                android:text="@string/title_obra"
-                android:textColor="#148273"
-                android:textSize="16sp"
-                android:textStyle="bold|italic" />
-            
-            <Button
-                android:id="@+id/share_btn"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_share"
-                android:focusable="true"
-                android:gravity="center"
-                android:text="@string/title_share"
-                android:textColor="#148273"
-                android:textSize="16sp"
-                android:textStyle="bold|italic" />
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:orientation="vertical"
+                android:padding="2dip" >
+
+                <Button
+                    android:id="@+id/author"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_autor"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:text="@string/title_obra"
+                    android:textColor="#148273"
+                     android:shadowColor="#000000"
+                            android:shadowDx="2"
+                            android:shadowDy="2"
+                            android:shadowRadius="2"
+                    android:textSize="16sp"
+                    android:textStyle="bold|italic" />
+
+                <Button
+                    android:id="@+id/ubicacion"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_pin"
+                    android:focusable="true"
+                    android:gravity="center"
+                     android:shadowColor="#000000"
+                            android:shadowDx="2"
+                            android:shadowDy="2"
+                            android:shadowRadius="2"
+                    android:text="@string/title_obra"
+                    android:textColor="#148273"
+                    android:textSize="16sp"
+                    android:textStyle="bold|italic" />
+
+                <Button
+                    android:id="@+id/detalle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawableLeft="@drawable/ic_text"
+                    android:focusable="true"
+                     android:shadowColor="#000000"
+                            android:shadowDx="2"
+                            android:shadowDy="2"
+                            android:shadowRadius="2"
+                    android:gravity="center"
+                    android:text="@string/read_more"
+                    android:textColor="#148273"
+                    android:textSize="16sp"
+                    android:textStyle="bold|italic" />
+                
+                <Button
+                    android:id="@+id/share_btn"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawableLeft="@drawable/ic_share"
+                    android:focusable="true"
+                     android:shadowColor="#000000"
+                            android:shadowDx="2"
+                            android:shadowDy="2"
+                            android:shadowRadius="2"
+                    android:gravity="center"
+                    android:text="@string/title_share"
+                    android:textColor="#148273"
+                    android:textSize="16sp"
+                    android:textStyle="bold|italic" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

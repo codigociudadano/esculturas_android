@@ -28,12 +28,21 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
+import android.graphics.LinearGradient;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore.Images;
 import android.text.Html;
 import android.view.MotionEvent;
@@ -103,6 +112,70 @@ public class Utils {
 		return another;
 	}
 
+	public static Bitmap getRefelection(Bitmap image) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD_MR1) {
+
+			// The gap we want between the reflection and the original image
+			final int reflectionGap = 0;
+
+			// Get your bitmap from drawable folder
+			Bitmap originalImage = image;
+
+			int width = originalImage.getWidth();
+			int height = originalImage.getHeight();
+
+			// This will not scale but will flip on the Y axis
+			Matrix matrix = new Matrix();
+			matrix.preScale(1, -1);
+
+			/*
+			 * Create a Bitmap with the flip matix applied to it. We only want
+			 * the bottom half of the image
+			 */
+
+			Bitmap reflectionImage = Bitmap.createBitmap(originalImage, 0,
+					height / 2, width, height / 2, matrix, false);
+
+			// Create a new bitmap with same width but taller to fit reflection
+			Bitmap bitmapWithReflection = Bitmap.createBitmap(width,
+					(height + height / 2), Config.ARGB_8888);
+			// Create a new Canvas with the bitmap that's big enough for
+			// the image plus gap plus reflection
+			Canvas canvas = new Canvas(bitmapWithReflection);
+			// Draw in the original image
+			canvas.drawBitmap(originalImage, 0, 0, null);
+			// Draw the reflection Image
+			canvas.drawBitmap(reflectionImage, 0, height + reflectionGap, null);
+
+			// Create a shader that is a linear gradient that covers the
+			// reflection
+			Paint paint = new Paint();
+			LinearGradient shader = new LinearGradient(0,
+					originalImage.getHeight(), 0,
+					bitmapWithReflection.getHeight() + reflectionGap,
+					0x99ffffff, 0x00ffffff, TileMode.CLAMP);
+			// Set the paint to use this shader (linear gradient)
+			paint.setShader(shader);
+			// Set the Transfer mode to be porter duff and destination in
+			paint.setXfermode(new PorterDuffXfermode(Mode.DST_IN));
+			// Draw a rectangle using the paint with our linear gradient
+			canvas.drawRect(0, height, width, bitmapWithReflection.getHeight()
+					+ reflectionGap, paint);
+			if (originalImage != null && originalImage.isRecycled()) {
+				originalImage.recycle();
+				originalImage = null;
+			}
+			if (reflectionImage != null && reflectionImage.isRecycled()) {
+				reflectionImage.recycle();
+				reflectionImage = null;
+			}
+			return bitmapWithReflection;
+		} else {
+			return null;
+		}
+
+	}
+
 	public static String getSetMethod(String fieldName) {
 		// TODO Auto-generated method stub
 		String firstWithCapitalLetter = fieldName.toUpperCase().substring(0, 1);
@@ -127,7 +200,8 @@ public class Utils {
 		sharingIntent.setType("image/*");
 
 		String toShare = Constants.REPLACCER.replaceFirst(
-				Constants.PATTERN_REPLACE, escultura.getEscultura().getTitle().trim());
+				Constants.PATTERN_REPLACE, escultura.getEscultura().getTitle()
+						.trim());
 
 		sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
 		sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, shareBody);

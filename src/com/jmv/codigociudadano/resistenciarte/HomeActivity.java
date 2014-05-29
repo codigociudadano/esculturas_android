@@ -205,7 +205,7 @@ public class HomeActivity extends ActionBarCustomActivity implements
 			Intent sharingIntent = new Intent(
 					android.content.Intent.ACTION_SEND);
 			sharingIntent.setType("text/plain");
-			String shareBody = "http://goo.gl/x8w50A";
+			String shareBody = "Buscala en el Market!";
 			sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
 					"La mejor forma de encontrar esculturas en Resistencia! Usa esta app!!");
 			sharingIntent

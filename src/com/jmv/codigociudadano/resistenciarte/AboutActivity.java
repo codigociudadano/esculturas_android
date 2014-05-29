@@ -25,7 +25,7 @@ public class AboutActivity extends ActionBarCustomActivity {
 
 		txtViewEx = (TextViewEx) findViewById(R.id.text_detailed);
 		
-		boolean useJustified = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
+		boolean useJustified = false;
 		
 		txtViewEx.setText(getString(R.string.detailed_about), useJustified);
 		
@@ -40,12 +40,7 @@ public class AboutActivity extends ActionBarCustomActivity {
 	    
 	    TextViewEx txtViewEx5 = (TextViewEx) findViewById(R.id.text_cc_header);
 	    txtViewEx5.setText(getString(R.string.idea), false);
-	    
-	    TextViewEx txtViewEx6 = (TextViewEx) findViewById(R.id.text_mm);
-	    txtViewEx6.setText(getString(R.string.mm_detail), useJustified);
-	    
-	    TextViewEx txtViewEx7 = (TextViewEx) findViewById(R.id.text_mm_header);
-	    txtViewEx7.setText(getString(R.string.servidor), false);
+
 	}
 
 	@Override

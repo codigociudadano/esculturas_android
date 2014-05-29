@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.google.common.base.Function;
 import com.jmv.codigociudadano.resistenciarte.HomeActivity;
+import com.jmv.codigociudadano.resistenciarte.ObraActivity;
 import com.jmv.codigociudadano.resistenciarte.R;
 import com.jmv.codigociudadano.resistenciarte.comps.TextViewEx;
 import com.jmv.codigociudadano.resistenciarte.fragments.PlaceholderFragment;
@@ -177,7 +178,7 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 				try {
 					JSONObject jsonObject = new JSONObject(response);
 					
-					setDescription(jsonObject, (TextView) view.findViewById(R.id.description));
+					setDescription(jsonObject, (Button) view.findViewById(R.id.description));
 					
 					if (!jsonObject.isNull("field_fotos")) {
 						try {
@@ -238,7 +239,7 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 			}
 			
 			private void setDescription(JSONObject jsonObject,
-					TextView descriptionBtn) {
+					Button descriptionBtn) {
 				/*
 				 * "":{"und":[{"lat":"-27.4492586","lon":"-58.9922044",
 				 * "map_width":null,"map_height":null,"zoom":"17","name":""}]}
@@ -268,6 +269,13 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 										aYs.getJSONObject(0).getString("value"))
 								.trim().substring(0, 50).concat("... <b>[Leer mas..]</b>");
 						descriptionBtn.setText(value.contains("Fuente :")?Html.fromHtml("<b>[Leer mas...]</b>"):Html.fromHtml(value));
+						descriptionBtn.setOnClickListener(new OnClickListener() {
+							
+							@Override
+							public void onClick(View v) {
+								ObraActivity.showHome(HomeActivity.getInstance(), distancias2.getNid());
+							}
+						});
 					}
 				} catch (JSONException e) {
 					// the author is null

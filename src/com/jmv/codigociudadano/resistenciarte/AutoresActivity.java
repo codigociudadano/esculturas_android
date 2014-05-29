@@ -174,9 +174,17 @@ public class AutoresActivity extends ActionBarCustomActivity implements
 					R.layout.fragment_autor, null);
 
 			addIMage(v, item);
-
+			final int nid = item.getNid();
 			final Button texto = (Button) v.findViewById(R.id.tittle);
 			texto.setText(distancias2.getTitle());
+			texto.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					
+					AutorActivity.showHome(AutoresActivity.this, nid);
+				}
+			});
 
 			myLinearLayout.addView(v);
 
@@ -198,9 +206,18 @@ public class AutoresActivity extends ActionBarCustomActivity implements
 				try {
 					JSONObject jsonObject = new JSONObject(response);
 
-					final TextView textoUbic = (TextView) view
+					final Button textoUbic = (Button) view
 							.findViewById(R.id.description);
 					setDescription(jsonObject, textoUbic);
+					final int nid = distancias2.getNid();
+					textoUbic.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							
+							AutorActivity.showHome(AutoresActivity.this, nid);
+						}
+					});
 
 					if (!jsonObject.isNull("field_fotos")) {
 						try {
@@ -256,7 +273,7 @@ public class AutoresActivity extends ActionBarCustomActivity implements
 			}
 
 			private void setDescription(JSONObject jsonObject,
-					TextView descriptionBtn) {
+					Button descriptionBtn) {
 				/*
 				 * "":{"und":[{"lat":"-27.4492586","lon":"-58.9922044",
 				 * "map_width":null,"map_height":null,"zoom":"17","name":""}]}
@@ -399,6 +416,16 @@ public class AutoresActivity extends ActionBarCustomActivity implements
 									.findViewById(R.id.tittle);
 							texto.setText(distancias2.getTitle());
 
+							final int nid = item.getNid();
+							texto.setOnClickListener(new OnClickListener() {
+
+								@Override
+								public void onClick(View v) {
+									
+									AutorActivity.showHome(AutoresActivity.this, nid);
+								}
+							});
+							
 							myLinearLayout.addView(v);
 
 						}

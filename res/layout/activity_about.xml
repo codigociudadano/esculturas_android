@@ -231,60 +231,7 @@
                     android:background="#FFFFFF" >
                 </View>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="10dp"
-                    android:scrollbarSize="5dp"
-                    android:scrollbarStyle="insideOverlay"
-                    android:scrollbars="vertical" >
-
-                    <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:onClick="go42mate"
-                    android:src="@drawable/logo_42mate_color" />
-
-                </LinearLayout>
-
-                <com.jmv.codigociudadano.resistenciarte.comps.TextViewEx
-                    android:id="@+id/text_mm_header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="15dp"
-                    android:shadowColor="#000000"
-                    android:shadowDx="2"
-                    android:shadowDy="2"
-                    android:shadowRadius="2"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <com.jmv.codigociudadano.resistenciarte.comps.TextViewEx
-                    android:id="@+id/text_mm"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="15dp"
-                    android:shadowColor="#000000"
-                    android:shadowDx="2"
-                    android:shadowDy="2"
-                    android:shadowRadius="2"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="0dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="0dp"
-                    android:background="#FFFFFF" >
-                </View>
+                
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

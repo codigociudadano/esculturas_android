@@ -88,13 +88,16 @@
                 android:id="@+id/author"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
                 android:drawableLeft="@drawable/ic_autor"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="@string/title_obra"
                 android:textColor="#148273"
                 android:textSize="16sp"
+                 android:shadowColor="#000000"
+                            android:shadowDx="2"
+                            android:shadowDy="2"
+                            android:shadowRadius="2"
                 android:textStyle="bold|italic" />
 
             <Button
@@ -106,6 +109,10 @@
                 android:gravity="center"
                 android:text="@string/title_obra"
                 android:textColor="#148273"
+                 android:shadowColor="#000000"
+                            android:shadowDx="2"
+                            android:shadowDy="2"
+                            android:shadowRadius="2"
                 android:textSize="16sp"
                 android:textStyle="bold|italic" />
   

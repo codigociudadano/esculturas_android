@@ -31,8 +31,11 @@
     <string name="button_autores">Cargar mas autores&#8230;</string>
     <string name="button_novedades">Cargar mas novedades&#8230;</string>
     <string name="button_before">Cargar Anteriores&#8230;</string>
+    <string name="ver_en_galeria">Ver Fotos en Galeria&#8230;</string>
     <string name="title_obra">---</string>
+    <string name="detalles_obra">Ver Detalles&#8230;</string>
     <string name="title_share">Compartir</string>
+    <string name="read_more">Leer mass&#8230;</string>
     <string name="equipo">Equipo ResistenciArte</string>
     <string name="mate">42mate</string>
     <string name="confirm">Prender GPS/RED</string>
@@ -45,6 +48,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_map">Mapa de Esculturas</string>
     <string name="title_activity_nearby_locations">Esculturas Cercanas</string>
+    <string name="autor_obra_specifi">Lista de Obras</string>
     <string name="not_working_well">La funcion principal no estará habilitada hasta que prendas el gps!</string>
     <string name="gps_not_turned_on">Tu GPS no esta prendido</string>
     <string name="gps_not_turned_on_yet">Aun no prendiste tus servicios de ubicación (GPS/RED)</string>
@@ -52,5 +56,8 @@
     <string name="title_activity_about">Acerca de&#8230;</string>
     <string name="title_activity_autores">Listado de Autores</string>
     <string name="title_activity_autor">Autor</string>
+    <string name="title_activity_obra">Obra</string>
+    <string name="title_activity_cover_flow_example">Galeria de Fotos</string>
+    <string name="title_activity_standard_image_programmatic">Detalle de Obra</string>
 
 </resources>

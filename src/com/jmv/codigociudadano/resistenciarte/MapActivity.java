@@ -2,20 +2,29 @@ package com.jmv.codigociudadano.resistenciarte;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.common.base.Function;
+import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Autor;
 import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Escultura;
+import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Foto;
 import com.jmv.codigociudadano.resistenciarte.logic.esculturas.GeoEscultura;
 import com.jmv.codigociudadano.resistenciarte.net.IRequester;
 import com.jmv.codigociudadano.resistenciarte.net.RestClientResistenciarte;
@@ -29,9 +38,19 @@ import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Align;
+import android.graphics.Paint.Style;
+import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -39,6 +58,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MapActivity extends ActionBarCustomActivity implements IRequester {
@@ -50,6 +73,8 @@ public class MapActivity extends ActionBarCustomActivity implements IRequester {
 	private GoogleMap googleMap;
 	private Location myLocation;
 	private ArrayList<GeoEscultura> listaEsculturas;
+	private HashMap<Marker, GeoEscultura> esculturas_per_marker;
+	private HashMap<GeoEscultura, View> view_per_esculturas;
 
 	public MapActivity() {
 		RestClientResistenciarte client = new RestClientResistenciarte(this);
@@ -65,6 +90,7 @@ public class MapActivity extends ActionBarCustomActivity implements IRequester {
 
 			mLoginFormView = findViewById(R.id.login_form);
 			mLoginStatusView = findViewById(R.id.login_status);
+			
 			showProgress(true);
 			initilizeMap();
 		} catch (Exception e) {
@@ -118,6 +144,9 @@ public class MapActivity extends ActionBarCustomActivity implements IRequester {
 			// ---get the best location provider---
 			String bestProvider = locationManager.getBestProvider(c, true);
 
+			esculturas_per_marker = new HashMap<Marker, GeoEscultura>();
+			view_per_esculturas = new HashMap<GeoEscultura, View>();
+			
 			// Getting Current Location
 			if (bestProvider != null) {
 				myLocation = locationManager.getLastKnownLocation(bestProvider);
@@ -136,6 +165,8 @@ public class MapActivity extends ActionBarCustomActivity implements IRequester {
 				}
 			}
 
+			
+			googleMap.setInfoWindowAdapter(new MynfoWindowAdapter());
 			// check if map is created successfully or not
 			if (googleMap == null) {
 				Toast.makeText(getApplicationContext(),
@@ -173,23 +204,6 @@ public class MapActivity extends ActionBarCustomActivity implements IRequester {
 		return super.onOptionsItemSelected(item);
 	}
 
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
-
-		public PlaceholderFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.map_fragment, container,
-					false);
-			return rootView;
-		}
-	}
-
 	@Override
 	public String getRequestURI() {
 		String url = Constants.BASE_URL
@@ -218,6 +232,8 @@ public class MapActivity extends ActionBarCustomActivity implements IRequester {
 
 			final LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
+			esculturas_per_marker.clear();
+			
 			for (GeoEscultura locationStore : listaEsculturas) {
 				final LatLng pos = new LatLng(locationStore.getNode_latitude(),
 						locationStore.getNode_longitude());
@@ -229,13 +245,16 @@ public class MapActivity extends ActionBarCustomActivity implements IRequester {
 
 				int image = R.drawable.ic_action_pin;
 
-				googleMap.addMarker(new MarkerOptions()
+				// #148273
+				Marker marker = googleMap.addMarker(new MarkerOptions()
 						.position(pos)
-						.title(locationStore.getNode_title())
+						.title(locationStore.getNode_title().trim())
 						.snippet(
 								"Distancia actual:"
 										+ locationStore.getDistance() + "(KM)")
-						.icon(BitmapDescriptorFactory.fromResource(image)));
+						.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+				
+				esculturas_per_marker.put(marker, locationStore);
 
 			}
 
@@ -250,16 +269,82 @@ public class MapActivity extends ActionBarCustomActivity implements IRequester {
 					googleMap.setOnCameraChangeListener(null);
 				}
 			});
+			
+			googleMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+		            @Override
+		            public void onInfoWindowClick(Marker marker) {
+		            	GeoEscultura esc = esculturas_per_marker.get(marker);
+		            	
+		               ObraActivity.showHome(MapActivity.this, esc.getNid());
+
+		            }
+		        });
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
 
+	public static int convertToPixels(Context context, int nDP)
+	{
+	    final float conversionScale = context.getResources().getDisplayMetrics().density;
+
+	    return (int) ((nDP * conversionScale) + 0.5f) ;
+
+	}
+	
 	@Override
 	public void onResponse(InputStream result) {
 		// TODO Auto-generated method stub
 
 	}
 
+	private class MynfoWindowAdapter implements InfoWindowAdapter {
+
+        // Use default InfoWindow frame
+        @Override
+        public View getInfoWindow(Marker arg0) {
+            return null;
+        }
+
+        // Defines the contents of the InfoWindow
+        @Override
+        public View getInfoContents(Marker arg0) {
+
+        	GeoEscultura distancias2 = esculturas_per_marker.get(arg0);
+        	
+        	View v = View.inflate(MapActivity.this,
+					R.layout.marker_layout, null);
+
+			final LatLng lt = new LatLng(distancias2.getNode_latitude(),
+					distancias2.getNode_longitude());
+
+			final TextView texto = (TextView) v.findViewById(R.id.tittle);
+			texto.setText(distancias2.getNode_title());
+
+			texto.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(
+							android.content.Intent.ACTION_VIEW,
+							Uri.parse("http://maps.google.com/maps?daddr="
+									+ lt.latitude + "," + lt.longitude));
+					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					intent.addCategory(Intent.CATEGORY_LAUNCHER);
+					intent.setClassName("com.google.android.apps.maps",
+							"com.google.android.maps.MapsActivity");
+					startActivity(intent);
+				}
+			});
+
+			view_per_esculturas.put(distancias2, v);
+            return v;
+
+        }
+    }
+
+
+	
 }

@@ -98,6 +98,33 @@
         <activity
             android:name="com.jmv.codigociudadano.resistenciarte.AutorActivity"
             android:label="@string/title_activity_autor"
+            android:parentActivityName="com.jmv.codigociudadano.resistenciarte.HomeActivity"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.jmv.codigociudadano.resistenciarte.HomeActivity" />
+        </activity>
+        <activity
+            android:name="com.jmv.codigociudadano.resistenciarte.ObraActivity"
+            android:label="@string/title_activity_obra"
+            android:parentActivityName="com.jmv.codigociudadano.resistenciarte.HomeActivity"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.jmv.codigociudadano.resistenciarte.HomeActivity" />
+        </activity>
+        <activity
+            android:name="com.jmv.codigociudadano.resistenciarte.CoverFlowExample"
+            android:label="@string/title_activity_cover_flow_example"
+            android:parentActivityName="com.jmv.codigociudadano.resistenciarte.HomeActivity"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.jmv.codigociudadano.resistenciarte.HomeActivity" />
+        </activity>
+        <activity
+            android:name="com.jmv.codigociudadano.resistenciarte.StandardImageProgrammatic"
+            android:label="@string/title_activity_standard_image_programmatic"
             android:parentActivityName="com.jmv.codigociudadano.resistenciarte.HomeActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

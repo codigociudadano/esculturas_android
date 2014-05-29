@@ -64,7 +64,7 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 		mAddress.setVisibility(View.GONE);
 
 		Utils.addTouchEffectoToButtons(mLoginFormView);
-		
+
 		showProgress(true);
 		init();
 	}
@@ -135,14 +135,12 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 
 	@Override
 	public void onResponse(String response) {
-		ArrayList<GeoEscultura> listaEsculturas = null;
+		ArrayList<GeoEscultura> listaEsculturas = new ArrayList<GeoEscultura>();
 
 		JSONArray jsonArray;
 		try {
 			jsonArray = new JSONArray(response);
 			int max = jsonArray.length();
-
-			listaEsculturas = new ArrayList<GeoEscultura>();
 
 			for (int i = 0; i < max; i++) {
 				JSONObject jsonObject = jsonArray.optJSONObject(i);
@@ -159,54 +157,56 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 		}
 		myLinearLayout.removeAllViewsInLayout();
 
-		Collections.sort(listaEsculturas);
+		if (!listaEsculturas.isEmpty()) {
+			Collections.sort(listaEsculturas);
 
-		int number = 1;
+			int number = 1;
 
-		for (GeoEscultura distancias2 : listaEsculturas) {
+			for (GeoEscultura distancias2 : listaEsculturas) {
 
-			View v = View.inflate(NearbyLocations.this,
-					R.layout.fragment_escultura_nearby, null);
+				View v = View.inflate(NearbyLocations.this,
+						R.layout.fragment_escultura_nearby, null);
 
-			final LatLng lt = new LatLng(distancias2.getNode_latitude(),
-					distancias2.getNode_longitude());
+				final LatLng lt = new LatLng(distancias2.getNode_latitude(),
+						distancias2.getNode_longitude());
 
-			final ImageView imgView = (ImageView) v.findViewById(R.id.image);
+				addIMage(v, distancias2);
 
-			addIMage(v, distancias2);
+				final TextView texto = (TextView) v.findViewById(R.id.tittle);
+				texto.setText(" " + number + " - "
+						+ distancias2.getNode_title());
+				number++;
+				final Button textoUbic = (Button) v
+						.findViewById(R.id.ubicacion);
+				textoUbic.setText((Utils.toDecimalFormat(distancias2
+						.getDistance() * 1000)) + " metros aprox.");
 
-			final TextView texto = (TextView) v.findViewById(R.id.tittle);
-			texto.setText(" " + number + " - " + distancias2.getNode_title());
-			number++;
-			final Button textoUbic = (Button) v.findViewById(R.id.ubicacion);
-			textoUbic
-					.setText((Utils.toDecimalFormat(distancias2.getDistance() * 1000))
-							+ " metros aprox.");
-			
-			textoUbic.setOnClickListener(new OnClickListener() {
+				textoUbic.setOnClickListener(new OnClickListener() {
 
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent(
-							android.content.Intent.ACTION_VIEW,
-							Uri.parse("http://maps.google.com/maps?   saddr="
-									+ currentLocation.latitude + ","
-									+ currentLocation.longitude + "&daddr="
-									+ lt.latitude + "," + lt.longitude));
-					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-					intent.addCategory(Intent.CATEGORY_LAUNCHER);
-					intent.setClassName("com.google.android.apps.maps",
-							"com.google.android.maps.MapsActivity");
-					startActivity(intent);
-				}
-			});
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(
+								android.content.Intent.ACTION_VIEW,
+								Uri.parse("http://maps.google.com/maps?   saddr="
+										+ currentLocation.latitude
+										+ ","
+										+ currentLocation.longitude
+										+ "&daddr="
+										+ lt.latitude + "," + lt.longitude));
+						intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						intent.addCategory(Intent.CATEGORY_LAUNCHER);
+						intent.setClassName("com.google.android.apps.maps",
+								"com.google.android.maps.MapsActivity");
+						startActivity(intent);
+					}
+				});
 
+				myLinearLayout.addView(v);
 
-			myLinearLayout.addView(v);
+			}
 
+			showProgress(false);
 		}
-
-		showProgress(false);
 	}
 
 	private void addIMage(final View view, final GeoEscultura distancias2) {
@@ -279,24 +279,25 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 	private void addAutorName(JSONObject response, final Button textAuthor) {
 		JSONArray aYs;
 		try {
-			if (response.isNull("field_autor")){
+			if (response.isNull("field_autor")) {
 				textAuthor.setText(Constants.ANONIMO);
 				return;
 			}
-			
+
 			JSONObject auhtorObject;
-			
-			try{
+
+			try {
 				auhtorObject = response.getJSONObject("field_autor");
-			} catch (JSONException e){
-				//the author is null
+			} catch (JSONException e) {
+				// the author is null
 				textAuthor.setText(Constants.ANONIMO);
 				return;
 			}
-			
-			aYs = auhtorObject.isNull("und")? null:auhtorObject.getJSONArray("und");
-			
-			if (aYs == null){
+
+			aYs = auhtorObject.isNull("und") ? null : auhtorObject
+					.getJSONArray("und");
+
+			if (aYs == null) {
 				textAuthor.setText(Constants.ANONIMO);
 			} else {
 				final int autorId = aYs.getJSONObject(0).getInt("target_id");
@@ -311,8 +312,21 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 							JSONArray jsonArray;
 							jsonArray = new JSONArray(response);
 							JSONObject jsonObject = jsonArray.optJSONObject(0);
-							Utils.extractFromResponseToObject(author, jsonObject);
+							Utils.extractFromResponseToObject(author,
+									jsonObject);
 							textAuthor.setText(author.getTitle().trim());
+							final int nid = autorId;
+							textAuthor
+									.setOnClickListener(new OnClickListener() {
+
+										@Override
+										public void onClick(View v) {
+
+											AutorActivity.showHome(
+													HomeActivity.getInstance(),
+													nid);
+										}
+									});
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -320,8 +334,8 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 
 					@Override
 					public String getRequestURI() {
-						return Constants.BASE_URL + "/api/v1/node?parameters[nid]="
-								+ autorId;
+						return Constants.BASE_URL
+								+ "/api/v1/node?parameters[nid]=" + autorId;
 					}
 
 					@Override

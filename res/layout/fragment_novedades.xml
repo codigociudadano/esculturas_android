@@ -95,7 +95,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold|italic" />
 
-                <com.jmv.codigociudadano.resistenciarte.comps.TextViewEx
+                <Button
                     android:id="@+id/description"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"

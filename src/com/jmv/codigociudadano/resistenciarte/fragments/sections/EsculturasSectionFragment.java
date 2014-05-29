@@ -24,8 +24,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.common.base.Function;
+import com.jmv.codigociudadano.resistenciarte.AutorActivity;
 import com.jmv.codigociudadano.resistenciarte.HomeActivity;
+import com.jmv.codigociudadano.resistenciarte.ObraActivity;
 import com.jmv.codigociudadano.resistenciarte.R;
+import com.jmv.codigociudadano.resistenciarte.StandardImageProgrammatic;
 import com.jmv.codigociudadano.resistenciarte.fragments.PlaceholderFragment;
 import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Autor;
 import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Escultura;
@@ -195,6 +198,23 @@ public class EsculturasSectionFragment extends PlaceholderFragment {
 							View iV = view.findViewById(R.id.default_image);
 							iV.setVisibility(View.GONE);
 
+							Button read = (Button) view.findViewById(R.id.detalle);
+							read.setOnClickListener(new OnClickListener() {
+								
+								@Override
+								public void onClick(View v) {
+									ObraActivity.showHome(HomeActivity.getInstance(), distancias2.getNid());
+								}
+							});
+							
+							view.findViewById(R.id.image).setOnClickListener(new OnClickListener() {
+								
+								@Override
+								public void onClick(View v) {
+									StandardImageProgrammatic.showHome(HomeActivity.getInstance(), bmap);
+								}
+							});
+							
 							Button shareButton = (Button) view.findViewById(R.id.share_btn);
 							shareButton.setOnClickListener(new OnClickListener() {
 								
@@ -342,6 +362,14 @@ public class EsculturasSectionFragment extends PlaceholderFragment {
 							JSONObject jsonObject = jsonArray.optJSONObject(0);
 							Utils.extractFromResponseToObject(author, jsonObject);
 							textAuthor.setText(author.getTitle().trim());
+							textAuthor.setOnClickListener(new OnClickListener() {
+
+								@Override
+								public void onClick(View v) {
+									
+									AutorActivity.showHome(HomeActivity.getInstance(), autorId);
+								}
+							});
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

@@ -49,7 +49,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 			args.putInt(ARG_SECTION_NUMBER, position);
 			p.setArguments(args);
 			p.setImageLoaderService(imageLoaderService);
-			fragments.add(position, p);
+			if (fragments.size() > position){
+				fragments.add(position, p);
+			}
 		}
 		return p;
 	}

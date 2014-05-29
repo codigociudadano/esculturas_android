@@ -240,11 +240,22 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 
 					Function<Bitmap, Void> afterLogin = new Function<Bitmap, Void>() {
 						@Override
-						public Void apply(Bitmap bmap) {
+						public Void apply(final Bitmap bmap) {
 							View p = view.findViewById(R.id.progress);
 							p.setVisibility(View.GONE);
 							View iV = view.findViewById(R.id.default_image);
 							iV.setVisibility(View.GONE);
+
+							view.findViewById(R.id.image).setOnClickListener(
+									new OnClickListener() {
+
+										@Override
+										public void onClick(View v) {
+											StandardImageProgrammatic.showHome(
+													NearbyLocations.this,
+													bmap, distancias2.getNode_title().trim());
+										}
+									});
 							return null;
 						}
 					};

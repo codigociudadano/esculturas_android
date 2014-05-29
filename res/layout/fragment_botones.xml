@@ -109,22 +109,4 @@
     </View>
     </LinearLayout>
 
-    
-
-    <TextView
-        android:id="@+id/tittle"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:focusable="true"
-        android:gravity="top|center_horizontal"
-        android:paddingBottom="6dip"
-        android:shadowColor="#000000"
-        android:shadowDx="1"
-        android:shadowDy="1"
-        android:shadowRadius="1"
-        android:text="@string/title_obra"
-        android:textColor="#148273"
-        android:textSize="20sp"
-        android:textStyle="bold|italic" />
-
 </FrameLayout>

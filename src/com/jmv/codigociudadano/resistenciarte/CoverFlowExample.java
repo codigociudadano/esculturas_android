@@ -118,7 +118,7 @@ public class CoverFlowExample extends Activity {
 			public void onItemClick(final AdapterView<?> parent,
 					final View view, final int position, final long id) {
 				StandardImageProgrammatic.showHome(CoverFlowExample.this,
-						bitmap.getBm().get(position));
+						bitmap.getBm().get(position), bitmap.getStr().get(position));
 			}
 
 		});

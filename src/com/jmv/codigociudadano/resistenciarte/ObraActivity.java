@@ -111,8 +111,10 @@ IRequester {
 		try {
 			JSONObject jsonObject = new JSONObject(response);
 
+			final String tittle_obra = jsonObject.getString("title").trim();
+			
 			final Button textName = (Button) findViewById(R.id.tittle);
-			textName.setText(jsonObject.getString("title").trim());
+			textName.setText(tittle_obra);
 
 			final TextViewEx textoUbic = (TextViewEx) findViewById(R.id.description);
 			setDescription(jsonObject, textoUbic);
@@ -161,7 +163,7 @@ IRequester {
 						
 						@Override
 						public void onClick(View v) {
-							StandardImageProgrammatic.showHome(ObraActivity.this, bmap);
+							StandardImageProgrammatic.showHome(ObraActivity.this, bmap, tittle_obra);
 						}
 					});
 					Bitmap reflect = Utils.getRefelection(bmap);

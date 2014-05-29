@@ -38,4 +38,5 @@ public class Constants {
 	public static final String REPLACCER = "Estoy viendo la obra: \"fFfFfF\" de la ciudad de Resistencia usando Resistenciarte! Usala vos tambien!";
 	public static final String NID = "nid";
 	public static final String AUTOR = "Autor";
+	public static final String TITLE_ACTIVITY = "tittle_activity";
 }

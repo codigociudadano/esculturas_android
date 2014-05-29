@@ -211,7 +211,7 @@ public class EsculturasSectionFragment extends PlaceholderFragment {
 								
 								@Override
 								public void onClick(View v) {
-									StandardImageProgrammatic.showHome(HomeActivity.getInstance(), bmap);
+									StandardImageProgrammatic.showHome(HomeActivity.getInstance(), bmap, distancias2.getTitle());
 								}
 							});
 							

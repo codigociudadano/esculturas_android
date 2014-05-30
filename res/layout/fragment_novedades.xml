@@ -104,7 +104,7 @@
                     android:focusable="true"
                     android:gravity="center"
                     android:text="@string/title_obra"
-                    android:textColor="#148273"
+                    android:textColor="#FFFFFF"
                     android:textSize="14sp"
                     android:textStyle="italic" />
             </LinearLayout>

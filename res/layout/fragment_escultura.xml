@@ -122,7 +122,7 @@
                     android:shadowDy="2"
                     android:shadowRadius="2"
                     android:text="@string/title_obra"
-                    android:textColor="#148273"
+                    android:textColor="#FFFFFF"
                     android:textSize="16sp"
                     android:textStyle="bold|italic" />
 
@@ -138,7 +138,7 @@
                     android:shadowDy="2"
                     android:shadowRadius="2"
                     android:text="@string/title_obra"
-                    android:textColor="#148273"
+                    android:textColor="#FFFFFF"
                     android:textSize="16sp"
                     android:textStyle="bold|italic" />
 
@@ -155,7 +155,7 @@
                     android:shadowDy="2"
                     android:shadowRadius="2"
                     android:text="@string/read_more"
-                    android:textColor="#148273"
+                    android:textColor="#FFFFFF"
                     android:textSize="16sp"
                     android:textStyle="bold|italic" />
 
@@ -172,7 +172,7 @@
                     android:shadowDy="2"
                     android:shadowRadius="2"
                     android:text="@string/title_share"
-                    android:textColor="#148273"
+                    android:textColor="#FFFFFF"
                     android:textSize="16sp"
                     android:textStyle="bold|italic" />
             </LinearLayout>

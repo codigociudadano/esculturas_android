@@ -53,11 +53,12 @@ public class AppRater {
 
         LinearLayout ll = new LinearLayout(mContext);
         ll.setOrientation(LinearLayout.VERTICAL);
+        ll.setBackgroundColor(Color.WHITE);
         
         TextView tv = new TextView(mContext);
         tv.setText("Si te copaste con " + APP_TITLE + ", tomate dos segundos y dejame un comentario en el play store. De esta manera me ayudas a seguir mejorandola!");
         tv.setWidth(240);
-        tv.setTextColor(Color.WHITE);
+        tv.setTextColor(Color.BLACK);
         tv.setPadding(4, 0, 4, 10);
         ll.addView(tv);
         

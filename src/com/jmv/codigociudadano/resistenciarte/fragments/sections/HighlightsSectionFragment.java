@@ -229,8 +229,8 @@ public class HighlightsSectionFragment extends PlaceholderFragment {
 				if (aYs == null) {
 					ubic_main.setVisibility(View.GONE);
 				} else {
-					final double lat = Double.valueOf(aYs.getJSONObject(0).getInt("lat"));
-					final double lon = Double.valueOf(aYs.getJSONObject(0).getInt("lon"));
+					final double lat = Double.valueOf(aYs.getJSONObject(0).getDouble("lat"));
+					final double lon = Double.valueOf(aYs.getJSONObject(0).getDouble("lon"));
 					ubic_main.setOnClickListener(new OnClickListener() {
 
 						@Override

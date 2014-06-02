@@ -259,7 +259,7 @@ public class EsculturasSectionFragment extends PlaceholderFragment {
 				 * field_ubicacion":{"und":[{"value":"Perón, Juan Domingo Nº 454\t\t\t\t",
 				 * "safe_value":"Perón, Juan Domingo Nº 454\t\t\t\t","format":null}]}
 				 */
-				JSONArray aYs;
+				final JSONArray aYs;
 				try {
 					if (jsonObject.isNull("field_mapa")) {
 						ubic_main.setVisibility(View.GONE);
@@ -274,14 +274,19 @@ public class EsculturasSectionFragment extends PlaceholderFragment {
 					if (aYs == null) {
 						ubic_main.setVisibility(View.GONE);
 					} else {
-						final double lat = Double.valueOf(aYs.getJSONObject(0).getInt("lat"));
-						final double lon = Double.valueOf(aYs.getJSONObject(0).getInt("lon"));
+						
 						ubic_main.setEnabled(true);
 						ubic_main.setOnClickListener(new OnClickListener() {
 
 							@Override
 							public void onClick(View v) {
-								
+								double lat = 0;
+								double lon = 0;
+								try {
+									lat = Double.valueOf(aYs.getJSONObject(0).getDouble("lat"));
+									lon = Double.valueOf(aYs.getJSONObject(0).getDouble("lon"));
+								} catch (JSONException e) {
+								}
 								Intent intent = new Intent(
 										android.content.Intent.ACTION_VIEW,
 										Uri.parse("http://maps.google.com/maps?&daddr="

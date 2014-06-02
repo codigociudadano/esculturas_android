@@ -142,8 +142,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:paddingBottom="2dp"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp"
+                            android:paddingLeft="7dp"
+                            android:paddingRight="7dp"
                             android:paddingTop="2dp"
                             android:shadowColor="#000000"
                             android:shadowDx="2"
@@ -161,22 +161,22 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:orientation="horizontal"
-                        android:padding="10dp" >
+                        android:padding="7dp" >
 
                         <TextView
                             android:id="@+id/title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="top|center_horizontal"
-                            android:gravity="top|center_horizontal"
+                            android:layout_gravity="center"
+                            android:gravity="center"
                             android:shadowColor="#000000"
                             android:shadowDx="2"
                             android:shadowDy="2"
                             android:shadowRadius="2"
                             android:text="56"
                             android:textColor="#FFFFFF"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
+                            android:textSize="14sp"
+                            android:textStyle="italic" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -192,15 +192,16 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:drawableLeft="@drawable/ic_autor"
-                            android:gravity="center"
+                            android:gravity="left|center_vertical"
                             android:shadowColor="#000000"
                             android:shadowDx="2"
                             android:shadowDy="2"
                             android:layout_weight="0.5"
                             android:shadowRadius="2"
+                            android:enabled="false"
                             android:text="@string/author_getting"
                             android:textColor="#FFFFFF"
-                            android:textSize="14sp" />
+                            android:textSize="13sp" />
 
                         <Button
                             android:id="@+id/ubic_main"
@@ -209,7 +210,7 @@
                             android:layout_gravity="center"
                             android:layout_weight="0.5"
                             android:drawableLeft="@drawable/ic_pin"
-                            android:gravity="center"
+                            android:gravity="left|center_vertical"
                             android:paddingLeft="10dp"
                             android:shadowColor="#000000"
                             android:shadowDx="2"
@@ -217,7 +218,7 @@
                             android:shadowRadius="2"
                             android:text="@string/ubic"
                             android:textColor="#FFFFFF"
-                            android:textSize="14sp" />
+                            android:textSize="13sp" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

@@ -273,7 +273,7 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 							
 							@Override
 							public void onClick(View v) {
-								ObraActivity.showHome(HomeActivity.getInstance(), distancias2.getNid());
+								ObraActivity.showHome(HomeActivity.getInstance(), distancias2.getNid(), distancias2.getTitle().trim());
 							}
 						});
 					}

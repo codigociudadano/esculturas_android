@@ -275,7 +275,7 @@ public class MapActivity extends ActionBarCustomActivity implements IRequester {
 		            public void onInfoWindowClick(Marker marker) {
 		            	GeoEscultura esc = esculturas_per_marker.get(marker);
 		            	
-		               ObraActivity.showHome(MapActivity.this, esc.getNid());
+		               ObraActivity.showHome(MapActivity.this, esc.getNid(), esc.getNode_title().trim());
 
 		            }
 		        });

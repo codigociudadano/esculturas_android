@@ -72,27 +72,7 @@
             android:orientation="vertical" >
 
             <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:orientation="vertical"
-                    android:padding="6dip" >
-
-                    <Button
-                        android:id="@+id/tittle"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="@android:color/transparent"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:text="@string/title_obra"
-                        android:textColor="#148273"
-                        android:textSize="25sp"
-                        android:textStyle="bold|italic" />
-                </LinearLayout>
-                
-            <LinearLayout
+                android:id="@+id/wait_image"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
@@ -109,8 +89,8 @@
                     <FrameLayout
                         android:id="@+id/default_image"
                         android:layout_width="320dp"
-                         android:layout_gravity="center"
                         android:layout_height="320dp"
+                        android:layout_gravity="center"
                         android:orientation="horizontal"
                         android:scrollbarSize="15dp"
                         android:scrollbarStyle="insideOverlay"
@@ -147,12 +127,18 @@
                             android:id="@+id/image"
                             android:layout_width="320dp"
                             android:layout_height="320dp" />
-                        
                     </FrameLayout>
                 </FrameLayout>
 
-                
+               
             </LinearLayout>
+            
+             <LinearLayout
+                    android:id="@+id/coverflowReflect"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical" />
 
             <com.jmv.codigociudadano.resistenciarte.comps.TextViewEx
                 android:id="@+id/description"
@@ -163,8 +149,8 @@
                 android:focusable="true"
                 android:gravity="center"
                 android:text="@string/title_obra"
-                android:textColor="#148273"
-                android:textSize="14sp"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
                 android:textStyle="italic" />
 
             <LinearLayout

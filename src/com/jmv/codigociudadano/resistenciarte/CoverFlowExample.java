@@ -94,15 +94,16 @@ public class CoverFlowExample extends Activity {
 			coverImageAdapter = new ResourceImageAdapter(this, bd);
 		}
 		mCoverFlow.setAdapter(coverImageAdapter);
-		mCoverFlow.setSelection(0, true);
-		textView.setText(String.valueOf(bitmap.getStr().get(0)));
+		mCoverFlow.setSelection(bd.size() > 2? bd.size()/2 : 0, true);
+		textView.setText(String.valueOf(bitmap.getStr().get(bd.size() > 2? bd.size()/2 : 0)));
 		setupListeners(mCoverFlow);
 	}
 
-	public static void showHome(Context home, CoverFlowData bm, String nombre) {
+	public static void showHome(Context home, CoverFlowData bm, String nombre, int nid) {
 		Intent intent = new Intent(home, CoverFlowExample.class);
 		bitmap = bm;
 		intent.putExtra(Constants.AUTOR, nombre);
+		intent.putExtra(Constants.NID, nid);
 		home.startActivity(intent);
 	}
 
@@ -118,7 +119,7 @@ public class CoverFlowExample extends Activity {
 			public void onItemClick(final AdapterView<?> parent,
 					final View view, final int position, final long id) {
 				StandardImageProgrammatic.showHome(CoverFlowExample.this,
-						bitmap.getBm().get(position), bitmap.getStr().get(position));
+						bitmap.getBm().get(position), bitmap.getStr().get(position), getIntent().getIntExtra(Constants.NID,0), bitmap.getStrURL().get(position), bitmap.getObraID().get(position));
 			}
 
 		});

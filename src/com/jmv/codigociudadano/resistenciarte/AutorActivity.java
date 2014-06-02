@@ -26,6 +26,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.text.Html;
 import android.util.DisplayMetrics;
 import android.view.Menu;
@@ -55,6 +56,11 @@ public class AutorActivity extends ActionBarCustomActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_autor);
 
+		final ActionBar actionBar = getSupportActionBar();
+		actionBar.setIcon(R.drawable.ic_launcher_custom);
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setTitle(getIntent().getStringExtra(Constants.TITLE_ACTIVITY));
+		
 		nid = getIntent().getIntExtra(Constants.NID, 0);
 
 		if (nid == 0) {
@@ -107,10 +113,14 @@ public class AutorActivity extends ActionBarCustomActivity implements
 					final int idx = 0;
 					final ArrayList<Bitmap> bmDat = new ArrayList<Bitmap>();
 					final ArrayList<String> bmStr = new ArrayList<String>();
+					final ArrayList<String> bmURL = new ArrayList<String>();
+					final ArrayList<Integer> bmObraID = new ArrayList<Integer>();
 					
 					final CoverFlowData cv = new CoverFlowData();
 					cv.setBm(bmDat);
 					cv.setStr(bmStr);
+					cv.setStrURL(bmURL);
+					cv.setObraID(bmObraID);
 					
 					for (final FotoObraAutor fotoObraAutor : fotos) {
 						// Image url
@@ -130,7 +140,7 @@ public class AutorActivity extends ActionBarCustomActivity implements
 							
 							@Override
 							public void onClick(View v) {
-								ObraActivity.showHome(AutorActivity.this, nidObra);
+								ObraActivity.showHome(AutorActivity.this, nidObra, fotoObraAutor.getName().trim());
 							}
 						});
 						
@@ -148,13 +158,16 @@ public class AutorActivity extends ActionBarCustomActivity implements
 								
 								bmStr.add(fotoObraAutor.getName());
 								bmDat.add(bmap);
+								bmObraID.add(fotoObraAutor.getId());
+								bmURL.add(fotoObraAutor.getImage());
+								
 								if (bmDat.size() == terminoDeCargar){
 									see_gallery.setVisibility(View.VISIBLE);
 									see_gallery.setOnClickListener(new OnClickListener() {
 										
 										@Override
 										public void onClick(View v) {
-											CoverFlowExample.showHome(AutorActivity.this, cv, autorName);
+											CoverFlowExample.showHome(AutorActivity.this, cv, autorName, nid);
 										}
 									});
 									
@@ -194,9 +207,10 @@ public class AutorActivity extends ActionBarCustomActivity implements
 		mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 	}
 
-	public static void showHome(Context home, int nid) {
+	public static void showHome(Context home, int nid, String autor) {
 		Intent intent = new Intent(home, AutorActivity.class);
 		intent.putExtra(Constants.NID, nid);
+		intent.putExtra(Constants.TITLE_ACTIVITY, autor);
 		home.startActivity(intent);
 	}
 
@@ -232,9 +246,11 @@ public class AutorActivity extends ActionBarCustomActivity implements
 
 			myLinearLayout.removeAllViews();
 			
-			final Button textName = (Button) findViewById(R.id.tittle);
-			textName.setText(jsonObject.getString("title").trim());
-
+			final ActionBar actionBar = getSupportActionBar();
+			actionBar.setIcon(R.drawable.ic_launcher_custom);
+			actionBar.setDisplayHomeAsUpEnabled(true);
+			actionBar.setTitle(jsonObject.getString("title").trim());
+			
 			addImages(jsonObject.getString("title").trim());
 			
 			final TextViewEx textoUbic = (TextViewEx) findViewById(R.id.description);

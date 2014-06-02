@@ -311,6 +311,7 @@ public class HighlightsSectionFragment extends PlaceholderFragment {
 							Utils.extractFromResponseToObject(author,
 									jsonObject);
 							textAuthor.setText(author.getTitle().trim());
+							textAuthor.setEnabled(true);
 							textAuthor.setVisibility(View.VISIBLE);
 							final int nid = autorId;
 							textAuthor.setOnClickListener(new OnClickListener() {
@@ -318,7 +319,7 @@ public class HighlightsSectionFragment extends PlaceholderFragment {
 								@Override
 								public void onClick(View v) {
 									
-									AutorActivity.showHome(HomeActivity.getInstance(), nid);
+									AutorActivity.showHome(HomeActivity.getInstance(), nid, author.getTitle().trim());
 								}
 							});
 						} catch (Exception e) {

@@ -163,8 +163,9 @@ public class EsculturasSectionFragment extends PlaceholderFragment {
 
 			@Override
 			public void onResponse(String response) {
+				final JSONObject jsonObject;
 				try {
-					JSONObject jsonObject = new JSONObject(response);
+					jsonObject = new JSONObject(response);
 					JSONArray fotosArrays = jsonObject.getJSONObject(
 							"field_fotos").getJSONArray("und");
 
@@ -199,11 +200,12 @@ public class EsculturasSectionFragment extends PlaceholderFragment {
 							iV.setVisibility(View.GONE);
 
 							Button read = (Button) view.findViewById(R.id.detalle);
+							read.setEnabled(true);
 							read.setOnClickListener(new OnClickListener() {
 								
 								@Override
 								public void onClick(View v) {
-									ObraActivity.showHome(HomeActivity.getInstance(), distancias2.getNid());
+									ObraActivity.showHome(HomeActivity.getInstance(), distancias2.getNid(), distancias2.getTitle().trim());
 								}
 							});
 							
@@ -211,11 +213,18 @@ public class EsculturasSectionFragment extends PlaceholderFragment {
 								
 								@Override
 								public void onClick(View v) {
-									StandardImageProgrammatic.showHome(HomeActivity.getInstance(), bmap, distancias2.getTitle());
+									int author = 0;
+									try{
+										author = jsonObject.getJSONObject("field_autor").getJSONArray("und").getJSONObject(0).getInt("target_id");
+									} catch(Exception e){
+										
+									}
+									StandardImageProgrammatic.showHome(HomeActivity.getInstance(), bmap, distancias2.getTitle(), author, image_url, distancias2.getNid() );
 								}
 							});
 							
 							Button shareButton = (Button) view.findViewById(R.id.share_btn);
+							shareButton.setEnabled(true);
 							shareButton.setOnClickListener(new OnClickListener() {
 								
 								@Override
@@ -267,6 +276,7 @@ public class EsculturasSectionFragment extends PlaceholderFragment {
 					} else {
 						final double lat = Double.valueOf(aYs.getJSONObject(0).getInt("lat"));
 						final double lon = Double.valueOf(aYs.getJSONObject(0).getInt("lon"));
+						ubic_main.setEnabled(true);
 						ubic_main.setOnClickListener(new OnClickListener() {
 
 							@Override
@@ -362,12 +372,13 @@ public class EsculturasSectionFragment extends PlaceholderFragment {
 							JSONObject jsonObject = jsonArray.optJSONObject(0);
 							Utils.extractFromResponseToObject(author, jsonObject);
 							textAuthor.setText(author.getTitle().trim());
+							textAuthor.setEnabled(true);
 							textAuthor.setOnClickListener(new OnClickListener() {
 
 								@Override
 								public void onClick(View v) {
 									
-									AutorActivity.showHome(HomeActivity.getInstance(), autorId);
+									AutorActivity.showHome(HomeActivity.getInstance(), autorId, author.getTitle());
 								}
 							});
 						} catch (Exception e) {

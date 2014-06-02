@@ -39,4 +39,6 @@ public class Constants {
 	public static final String NID = "nid";
 	public static final String AUTOR = "Autor";
 	public static final String TITLE_ACTIVITY = "tittle_activity";
+	public static final String OBRA = "obra";
+	public static final String URL = "URL";
 }

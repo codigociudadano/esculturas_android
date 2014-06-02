@@ -43,21 +43,7 @@
                     android:textSize="16sp"
                     android:textStyle="bold|italic" />
 
-                <Button
-                    android:id="@+id/ubicacion"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableBottom="@drawable/ic_pin"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:shadowColor="#000000"
-                                        android:background="@android:color/transparent"
-                    android:shadowDx="2"
-                    android:shadowDy="2"
-                    android:shadowRadius="2"
-                    android:textColor="#148273"
-                    android:textSize="16sp"
-                    android:textStyle="bold|italic" />
+                
 
                 <Button
                     android:id="@+id/detalle"

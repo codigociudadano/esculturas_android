@@ -166,7 +166,7 @@ public class AutoresActivity extends ActionBarCustomActivity implements
 
 		myLinearLayout.removeAllViewsInLayout();
 
-		for (Escultura item : esculturas) {
+		for (final Escultura item : esculturas) {
 
 			Escultura distancias2 = item;
 
@@ -175,14 +175,14 @@ public class AutoresActivity extends ActionBarCustomActivity implements
 
 			addIMage(v, item);
 			final int nid = item.getNid();
-			final Button texto = (Button) v.findViewById(R.id.tittle);
-			texto.setText(distancias2.getTitle());
+			final TextView texto = (TextView) v.findViewById(R.id.tittle);
+			texto.setText(distancias2.getTitle().trim());
 			texto.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
 					
-					AutorActivity.showHome(AutoresActivity.this, nid);
+					AutorActivity.showHome(AutoresActivity.this, nid, item.getTitle());
 				}
 			});
 
@@ -215,7 +215,7 @@ public class AutoresActivity extends ActionBarCustomActivity implements
 						@Override
 						public void onClick(View v) {
 							
-							AutorActivity.showHome(AutoresActivity.this, nid);
+							AutorActivity.showHome(AutoresActivity.this, nid, distancias2.getTitle());
 						}
 					});
 
@@ -403,7 +403,7 @@ public class AutoresActivity extends ActionBarCustomActivity implements
 							e.printStackTrace();
 						}
 
-						for (Escultura item : esculturas) {
+						for (final Escultura item : esculturas) {
 
 							Escultura distancias2 = item;
 
@@ -412,9 +412,9 @@ public class AutoresActivity extends ActionBarCustomActivity implements
 
 							addIMage(v, item);
 
-							final Button texto = (Button) v
+							final TextView texto = (TextView) v
 									.findViewById(R.id.tittle);
-							texto.setText(distancias2.getTitle());
+							texto.setText(distancias2.getTitle().trim());
 
 							final int nid = item.getNid();
 							texto.setOnClickListener(new OnClickListener() {
@@ -422,7 +422,7 @@ public class AutoresActivity extends ActionBarCustomActivity implements
 								@Override
 								public void onClick(View v) {
 									
-									AutorActivity.showHome(AutoresActivity.this, nid);
+									AutorActivity.showHome(AutoresActivity.this, nid, item.getTitle());
 								}
 							});
 							

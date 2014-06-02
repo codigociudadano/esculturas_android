@@ -1,6 +1,9 @@
 package com.jmv.codigociudadano.resistenciarte;
 
+import com.jmv.codigociudadano.resistenciarte.fragments.sections.EsculturaItem;
+import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Escultura;
 import com.jmv.codigociudadano.resistenciarte.utils.Constants;
+import com.jmv.codigociudadano.resistenciarte.utils.Utils;
 import com.polites.android.GestureImageView;
 
 import android.content.Context;
@@ -10,6 +13,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.LinearLayout.LayoutParams;
 
 public class StandardImageProgrammatic extends ActionBarCustomActivity {
@@ -17,6 +21,8 @@ public class StandardImageProgrammatic extends ActionBarCustomActivity {
 	private static Bitmap bmap;
 
 	protected GestureImageView view;
+
+	private View botonera;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -42,14 +48,60 @@ public class StandardImageProgrammatic extends ActionBarCustomActivity {
 
 		layout.addView(view);
 		
-		((ViewGroup) findViewById(R.id.layout2)).addView(View.inflate(this,
-				R.layout.fragment_botones, null));
+		botonera = View.inflate(this,
+				R.layout.fragment_botones, null);
+		
+		((ViewGroup) findViewById(R.id.layout2)).addView(botonera);
+		
+		final int autorId = getIntent().getIntExtra(Constants.AUTOR, 0);
+		
+		View textAuthor = botonera.findViewById(R.id.author);
+		textAuthor.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				
+				AutorActivity.showHome(HomeActivity.getInstance(), autorId, "");
+			}
+		});
+		
+		final int obraId = getIntent().getIntExtra(Constants.OBRA, 0);
+		
+		View detalles = botonera.findViewById(R.id.detalle);
+		detalles.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				
+				ObraActivity.showHome(StandardImageProgrammatic.this, obraId, getIntent().getStringExtra(Constants.TITLE_ACTIVITY));
+			}
+		});
+		
+		
+		View share_btn = botonera.findViewById(R.id.share_btn);
+		share_btn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				EsculturaItem item = new EsculturaItem();
+				Escultura esc = new Escultura();
+				esc.setTitle(getIntent().getStringExtra(Constants.TITLE_ACTIVITY));
+				item.setEscultura(esc);
+				item.setImage(getIntent().getStringExtra(Constants.URL));
+				Utils.shareEscultura(HomeActivity.getInstance(), item);
+			}
+		});
+		
+		
 	}
 
-	public static void showHome(Context context, Bitmap imageToSHow, String name) {
+	public static void showHome(Context context, Bitmap imageToSHow, String name, int autorId, String url,  int obraId) {
 		Intent intent = new Intent(context, StandardImageProgrammatic.class);
 		bmap = imageToSHow;
 		intent.putExtra(Constants.TITLE_ACTIVITY, name);
+		intent.putExtra(Constants.AUTOR, autorId);
+		intent.putExtra(Constants.OBRA, obraId);
+		intent.putExtra(Constants.URL, url);
 		context.startActivity(intent);
 	}
 

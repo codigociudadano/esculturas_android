@@ -74,6 +74,8 @@ public class HomeActivity extends ActionBarCustomActivity implements
 				R.drawable.ic_action_map));
 		dataList.add(new DrawerItem(getString(R.string.autores),
 				R.drawable.ic_action_usr));
+		dataList.add(new DrawerItem(getString(R.string.contacto_menu),
+				R.drawable.ic_action_contacto));
 		dataList.add(new DrawerItem(getString(R.string.about),
 				R.drawable.ic_action_about));
 
@@ -205,7 +207,7 @@ public class HomeActivity extends ActionBarCustomActivity implements
 			Intent sharingIntent = new Intent(
 					android.content.Intent.ACTION_SEND);
 			sharingIntent.setType("text/plain");
-			String shareBody = "Buscala en el Market!";
+			String shareBody = "Buscala en el Market! https://play.google.com/store/apps/details?id=com.jmv.codigociudadano.resistenciarte";
 			sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
 					"La mejor forma de encontrar esculturas en Resistencia! Usa esta app!!");
 			sharingIntent
@@ -276,6 +278,9 @@ public class HomeActivity extends ActionBarCustomActivity implements
 			AutoresActivity.showHome(this);
 			break;
 		case 3:
+			ContactoActivity.showHome(this);
+			break;
+		case 4:
 			AboutActivity.showHome(this);
 			break;
 		}

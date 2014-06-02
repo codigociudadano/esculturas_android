@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.jmv.codigociudadano.resistenciarte"
-    android:versionCode="1"
+    android:versionCode="2"
     android:versionName="1.0" >
 
     <uses-sdk
@@ -38,7 +38,7 @@
         <!-- Goolge API Key -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyBqwJCdufD8h8iK8T7Pu3ERwyFd2Ac17qQ" />
+            android:value="AIzaSyDrdANnPrj7XgYspzXQENwSkk7xxC0JMPc" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -125,6 +125,15 @@
         <activity
             android:name="com.jmv.codigociudadano.resistenciarte.StandardImageProgrammatic"
             android:label="@string/title_activity_standard_image_programmatic"
+            android:parentActivityName="com.jmv.codigociudadano.resistenciarte.HomeActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.jmv.codigociudadano.resistenciarte.HomeActivity" />
+        </activity>
+        <activity
+            android:name="com.jmv.codigociudadano.resistenciarte.ContactoActivity"
+            android:label="@string/title_activity_contacto"
+            android:screenOrientation="portrait"
             android:parentActivityName="com.jmv.codigociudadano.resistenciarte.HomeActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

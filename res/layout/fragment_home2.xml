@@ -83,7 +83,7 @@
                             android:shadowRadius="1"
                 android:text="@string/button_before"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="#009681"
+                android:textColor="#FFFFFF"
                 android:textSize="20sp" />
             
             <LinearLayout
@@ -107,7 +107,7 @@
                             android:shadowRadius="1"
                 android:text="@string/button"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="#009681"
+                android:textColor="#FFFFFF"
                 android:textSize="20sp" />
         </LinearLayout>
     </ScrollView>

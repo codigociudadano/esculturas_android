@@ -10,7 +10,9 @@ import org.json.JSONObject;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.common.base.Function;
+import com.jmv.codigociudadano.resistenciarte.fragments.sections.EsculturaItem;
 import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Autor;
+import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Escultura;
 import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Foto;
 import com.jmv.codigociudadano.resistenciarte.logic.esculturas.GeoEscultura;
 import com.jmv.codigociudadano.resistenciarte.net.IRequester;
@@ -178,6 +180,7 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 				number++;
 				final Button textoUbic = (Button) v
 						.findViewById(R.id.ubicacion);
+				textoUbic.setEnabled(true);
 				textoUbic.setText((Utils.toDecimalFormat(distancias2
 						.getDistance() * 1000)) + " metros aprox.");
 
@@ -215,7 +218,7 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 			@Override
 			public void onResponse(String response) {
 				try {
-					JSONObject jsonObject = new JSONObject(response);
+					final JSONObject jsonObject = new JSONObject(response);
 					JSONArray fotosArrays = jsonObject.getJSONObject(
 							"field_fotos").getJSONArray("und");
 
@@ -232,7 +235,7 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 					}
 
 					// Image url
-					String image_url = Constants.BASE_URL
+					final String image_url = Constants.BASE_URL
 							+ "/sites/default/files/"
 							+ fotos.get(0).getUri()
 									.replaceFirst("public://", "");
@@ -246,16 +249,47 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 							View iV = view.findViewById(R.id.default_image);
 							iV.setVisibility(View.GONE);
 
+							Button read = (Button) view.findViewById(R.id.detalle);
+							read.setEnabled(true);
+							read.setOnClickListener(new OnClickListener() {
+								
+								@Override
+								public void onClick(View v) {
+									ObraActivity.showHome(HomeActivity.getInstance(), distancias2.getNid(), distancias2.getNode_title().trim());
+								}
+							});
+							
 							view.findViewById(R.id.image).setOnClickListener(
 									new OnClickListener() {
 
 										@Override
 										public void onClick(View v) {
+											int author = 0;
+											try{
+												author = jsonObject.getJSONObject("field_autor").getJSONArray("und").getJSONObject(0).getInt("target_id");
+											} catch(Exception e){
+												
+											}
 											StandardImageProgrammatic.showHome(
 													NearbyLocations.this,
-													bmap, distancias2.getNode_title().trim());
+													bmap, distancias2.getNode_title().trim(), author, image_url, distancias2.getNid());
 										}
 									});
+							
+							Button shareButton = (Button) view.findViewById(R.id.share_btn);
+							shareButton.setEnabled(true);
+							shareButton.setOnClickListener(new OnClickListener() {
+								
+								@Override
+								public void onClick(View v) {
+									EsculturaItem item = new EsculturaItem();
+									Escultura d = new Escultura();
+									d.setTitle(distancias2.getNode_title());
+									item.setEscultura(d);
+									item.setImage(image_url);
+									Utils.shareEscultura(HomeActivity.getInstance(), item);
+								}
+							});
 							return null;
 						}
 					};
@@ -308,6 +342,7 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 			aYs = auhtorObject.isNull("und") ? null : auhtorObject
 					.getJSONArray("und");
 
+			
 			if (aYs == null) {
 				textAuthor.setText(Constants.ANONIMO);
 			} else {
@@ -327,6 +362,7 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 									jsonObject);
 							textAuthor.setText(author.getTitle().trim());
 							final int nid = autorId;
+							textAuthor.setEnabled(true);
 							textAuthor
 									.setOnClickListener(new OnClickListener() {
 
@@ -335,7 +371,7 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 
 											AutorActivity.showHome(
 													HomeActivity.getInstance(),
-													nid);
+													nid, author.getTitle().trim());
 										}
 									});
 						} catch (Exception e) {

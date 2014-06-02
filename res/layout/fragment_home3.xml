@@ -110,7 +110,7 @@
                             android:layout_gravity="top|center_horizontal"
                             android:gravity="top|center_horizontal"
                             android:text="@string/sin_novedades_detailed"
-                            android:textColor="#009681"
+                            android:textColor="#FFFFFF"
                                android:shadowColor="#000000"
                             android:shadowDx="2"
                             android:shadowDy="2"
@@ -143,7 +143,7 @@
                 android:shadowRadius="2"
                 android:text="@string/button_before"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="#009681"
+                android:textColor="#FFFFFF"
                 android:textSize="20sp" />
             
             
@@ -167,7 +167,7 @@
                 android:shadowRadius="2"
                 android:text="@string/button_novedades"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="#009681"
+                android:textColor="#FFFFFF"
                 android:textSize="20sp" />
         </LinearLayout>
     </ScrollView>

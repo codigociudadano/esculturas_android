@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.ConfigurationInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -108,7 +109,6 @@ public class HomeActivity extends ActionBarCustomActivity implements
 			public void onDrawerClosed(View view) {
 				supportInvalidateOptionsMenu();
 				actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
 			}
 
 			public void onDrawerOpened(View drawerView) {

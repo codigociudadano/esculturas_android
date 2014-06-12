@@ -52,6 +52,8 @@ public class AppRater {
         dialog.setTitle("Rankear " + APP_TITLE);
 
         LinearLayout ll = new LinearLayout(mContext);
+        LinearLayout.LayoutParams fieldparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        ll.setLayoutParams(fieldparams);
         ll.setOrientation(LinearLayout.VERTICAL);
         ll.setBackgroundColor(Color.WHITE);
         

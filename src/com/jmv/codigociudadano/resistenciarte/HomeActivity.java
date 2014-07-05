@@ -112,6 +112,7 @@ public class HomeActivity extends ActionBarCustomActivity implements
 			}
 
 			public void onDrawerOpened(View drawerView) {
+				actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 				supportInvalidateOptionsMenu();
 			}
 		};

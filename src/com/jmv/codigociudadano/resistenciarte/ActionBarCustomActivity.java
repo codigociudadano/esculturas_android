@@ -34,7 +34,7 @@ public class ActionBarCustomActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		final ActionBar actionBar = getSupportActionBar();
-		actionBar.setIcon(R.drawable.ic_launcher_custom);
+		actionBar.setIcon(R.drawable.resistenciarte_logo_color);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 	}
 

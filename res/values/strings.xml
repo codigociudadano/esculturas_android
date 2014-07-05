@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Resistenciarte</string>
+    <string name="app_name">RESISTENCIARTE</string>
     <string name="title_section1">Destacado</string>
     <string name="sin_novedades_detailed">Busca por mas novedades aqui pronto!!!</string>
     <string name="sin_novedades">No existen novedades!</string>

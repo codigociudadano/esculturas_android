@@ -12,7 +12,7 @@
         android:clickable="false"
         android:focusable="false"
         android:longClickable="false"
-        android:src="@drawable/logo_letra" />
+        android:src="@drawable/resistenciarte_text_color" />
     
 
 </LinearLayout>

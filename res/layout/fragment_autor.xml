@@ -81,14 +81,10 @@
                 android:gravity="center"
                 android:padding="15dp"
                 android:paddingBottom="6dip"
-                android:shadowColor="#000000"
-                android:shadowDx="2"
-                android:shadowDy="2"
-                android:shadowRadius="2"
                 android:text="@string/title_obra"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                android:textStyle="bold|italic" />
+                android:textSize="13sp"
+                android:drawableLeft="@drawable/ic_autor"/>
 
             <Button
                 android:id="@+id/description"
@@ -100,8 +96,10 @@
                 android:gravity="center"
                 android:text="@string/title_obra"
                 android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                android:textStyle="italic" />
+                android:padding="15dp"
+                android:paddingBottom="6dip"
+                android:textSize="13sp"
+                android:drawableLeft="@drawable/ic_text"/>
         </LinearLayout>
     </LinearLayout>
 

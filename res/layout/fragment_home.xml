@@ -65,7 +65,7 @@
 
     <!-- Login form -->
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/login_form"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
@@ -73,9 +73,9 @@
         android:gravity="center"
         android:orientation="vertical" >
 
-        <FrameLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical" >
 
             <LinearLayout
@@ -83,8 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:paddingTop="2dp" >
+                android:orientation="vertical" >
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -101,76 +100,76 @@
                         android:gravity="center"
                         android:src="@drawable/ic_author_default" />
                 </LinearLayout>
-            </LinearLayout>
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:gravity="bottom"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/login_form_detailed"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" >
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:orientation="vertical" 
-                    android:padding="0dp">
+                    android:layout_gravity="bottom"
+                    android:gravity="bottom"
+                    android:orientation="vertical" >
 
-                    <Button
-                        android:id="@+id/title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:drawableLeft="@drawable/ic_autor"
-                        android:enabled="false"
-                        android:gravity="left|center_vertical"
-                        android:paddingLeft="10dp"
-                        android:text="@string/author_getting"
-                        android:textColor="#FFFFFF"
-                        android:textSize="13sp"
-                        android:layout_marginBottom="0dp"
-                        android:drawablePadding="10dp"
-                        android:background="#019682"/>
+                    <LinearLayout
+                        android:id="@+id/login_form_detailed"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
 
-                    <Button
-                        android:id="@+id/author_main"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:drawableLeft="@drawable/ic_autor"
-                        android:enabled="false"
-                        android:gravity="left|center_vertical"
-                        android:paddingLeft="10dp"
-                        android:text="@string/author_getting"
-                        android:textColor="#FFFFFF"
-                        android:textSize="13sp"
-                        android:layout_marginBottom="0dp"
-                        android:drawablePadding="10dp"
-                        android:background="#038c78"/>
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="vertical"
+                            android:padding="0dp" >
 
-                    <Button
-                        android:id="@+id/ubic_main"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:drawableLeft="@drawable/ic_pin"
-                        android:gravity="left|center_vertical"
-                        android:paddingLeft="10dp"
-                        android:text="@string/ubic"
-                        android:textColor="#FFFFFF"
-                        android:textSize="13sp"
-                        android:drawablePadding="10dp"
-                        android:background="#019682"/>
+                            <Button
+                                android:id="@+id/title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginBottom="0dp"
+                                android:background="#019682"
+                                android:drawableLeft="@drawable/ic_text"
+                                android:drawablePadding="10dp"
+                                android:enabled="false"
+                                android:gravity="left|center_vertical"
+                                android:paddingLeft="10dp"
+                                android:text="@string/author_getting"
+                                android:textColor="#FFFFFF"
+                                android:textSize="13sp" />
+
+                            <Button
+                                android:id="@+id/author_main"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginBottom="0dp"
+                                android:background="#038c78"
+                                android:drawableLeft="@drawable/ic_autor"
+                                android:drawablePadding="10dp"
+                                android:enabled="false"
+                                android:gravity="left|center_vertical"
+                                android:paddingLeft="10dp"
+                                android:text="@string/author_getting"
+                                android:textColor="#FFFFFF"
+                                android:textSize="13sp" />
+
+                            <Button
+                                android:id="@+id/ubic_main"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:background="#019682"
+                                android:drawableLeft="@drawable/ic_pin"
+                                android:drawablePadding="10dp"
+                                android:gravity="left|center_vertical"
+                                android:paddingLeft="10dp"
+                                android:text="@string/ubic"
+                                android:textColor="#FFFFFF"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-        </FrameLayout>
-    </FrameLayout>
+        </ScrollView>
+    </LinearLayout>
 
 </FrameLayout>

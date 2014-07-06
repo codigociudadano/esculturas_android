@@ -50,7 +50,7 @@ public class HighlightsSectionFragment extends LocatorFragment {
 	private ArrayList<Foto> fotos;
 	private Escultura localReg;
 	private ImageView img;
-	private TextView textView;
+	private Button textView;
 	private View mDeatailedView;
 	private Button textAuthor;
 	private Button ubic_main;
@@ -74,7 +74,7 @@ public class HighlightsSectionFragment extends LocatorFragment {
 		img = (ImageView) rootView.findViewById(R.id.img);
 		
 		
-		textView = (TextView) rootView.findViewById(R.id.title);
+		textView = (Button) rootView.findViewById(R.id.title);
 		textAuthor = (Button) rootView.findViewById(R.id.author_main);
 		ubic_main = (Button) rootView.findViewById(R.id.ubic_main);
 
@@ -163,6 +163,7 @@ public class HighlightsSectionFragment extends LocatorFragment {
 						fotos.add(foto);
 					}
 
+					
 					// Image url
 					final String image_url = Constants.BASE_URL + "/sites/default/files/"
 							+ fotos.get(0).getFilename();
@@ -170,12 +171,24 @@ public class HighlightsSectionFragment extends LocatorFragment {
 					Function<Bitmap, Void> afterLogin = new Function<Bitmap, Void>() {
 						@Override
 						public Void apply(Bitmap bmap) {
+							final String text; 
 							try {
-								textView.setText(jsonObject.getString("title"));
+								text = jsonObject.getString("title");
+								textView.setText(text);
+								textView.setEnabled(true);
+								textView.setOnClickListener(new OnClickListener() {
+									
+									@Override
+									public void onClick(View v) {
+										ObraActivity.showHome(HomeActivity.getInstance(), distancias2.getNid(), text);
+									}
+								});
 							} catch (JSONException e) {
-								textView.setText("Sin titulo");
+								//text = "";
 							}
 
+							
+							
 							DisplayMetrics metrics = new DisplayMetrics();
 							HomeActivity.getInstance().getWindowManager()
 									.getDefaultDisplay().getMetrics(metrics);

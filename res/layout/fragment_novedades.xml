@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
+    android:background="#017d6c"
     android:orientation="vertical"
     android:padding="5dp"
     tools:context="com.jmv.codigociudadano.resistenciarte.HomeActivity$PlaceholderFragment" >
@@ -91,7 +91,7 @@
                     android:focusable="true"
                     android:gravity="center"
                     android:text="@string/title_obra"
-                    android:textColor="#148273"
+                    android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold|italic" />
 

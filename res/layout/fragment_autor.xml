@@ -2,62 +2,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
+        android:background="#017d6c"
     android:orientation="vertical"
-    android:padding="5dp"
     tools:context="com.jmv.codigociudadano.resistenciarte.HomeActivity$PlaceholderFragment" >
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical"
-        android:orientation="vertical"
-        android:padding="15dp" >
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:background="#148273"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/tittle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|center_horizontal"
-                android:focusable="true"
-                android:gravity="center"
-                android:padding="15dp"
-                android:paddingBottom="6dip"
-                android:shadowColor="#000000"
-                android:shadowDx="2"
-                android:shadowDy="2"
-                android:shadowRadius="2"
-                android:text="@string/title_obra"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                android:textStyle="bold|italic" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|center_vertical"
-        android:orientation="horizontal"
-        android:padding="15dp" >
+        android:orientation="vertical" >
 
         <FrameLayout
             android:layout_width="128dp"
             android:layout_height="128dp"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center"
             android:padding="5dp" >
 
             <FrameLayout
                 android:id="@+id/default_image"
                 android:layout_width="128dp"
                 android:layout_height="128dp"
+                android:layout_gravity="center"
                 android:orientation="horizontal"
                 android:scrollbarSize="15dp"
                 android:scrollbarStyle="insideOverlay"
@@ -74,7 +39,8 @@
             <FrameLayout
                 android:id="@+id/progress"
                 android:layout_width="128dp"
-                android:layout_height="128dp" >
+                android:layout_height="128dp"
+                android:layout_gravity="center" >
 
                 <ProgressBar
                     android:layout_width="128dp"
@@ -88,28 +54,48 @@
 
             <FrameLayout
                 android:layout_width="128dp"
-                android:layout_height="128dp" >
+                android:layout_height="128dp"
+                android:layout_gravity="center" >
 
                 <ImageView
                     android:id="@+id/image"
                     android:layout_width="128dp"
-                    android:layout_height="128dp" />
+                    android:layout_height="128dp"
+                    android:layout_gravity="center" />
             </FrameLayout>
         </FrameLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
-            android:orientation="vertical"
-            android:padding="10dip" >
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/tittle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:background="#038c78"
+                android:focusable="true"
+                android:gravity="center"
+                android:padding="15dp"
+                android:paddingBottom="6dip"
+                android:shadowColor="#000000"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="2"
+                android:text="@string/title_obra"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold|italic" />
 
             <Button
                 android:id="@+id/description"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left|center_vertical"
-                android:background="@android:color/transparent"
+                android:background="#019682"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="@string/title_obra"
@@ -118,16 +104,5 @@
                 android:textStyle="italic" />
         </LinearLayout>
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="0dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="0dp"
-        android:background="#FFFFFF" >
-    </View>
 
 </LinearLayout>

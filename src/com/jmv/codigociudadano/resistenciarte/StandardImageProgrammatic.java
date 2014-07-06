@@ -8,12 +8,15 @@ import com.polites.android.GestureImageView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
 
 public class StandardImageProgrammatic extends ActionBarCustomActivity {
@@ -35,7 +38,15 @@ public class StandardImageProgrammatic extends ActionBarCustomActivity {
 		final ActionBar actionBar = getSupportActionBar();
 		actionBar.setIcon(R.drawable.resistenciarte_logo_color);
 		actionBar.setDisplayHomeAsUpEnabled(true);
+		
 		actionBar.setTitle(getIntent().getStringExtra(Constants.TITLE_ACTIVITY));
+		int actionBarTitleId = Resources.getSystem().getIdentifier("action_bar_title", "id", "android");
+		if (actionBarTitleId > 0) {
+		    TextView title = (TextView) findViewById(actionBarTitleId);
+		    if (title != null) {
+		        title.setTextColor(Color.parseColor("#006355"));
+		    }
+		}
 		
 		LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT,
 				LayoutParams.FILL_PARENT);

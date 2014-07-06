@@ -2,14 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
+    android:background="#017d6c"
     android:orientation="vertical"
     tools:context="com.jmv.codigociudadano.resistenciarte.HomeActivity$PlaceholderFragment" >
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|center_vertical"
+        android:layout_gravity="center"
         android:layout_marginBottom="-5dp"
         android:orientation="vertical" >
 
@@ -31,6 +31,7 @@
                     android:layout_height="144dp"
                     android:orientation="horizontal"
                     android:scrollbarSize="15dp"
+                    android:layout_gravity="center"
                     android:scrollbarStyle="insideOverlay"
                     android:scrollbars="vertical" >
 
@@ -44,13 +45,14 @@
 
                 <FrameLayout
                     android:id="@+id/progress"
+                    android:layout_gravity="center"
                     android:layout_width="144dp"
                     android:layout_height="144dp" >
 
                     <ProgressBar
                         android:layout_width="144dp"
                         android:layout_height="144dp"
-                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:layout_gravity="center"
                         android:focusable="true"
                         android:paddingLeft="10dp"
                         android:scaleX="0.25"
@@ -59,6 +61,7 @@
 
                 <FrameLayout
                     android:layout_width="fill_parent"
+                    android:layout_gravity="center"
                     android:layout_height="wrap_content" >
 
                     <ImageView

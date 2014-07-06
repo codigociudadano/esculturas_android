@@ -27,11 +27,13 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -174,7 +176,7 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 
 				addIMage(v, distancias2);
 
-				final TextView texto = (TextView) v.findViewById(R.id.tittle);
+				final TextView texto = (TextView) v.findViewById(R.id.detalle);
 				texto.setText(" " + number + " - "
 						+ distancias2.getNode_title());
 				number++;
@@ -248,6 +250,32 @@ public class NearbyLocations extends LocatorActivity implements IRequester {
 							p.setVisibility(View.GONE);
 							View iV = view.findViewById(R.id.default_image);
 							iV.setVisibility(View.GONE);
+							
+							DisplayMetrics metrics = new DisplayMetrics();
+							HomeActivity.getInstance().getWindowManager()
+									.getDefaultDisplay().getMetrics(metrics);
+							int height = metrics.heightPixels;
+							int width = metrics.widthPixels;
+
+							float bmapWidth = bmap.getWidth();
+							float bmapHeight = bmap.getHeight();
+
+							float wRatio = width / bmapWidth;
+							float hRatio = height / bmapHeight;
+
+							float ratioMultiplier = wRatio;
+							// Untested conditional though I expect this might work
+							// for landscape mode
+							if (hRatio < wRatio) {
+								ratioMultiplier = hRatio;
+							}
+
+							int newBmapWidth = (int) (bmapWidth * ratioMultiplier);
+							int newBmapHeight = (int) (bmapHeight * ratioMultiplier);
+
+							view.findViewById(R.id.image).setLayoutParams(new FrameLayout.LayoutParams(
+									newBmapWidth, newBmapHeight));
+							
 
 							Button read = (Button) view.findViewById(R.id.detalle);
 							read.setEnabled(true);

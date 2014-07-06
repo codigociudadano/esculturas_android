@@ -3,7 +3,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
+    android:background="#017d6c"
     android:orientation="vertical"
     tools:context="com.jmv.codigociudadano.resistenciarte.NearbyLocations"
     tools:ignore="MergeRootFrame" >
@@ -179,7 +179,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="#000000"
+                android:background="#017d6c"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:paddingTop="10dp" >

@@ -207,7 +207,7 @@ public class MapActivity extends ActionBarCustomActivity implements IRequester {
 	@Override
 	public String getRequestURI() {
 		String url = Constants.BASE_URL
-				+ "/api/v1/closest_nodes_by_coord?lat=-27.454528&lon=-58.976896&qty_nodes=100";
+				+ "/api/v1/closest_nodes_by_coord?lat=-27.454528&lon=-58.976896&qty_nodes=2000";
 		return url;
 	}
 
@@ -252,7 +252,7 @@ public class MapActivity extends ActionBarCustomActivity implements IRequester {
 						.snippet(
 								"Distancia actual:"
 										+ locationStore.getDistance() + "(KM)")
-						.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+						.icon(BitmapDescriptorFactory.fromResource(R.drawable.green_pin)));
 				
 				esculturas_per_marker.put(marker, locationStore);
 
@@ -321,7 +321,7 @@ public class MapActivity extends ActionBarCustomActivity implements IRequester {
 					distancias2.getNode_longitude());
 
 			final TextView texto = (TextView) v.findViewById(R.id.tittle);
-			texto.setText(distancias2.getNode_title());
+			texto.setText(".  "+distancias2.getNode_title()+"  .");
 
 			texto.setOnClickListener(new OnClickListener() {
 

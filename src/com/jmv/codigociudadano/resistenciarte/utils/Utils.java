@@ -1,8 +1,5 @@
 package com.jmv.codigociudadano.resistenciarte.utils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -19,9 +16,7 @@ import java.util.Locale;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.jmv.codigociudadano.resistenciarte.R;
 import com.jmv.codigociudadano.resistenciarte.fragments.sections.EsculturaItem;
-import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Escultura;
 import com.jmv.codigociudadano.resistenciarte.net.FileCache;
 
 import android.app.Activity;
@@ -37,20 +32,17 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader.TileMode;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore.Images;
-import android.text.Html;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.animation.AlphaAnimation;
 import android.widget.Button;
-import android.widget.ImageView;
 
 public class Utils {
 

@@ -47,9 +47,7 @@ public class AutorActivity extends ActionBarCustomActivity implements
 	protected View mLoginStatusView;
 
 	private ImageLoader imageLoaderService;
-	private LinearLayout myLinearLayout;
 	private int nid;
-	private LinearLayout btn_loading_screen;
 	private Button see_gallery;
 
 	@Override
@@ -69,16 +67,13 @@ public class AutorActivity extends ActionBarCustomActivity implements
 			finish();
 			return;
 		}
-		
-		myLinearLayout = (LinearLayout) findViewById(R.id.text_view_place);
-		
+				
 		see_gallery = (Button)  findViewById(R.id.see_gallery);
 		see_gallery.setVisibility(View.GONE);
 		
 		mLoginFormView = findViewById(R.id.home_form);
 		mLoginStatusView = findViewById(R.id.login_status);
 
-		btn_loading_screen = (LinearLayout) findViewById(R.id.btn_loading_screen);
 		
 		// initialize tthe image loader service
 		// ImageLoader class instance
@@ -132,26 +127,10 @@ public class AutorActivity extends ActionBarCustomActivity implements
 						
 						final ImageView imSex = (ImageView) v.findViewById(R.id.image_to_load);
 						
-						final Button textView = (Button) v.findViewById(R.id.tittle);
-						textView.setText(fotoObraAutor.getName().trim());
-						
-						
-						final int nidObra = fotoObraAutor.getId();
-						textView.setOnClickListener(new OnClickListener() {
-							
-							@Override
-							public void onClick(View v) {
-								ObraActivity.showHome(AutorActivity.this, nidObra, fotoObraAutor.getName().trim());
-							}
-						});
-						
-						myLinearLayout.addView(v);
-
 						
 						Function<Bitmap, Void> afterLogin = new Function<Bitmap, Void>() {
 							@Override
 							public Void apply(Bitmap bmap) {
-								btn_loading_screen.setVisibility(View.GONE);
 								View p = v.findViewById(R.id.progress);
 								p.setVisibility(View.GONE);
 								View iV = v.findViewById(R.id.default_image);
@@ -182,7 +161,6 @@ public class AutorActivity extends ActionBarCustomActivity implements
 					}
 
 				} catch (Exception e) {
-
 				}
 			}
 
@@ -244,8 +222,6 @@ public class AutorActivity extends ActionBarCustomActivity implements
 	public void onResponse(String response) {
 		try {
 			JSONObject jsonObject = new JSONObject(response);
-
-			myLinearLayout.removeAllViews();
 			
 			final ActionBar actionBar = getSupportActionBar();
 			actionBar.setIcon(R.drawable.resistenciarte_logo_color);
@@ -260,45 +236,12 @@ public class AutorActivity extends ActionBarCustomActivity implements
 			if (!jsonObject.isNull("field_fotos")) {
 				try {
 					jsonObject.getJSONArray("field_fotos");
-					ImageView viewImg = (ImageView) findViewById(R.id.image);
-					viewImg.setBackgroundResource(R.drawable.ic_author_default);
 					showProgress(false);
 					return;
 				} catch (Exception e) {
 					// everything goes well!
 				}
 			} else {
-				ImageView viewImg = (ImageView) findViewById(R.id.image);
-				
-				DisplayMetrics metrics = new DisplayMetrics();
-				HomeActivity.getInstance().getWindowManager()
-						.getDefaultDisplay().getMetrics(metrics);
-				int height = metrics.heightPixels;
-				int width = metrics.widthPixels;
-
-				float bmapWidth = 48f;
-				float bmapHeight = 48f;
-
-				float wRatio = width / bmapWidth;
-				float hRatio = height / bmapHeight;
-
-				float ratioMultiplier = wRatio;
-				// Untested conditional though I expect this might work
-				// for landscape mode
-				if (hRatio < wRatio) {
-					ratioMultiplier = hRatio;
-				}
-
-				int newBmapWidth = (int) (bmapWidth * ratioMultiplier);
-				int newBmapHeight = (int) (bmapHeight * ratioMultiplier);
-
-				viewImg.setLayoutParams(new FrameLayout.LayoutParams(
-						newBmapWidth, newBmapHeight));
-				
-				
-				
-				viewImg.setBackgroundResource(R.drawable.ic_author_default);
-				
 				showProgress(false);
 				return;
 			}

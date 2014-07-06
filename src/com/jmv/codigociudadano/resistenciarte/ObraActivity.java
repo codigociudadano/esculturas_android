@@ -211,6 +211,8 @@ public class ObraActivity extends ActionBarCustomActivity implements IRequester 
 
 						bmStr.add(image_url);
 						bmDat.add(bmap);
+						
+						
 						if (bmDat.size() == terminoDeCargar) {
 
 							View p = findViewById(R.id.wait_image);

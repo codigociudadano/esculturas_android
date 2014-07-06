@@ -72,10 +72,12 @@ public abstract class LocatorFragment extends PlaceholderFragment implements
 			provider = !enabledGPS?LocationManager.GPS_PROVIDER:LocationManager.NETWORK_PROVIDER;
 			location = locationManager.getLastKnownLocation(provider);
 		}
-
-		
-		if (locationManager != null){
-			locationManager.requestLocationUpdates(provider, 2500, 100, this);
+		if (location != null){
+			onLocationChanged(location);
+		} else {
+			if (locationManager != null){
+				locationManager.requestLocationUpdates(provider, 2500, 100, this);
+			}
 		}
 	}
 	

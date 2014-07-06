@@ -34,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -268,6 +269,34 @@ public class AutorActivity extends ActionBarCustomActivity implements
 				}
 			} else {
 				ImageView viewImg = (ImageView) findViewById(R.id.image);
+				
+				DisplayMetrics metrics = new DisplayMetrics();
+				HomeActivity.getInstance().getWindowManager()
+						.getDefaultDisplay().getMetrics(metrics);
+				int height = metrics.heightPixels;
+				int width = metrics.widthPixels;
+
+				float bmapWidth = 48f;
+				float bmapHeight = 48f;
+
+				float wRatio = width / bmapWidth;
+				float hRatio = height / bmapHeight;
+
+				float ratioMultiplier = wRatio;
+				// Untested conditional though I expect this might work
+				// for landscape mode
+				if (hRatio < wRatio) {
+					ratioMultiplier = hRatio;
+				}
+
+				int newBmapWidth = (int) (bmapWidth * ratioMultiplier);
+				int newBmapHeight = (int) (bmapHeight * ratioMultiplier);
+
+				viewImg.setLayoutParams(new FrameLayout.LayoutParams(
+						newBmapWidth, newBmapHeight));
+				
+				
+				
 				viewImg.setBackgroundResource(R.drawable.ic_author_default);
 				
 				showProgress(false);
@@ -297,6 +326,32 @@ public class AutorActivity extends ActionBarCustomActivity implements
 					iV.setVisibility(View.GONE);
 					ImageView m = (ImageView) findViewById(R.id.image);
 					m.setVisibility(View.VISIBLE);
+					
+					DisplayMetrics metrics = new DisplayMetrics();
+					HomeActivity.getInstance().getWindowManager()
+							.getDefaultDisplay().getMetrics(metrics);
+					int height = metrics.heightPixels;
+					int width = metrics.widthPixels;
+
+					float bmapWidth = bmap.getWidth();
+					float bmapHeight = bmap.getHeight();
+
+					float wRatio = width / bmapWidth;
+					float hRatio = height / bmapHeight;
+
+					float ratioMultiplier = wRatio;
+					// Untested conditional though I expect this might work
+					// for landscape mode
+					if (hRatio < wRatio) {
+						ratioMultiplier = hRatio;
+					}
+
+					int newBmapWidth = (int) (bmapWidth * ratioMultiplier);
+					int newBmapHeight = (int) (bmapHeight * ratioMultiplier);
+
+					m.setLayoutParams(new FrameLayout.LayoutParams(
+							newBmapWidth, newBmapHeight));
+					
 					showProgress(false);
 					return null;
 				}

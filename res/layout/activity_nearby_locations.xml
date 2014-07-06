@@ -83,20 +83,6 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical" >
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:paddingTop="10dp"
-                    android:shadowColor="#000000"
-                    android:shadowDx="2"
-                    android:shadowDy="2"
-                    android:shadowRadius="2"
-                    android:text="@string/title_activity_nearby_locations"
-                    android:textColor="#009681"
-                    android:textSize="26sp"
-                    android:textStyle="bold" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -106,21 +92,23 @@
                     android:orientation="horizontal"
                     android:scrollbarSize="15dp"
                     android:scrollbarStyle="insideOverlay"
-                    android:scrollbars="vertical" >
-
+                    android:scrollbars="vertical" 
+                    android:padding="10dp">
+					
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_pin"/>
+                    
                     <TextView
                         android:id="@+id/cuurent_location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:shadowColor="#000000"
-                        android:shadowDx="2"
-                        android:shadowDy="2"
-                        android:shadowRadius="2"
                         android:text="@string/current_location"
                         android:textColor="#FFFFFF"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:layout_marginLeft="5dp"
+                        android:textSize="16sp"/>
 
                     <ProgressBar
                         android:id="@+id/progress_street"
@@ -128,7 +116,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical"
                         android:focusable="true"
-                        android:paddingLeft="10dp"
+                        android:layout_marginLeft="5dp"
                         android:scaleX="0.3"
                         android:scaleY="0.3" />
                 </LinearLayout>
@@ -144,34 +132,7 @@
                     android:shadowRadius="2"
                     android:textColor="#FFFFFF"
                     android:textSize="12sp"
-                    android:textStyle="italic" />
-
-                <LinearLayout
-                    android:id="@+id/home_form_pin_detailed"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:background="#005962"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="5dp"
-                    android:scrollbarSize="5dp"
-                    android:scrollbarStyle="insideOverlay"
-                    android:scrollbars="vertical" >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left|center"
-                        android:shadowColor="#000000"
-                        android:shadowDx="2"
-                        android:shadowDy="2"
-                        android:shadowRadius="2"
-                        android:text="@string/how_to_get"
-                        android:textColor="#FFFFFF"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                    android:visibility="gone"/>
             </LinearLayout>
 
             <LinearLayout
@@ -181,9 +142,7 @@
                 android:layout_gravity="center"
                 android:background="#017d6c"
                 android:gravity="center"
-                android:orientation="vertical"
-                android:paddingTop="10dp" >
-
+                android:orientation="vertical">
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

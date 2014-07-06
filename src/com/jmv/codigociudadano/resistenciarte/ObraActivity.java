@@ -62,7 +62,7 @@ public class ObraActivity extends ActionBarCustomActivity implements IRequester 
 		setContentView(R.layout.activity_obra);
 
 		final ActionBar actionBar = getSupportActionBar();
-		actionBar.setIcon(R.drawable.ic_launcher_custom);
+		actionBar.setIcon(R.drawable.resistenciarte_logo_color);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar
 				.setTitle(getIntent().getStringExtra(Constants.TITLE_ACTIVITY));

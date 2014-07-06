@@ -57,7 +57,7 @@ public class AutorActivity extends ActionBarCustomActivity implements
 		setContentView(R.layout.activity_autor);
 
 		final ActionBar actionBar = getSupportActionBar();
-		actionBar.setIcon(R.drawable.ic_launcher_custom);
+		actionBar.setIcon(R.drawable.resistenciarte_logo_color);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setTitle(getIntent().getStringExtra(Constants.TITLE_ACTIVITY));
 		
@@ -247,7 +247,7 @@ public class AutorActivity extends ActionBarCustomActivity implements
 			myLinearLayout.removeAllViews();
 			
 			final ActionBar actionBar = getSupportActionBar();
-			actionBar.setIcon(R.drawable.ic_launcher_custom);
+			actionBar.setIcon(R.drawable.resistenciarte_logo_color);
 			actionBar.setDisplayHomeAsUpEnabled(true);
 			actionBar.setTitle(jsonObject.getString("title").trim());
 			

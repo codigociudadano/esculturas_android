@@ -7,17 +7,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -47,8 +51,8 @@ public class EsculturasSectionFragment extends PlaceholderFragment {
 	private Button button;
 
 
-	public EsculturasSectionFragment() {
-		super();
+	public EsculturasSectionFragment(Context context) {
+		super(context);
 	}
 
 	@Override
@@ -142,7 +146,7 @@ public class EsculturasSectionFragment extends PlaceholderFragment {
 			
 			
 
-			final TextView texto = (TextView) v.findViewById(R.id.tittle);
+			final TextView texto = (TextView) v.findViewById(R.id.detalle);
 			texto.setText(distancias2.getTitle());
 
 			myLinearLayout.addView(v);
@@ -208,6 +212,32 @@ public class EsculturasSectionFragment extends PlaceholderFragment {
 									ObraActivity.showHome(HomeActivity.getInstance(), distancias2.getNid(), distancias2.getTitle().trim());
 								}
 							});
+							
+							
+							DisplayMetrics metrics = new DisplayMetrics();
+							HomeActivity.getInstance().getWindowManager()
+									.getDefaultDisplay().getMetrics(metrics);
+							int height = metrics.heightPixels;
+							int width = metrics.widthPixels;
+
+							float bmapWidth = bmap.getWidth();
+							float bmapHeight = bmap.getHeight();
+
+							float wRatio = width / bmapWidth;
+							float hRatio = height / bmapHeight;
+
+							float ratioMultiplier = wRatio;
+							// Untested conditional though I expect this might work
+							// for landscape mode
+							if (hRatio < wRatio) {
+								ratioMultiplier = hRatio;
+							}
+
+							int newBmapWidth = (int) (bmapWidth * ratioMultiplier);
+							int newBmapHeight = (int) (bmapHeight * ratioMultiplier);
+
+							view.findViewById(R.id.image).setLayoutParams(new FrameLayout.LayoutParams(
+									newBmapWidth, newBmapHeight));
 							
 							view.findViewById(R.id.image).setOnClickListener(new OnClickListener() {
 								
@@ -498,8 +528,8 @@ public class EsculturasSectionFragment extends PlaceholderFragment {
 
 							addIMage(v, item);
 
-							final TextView texto = (TextView) v.findViewById(R.id.tittle);
-							texto.setText(distancias2.getTitle());
+							final TextView texto = (TextView) v.findViewById(R.id.detalle);
+							texto.setText(distancias2 != null?distancias2.getTitle():"Desconocido");
 
 							myLinearLayout.addView(v);
 

@@ -7,7 +7,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -45,8 +47,8 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 	private LinearLayout mOpps;
 
 
-	public NovedadesSectionFragment() {
-		super();
+	public NovedadesSectionFragment(Context context) {
+		super(context);
 	}
 
 	@Override

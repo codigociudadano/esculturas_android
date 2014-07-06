@@ -3,22 +3,26 @@ package com.jmv.codigociudadano.resistenciarte;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jmv.codigociudadano.resistenciarte.comps.ConfirmationDialog;
 import com.jmv.codigociudadano.resistenciarte.drawercomps.CustomDrawerAdapter;
 import com.jmv.codigociudadano.resistenciarte.drawercomps.DrawerItem;
 import com.jmv.codigociudadano.resistenciarte.fragments.sections.SectionsPagerAdapter;
 import com.jmv.codigociudadano.resistenciarte.net.ImageLoader;
 import com.jmv.codigociudadano.resistenciarte.utils.AppRater;
+import com.jmv.codigociudadano.resistenciarte.utils.Utils;
 
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
 import android.app.ActivityManager;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.ConfigurationInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -40,6 +44,8 @@ public class HomeActivity extends ActionBarCustomActivity implements
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ViewPager mViewPager;
 
+	protected Dialog currentDialog;
+	
 	private static HomeActivity instance;
 
 	private ImageLoader imageLoaderService;
@@ -307,6 +313,47 @@ public class HomeActivity extends ActionBarCustomActivity implements
 		super.onConfigurationChanged(newConfig);
 		// Pass any configuration change to the drawer toggls
 		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+	
+	@Override
+	public Dialog onCreateDialog(int id) {
+		
+		final Context context = this;
+		switch (id) {
+		case Utils.GPS_NOT_TURNED_ON:
+			currentDialog = ConfirmationDialog.create(this, id,
+					R.string.gps_not_turned_on,
+					getString(R.string.gps_not_turned_on_details),
+					R.string.confirm, new Runnable() {
+						@Override
+						public void run() {
+							Intent intent = new Intent(
+									Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+							startActivity(intent);
+						}
+					});
+			return currentDialog;
+		case Utils.GPS_NOT_TURNED_FF:
+			currentDialog =  ConfirmationDialog.create(this, id,
+					R.string.gps_not_turned_on_yet,
+					getString(R.string.gps_not_turned_on_details),
+					R.string.confirm,R.string.cancel, new Runnable() {
+						@Override
+						public void run() {
+							Intent intent = new Intent(
+									Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+							startActivity(intent);
+						}
+					}, new Runnable() {
+						@Override
+						public void run() {
+							HomeActivity.showHome(context);
+						}
+					});
+			return currentDialog;
+		}
+
+		return super.onCreateDialog(id);
 	}
 
 }

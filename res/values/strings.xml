@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">RESISTENCIARTE</string>
-    <string name="title_section1">Destacado</string>
+    <string name="title_section1">Escultura Cercana</string>
     <string name="sin_novedades_detailed">Busca por mas novedades aqui pronto!!!</string>
     <string name="sin_novedades">No existen novedades!</string>
     <string name="title_section2">Esculturas</string>

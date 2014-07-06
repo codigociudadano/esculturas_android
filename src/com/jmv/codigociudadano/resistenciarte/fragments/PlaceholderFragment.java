@@ -1,5 +1,7 @@
 package com.jmv.codigociudadano.resistenciarte.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.InflateException;
@@ -23,9 +25,11 @@ public abstract class PlaceholderFragment extends Fragment implements
 	private ImageLoader imageLoaderService;
 
 	protected String codeName;
+	protected Context context;
 	
-	public PlaceholderFragment() {
+	public PlaceholderFragment(Context act) {
 		super();
+		this.context = act;
 	}
 
 	public int getFragmentId() {

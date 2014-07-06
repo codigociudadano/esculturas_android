@@ -2,14 +2,17 @@ package com.jmv.codigociudadano.resistenciarte.fragments.sections;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -22,22 +25,27 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.common.base.Function;
 import com.jmv.codigociudadano.resistenciarte.AutorActivity;
-import com.jmv.codigociudadano.resistenciarte.AutoresActivity;
 import com.jmv.codigociudadano.resistenciarte.HomeActivity;
+import com.jmv.codigociudadano.resistenciarte.LocatorActivity;
+import com.jmv.codigociudadano.resistenciarte.NearbyLocations;
+import com.jmv.codigociudadano.resistenciarte.ObraActivity;
 import com.jmv.codigociudadano.resistenciarte.R;
+import com.jmv.codigociudadano.resistenciarte.StandardImageProgrammatic;
+import com.jmv.codigociudadano.resistenciarte.fragments.LocatorFragment;
 import com.jmv.codigociudadano.resistenciarte.fragments.PlaceholderFragment;
 import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Autor;
 import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Escultura;
 import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Foto;
+import com.jmv.codigociudadano.resistenciarte.logic.esculturas.GeoEscultura;
 import com.jmv.codigociudadano.resistenciarte.net.IRequester;
 import com.jmv.codigociudadano.resistenciarte.net.RestClientResistenciarte;
 import com.jmv.codigociudadano.resistenciarte.utils.Constants;
-import com.jmv.codigociudadano.resistenciarte.utils.Generador;
 import com.jmv.codigociudadano.resistenciarte.utils.Utils;
 
-public class HighlightsSectionFragment extends PlaceholderFragment {
+public class HighlightsSectionFragment extends LocatorFragment {
 
 	private ArrayList<Foto> fotos;
 	private Escultura localReg;
@@ -47,35 +55,12 @@ public class HighlightsSectionFragment extends PlaceholderFragment {
 	private Button textAuthor;
 	private Button ubic_main;
 	
-	private SharedPreferences prefs;
-
 	private int currentPage = 0;
-	
-	public HighlightsSectionFragment() {
-		super();
+	private Location myLocation;
+		
+	public HighlightsSectionFragment(Context context) {
+		super(context);
 		codeName = getClass().getName();
-	}
-
-	private void checkNidUpdate() {
-		String lastUpdate = prefs.getString(Utils.LAST_UPDATE, "null");
-		if (lastUpdate.equalsIgnoreCase("null")) {
-			currentPage = 0;
-			saveCurrentPage(currentPage);
-		} else {
-			int lastPage = prefs.getInt(Utils.LAST_PAGE, 0);
-			if (Utils.getDaysCountFromLastUpdate(lastUpdate) > 6){
-				currentPage++;
-				saveCurrentPage(lastPage);
-			}
-			currentPage = lastPage;
-		}
-	}
-
-	private void saveCurrentPage(int currentPage2) {
-		SharedPreferences.Editor editor = prefs.edit();
-		editor.putString(Utils.LAST_UPDATE, Utils.getDateAsString());
-		editor.putInt(Utils.LAST_PAGE, currentPage2);
-		editor.commit();
 	}
 
 	@Override
@@ -86,9 +71,6 @@ public class HighlightsSectionFragment extends PlaceholderFragment {
 		
 		super.onCreateView(inflater, container, savedInstanceState);
 		
-		prefs = HomeActivity.getInstance().getSharedPreferences(Utils.TARJEBUS_APP, 0);
-		checkNidUpdate();
-		
 		img = (ImageView) rootView.findViewById(R.id.img);
 		
 		
@@ -98,173 +80,204 @@ public class HighlightsSectionFragment extends PlaceholderFragment {
 
 		mDeatailedView = rootView.findViewById(R.id.login_form_detailed);
 		
-		RestClientResistenciarte client = new RestClientResistenciarte(this);
-		client.makeJsonRestRequest();
-		
 		Utils.addTouchEffectoToButtons(rootView);
 		return rootView;
 	}
 
 	@Override
-	public String getRequestURI() {
-		return Constants.BASE_URL + "/api/v1/node?page="+currentPage+"&pagesize=1&parameters[type]=escultura";
-	}
-
-	@Override
-	public void onResponse(String response) {
-		JSONArray jsonArray;
-		try {
-			jsonArray = new JSONArray(response);
-			int index = 0;
-			JSONObject jsonObject = jsonArray.optJSONObject(index);
-
-			localReg = new Escultura();
-
-			Utils.extractFromResponseToObject(localReg, jsonObject);
-
-			getPhotos(localReg);
-
-		} catch (Exception e) {
-			//retrying
-			currentPage = 0;
-			saveCurrentPage(currentPage);
+	public void onLocationChanged(Location location) {
+		super.onLocationChanged(location);
+		if (location != null) {
+			myLocation = location;
 			RestClientResistenciarte client = new RestClientResistenciarte(this);
 			client.makeJsonRestRequest();
 		}
 	}
-
-	private void getPhotos(final Escultura localReg) {
-		RestClientResistenciarte internalCall = new RestClientResistenciarte(
-				photosRquester);
-		internalCall.makeJsonRestRequest();
+	
+	@Override
+	public String getRequestURI() {
+		return Constants.BASE_URL + "/api/v1/closest_nodes_by_coord?lat="
+				+ myLocation.getLatitude() + "&lon="
+				+ myLocation.getLongitude() + "&qty_nodes=1&dist=500";
 	}
 
-	private IRequester photosRquester = new IRequester() {
+	@Override
+	public void onResponse(String response) {
+		
+		ArrayList<GeoEscultura> listaEsculturas = new ArrayList<GeoEscultura>();
 
-		@Override
-		public void onResponse(String response) {
-			try {
-				JSONObject jsonObject = new JSONObject(response);
-				JSONArray fotosArrays = jsonObject.getJSONObject("field_fotos")
-						.getJSONArray("und");
+		JSONArray jsonArray;
+		try {
+			jsonArray = new JSONArray(response);
+			int max = jsonArray.length();
 
-				setUbicacion(jsonObject, ubic_main);
+			for (int i = 0; i < max; i++) {
+				JSONObject jsonObject = jsonArray.optJSONObject(i);
 
-				setAuthor(jsonObject, textAuthor);
+				GeoEscultura localReg = new GeoEscultura();
 
-				fotos = new ArrayList<Foto>();
-				for (int i = 0; i < fotosArrays.length(); i++) {
-					Foto foto = new Foto();
-					JSONObject jsonObjectFoto = fotosArrays.getJSONObject(i);
-					Utils.extractFromResponseToObject(foto, jsonObjectFoto);
-					fotos.add(foto);
-				}
+				Utils.extractFromResponseToObject(localReg, jsonObject);
 
-				// Image url
-				final String image_url = Constants.BASE_URL + "/sites/default/files/"
-						+ fotos.get(0).getFilename();
-
-				Function<Bitmap, Void> afterLogin = new Function<Bitmap, Void>() {
-					@Override
-					public Void apply(Bitmap bmap) {
-						textView.setText(localReg.getTitle());
-
-						DisplayMetrics metrics = new DisplayMetrics();
-						HomeActivity.getInstance().getWindowManager()
-								.getDefaultDisplay().getMetrics(metrics);
-						int height = metrics.heightPixels;
-						int width = metrics.widthPixels;
-
-						float bmapWidth = bmap.getWidth();
-						float bmapHeight = bmap.getHeight();
-
-						float wRatio = width / bmapWidth;
-						float hRatio = height / bmapHeight;
-
-						float ratioMultiplier = wRatio;
-						// Untested conditional though I expect this might work
-						// for landscape mode
-						if (hRatio < wRatio) {
-							ratioMultiplier = hRatio;
-						}
-
-						int newBmapWidth = (int) (bmapWidth * ratioMultiplier);
-						int newBmapHeight = (int) (bmapHeight * ratioMultiplier);
-
-						img.setLayoutParams(new LinearLayout.LayoutParams(
-								newBmapWidth, newBmapHeight));
-						
-						
-						showProgress(false);
-						mDeatailedView.setVisibility(View.VISIBLE);
-						return null;
-					}
-				};
-
-				getImageLoaderService()
-						.DisplayImage(image_url, img, afterLogin);
-
-			} catch (Exception e) {
-				e.printStackTrace();
+				listaEsculturas.add(localReg);
 			}
+
+		} catch (Exception e) {
+
 		}
 
-		private void setUbicacion(JSONObject jsonObject, Button ubic_main) {
-			/*
-			 * "":{"und":[{"lat":"-27.4492586","lon":"-58.9922044",
-			 * "map_width":null,"map_height":null,"zoom":"17","name":""}]}
-			 */
-			JSONArray aYs;
-			try {
-				if (jsonObject.isNull("field_mapa")) {
+		if (!listaEsculturas.isEmpty()) {
+			Collections.sort(listaEsculturas);
+
+			int number = 1;
+
+			for (GeoEscultura distancias2 : listaEsculturas) {
+
+				getPhotos(distancias2);
+
+			}
+
+		}
+		
+		
+	}
+
+	private void getPhotos(final GeoEscultura distancias2) {
+		IRequester r = new IRequester() {
+			@Override
+			public void onResponse(String response) {
+				try {
+					final JSONObject jsonObject = new JSONObject(response);
+					JSONArray fotosArrays = jsonObject.getJSONObject("field_fotos")
+							.getJSONArray("und");
+
+					
+					setUbicacion(jsonObject, ubic_main);
+
+					setAuthor(jsonObject, textAuthor);
+
+					fotos = new ArrayList<Foto>();
+					for (int i = 0; i < fotosArrays.length(); i++) {
+						Foto foto = new Foto();
+						JSONObject jsonObjectFoto = fotosArrays.getJSONObject(i);
+						Utils.extractFromResponseToObject(foto, jsonObjectFoto);
+						fotos.add(foto);
+					}
+
+					// Image url
+					final String image_url = Constants.BASE_URL + "/sites/default/files/"
+							+ fotos.get(0).getFilename();
+
+					Function<Bitmap, Void> afterLogin = new Function<Bitmap, Void>() {
+						@Override
+						public Void apply(Bitmap bmap) {
+							try {
+								textView.setText(jsonObject.getString("title"));
+							} catch (JSONException e) {
+								textView.setText("Sin titulo");
+							}
+
+							DisplayMetrics metrics = new DisplayMetrics();
+							HomeActivity.getInstance().getWindowManager()
+									.getDefaultDisplay().getMetrics(metrics);
+							int height = metrics.heightPixels;
+							int width = metrics.widthPixels;
+
+							float bmapWidth = bmap.getWidth();
+							float bmapHeight = bmap.getHeight();
+
+							float wRatio = width / bmapWidth;
+							float hRatio = height / bmapHeight;
+
+							float ratioMultiplier = wRatio;
+							// Untested conditional though I expect this might work
+							// for landscape mode
+							if (hRatio < wRatio) {
+								ratioMultiplier = hRatio;
+							}
+
+							int newBmapWidth = (int) (bmapWidth * ratioMultiplier);
+							int newBmapHeight = (int) (bmapHeight * ratioMultiplier);
+
+							img.setLayoutParams(new LinearLayout.LayoutParams(
+									newBmapWidth, newBmapHeight));
+							
+							
+							showProgress(false);
+							mDeatailedView.setVisibility(View.VISIBLE);
+							return null;
+						}
+					};
+
+					getImageLoaderService()
+							.DisplayImage(image_url, img, afterLogin);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			private void setUbicacion(JSONObject jsonObject, Button ubic_main) {
+				/*
+				 * "":{"und":[{"lat":"-27.4492586","lon":"-58.9922044",
+				 * "map_width":null,"map_height":null,"zoom":"17","name":""}]}
+				 */
+				JSONArray aYs;
+				try {
+					if (jsonObject.isNull("field_mapa")) {
+						ubic_main.setVisibility(View.GONE);
+						return;
+					}
+					JSONObject auhtorObject;
+					auhtorObject = jsonObject.getJSONObject("field_mapa");
+
+					aYs = auhtorObject.isNull("und") ? null : auhtorObject
+							.getJSONArray("und");
+
+					if (aYs == null) {
+						ubic_main.setVisibility(View.GONE);
+					} else {
+						final double lat = Double.valueOf(aYs.getJSONObject(0).getDouble("lat"));
+						final double lon = Double.valueOf(aYs.getJSONObject(0).getDouble("lon"));
+						ubic_main.setOnClickListener(new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								
+								Intent intent = new Intent(
+										android.content.Intent.ACTION_VIEW,
+										Uri.parse("http://maps.google.com/maps?&daddr="
+												+ lat + "," + lon));
+								intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+								intent.addCategory(Intent.CATEGORY_LAUNCHER);
+								intent.setClassName("com.google.android.apps.maps",
+										"com.google.android.maps.MapsActivity");
+								startActivity(intent);
+							}
+						});
+					}
+				} catch (JSONException e) {
+					// the author is null
 					ubic_main.setVisibility(View.GONE);
 					return;
 				}
-				JSONObject auhtorObject;
-				auhtorObject = jsonObject.getJSONObject("field_mapa");
 
-				aYs = auhtorObject.isNull("und") ? null : auhtorObject
-						.getJSONArray("und");
-
-				if (aYs == null) {
-					ubic_main.setVisibility(View.GONE);
-				} else {
-					final double lat = Double.valueOf(aYs.getJSONObject(0).getDouble("lat"));
-					final double lon = Double.valueOf(aYs.getJSONObject(0).getDouble("lon"));
-					ubic_main.setOnClickListener(new OnClickListener() {
-
-						@Override
-						public void onClick(View v) {
-							
-							Intent intent = new Intent(
-									android.content.Intent.ACTION_VIEW,
-									Uri.parse("http://maps.google.com/maps?&daddr="
-											+ lat + "," + lon));
-							intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-							intent.addCategory(Intent.CATEGORY_LAUNCHER);
-							intent.setClassName("com.google.android.apps.maps",
-									"com.google.android.maps.MapsActivity");
-							startActivity(intent);
-						}
-					});
-				}
-			} catch (JSONException e) {
-				// the author is null
-				ubic_main.setVisibility(View.GONE);
-				return;
 			}
 
-		}
+			@Override
+			public String getRequestURI() {
+				return Constants.BASE_URL + "/api/v1/node/"
+						+ distancias2.getNid();
+			}
 
-		@Override
-		public String getRequestURI() {
-			return localReg.getUri();
-		}
+			@Override
+			public void onResponse(InputStream result) {
+			}
+		};
 
-		@Override
-		public void onResponse(InputStream result) {
-		}
-	};
+		RestClientResistenciarte internalCall = new RestClientResistenciarte(r);
+		internalCall.makeJsonRestRequest();
+	}
+
 
 	@Override
 	public void onResponse(InputStream result) {

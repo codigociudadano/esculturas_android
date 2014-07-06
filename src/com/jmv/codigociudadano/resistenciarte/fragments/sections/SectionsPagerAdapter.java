@@ -3,10 +3,13 @@ package com.jmv.codigociudadano.resistenciarte.fragments.sections;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import com.jmv.codigociudadano.resistenciarte.LocatorActivity;
 import com.jmv.codigociudadano.resistenciarte.R;
+import com.jmv.codigociudadano.resistenciarte.fragments.LocatorFragment;
 import com.jmv.codigociudadano.resistenciarte.fragments.PlaceholderFragment;
 import com.jmv.codigociudadano.resistenciarte.net.ImageLoader;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -36,13 +39,14 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 		if (p == null) {
 			switch (position) {
 			case 0:
-				p = new HighlightsSectionFragment();
+				LocatorFragment f = (LocatorFragment) new HighlightsSectionFragment(context);
+				p = f;
 				break;
 			case 1:
-				p = new EsculturasSectionFragment();
+				p = new EsculturasSectionFragment(context);
 				break;
 			case 2:
-				p = new NovedadesSectionFragment();
+				p = new NovedadesSectionFragment(context);
 				break;
 			}
 			Bundle args = new Bundle();

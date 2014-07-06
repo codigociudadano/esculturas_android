@@ -5,7 +5,6 @@
     android:layout_gravity="center"
     android:background="#000000"
     android:gravity="center"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.jmv.codigociudadano.resistenciarte.HomeActivity$PlaceholderFragment" >
     
     <LinearLayout
@@ -79,6 +78,7 @@
                 android:layout_height="wrap_content"
                  android:shadowColor="#000000"
                             android:shadowDx="2"
+                            
                             android:shadowDy="2"
                             android:shadowRadius="1"
                 android:text="@string/button_before"
@@ -93,8 +93,7 @@
                 android:layout_gravity="center"
                 android:background="#000000"
                 android:gravity="center"
-                android:orientation="vertical"
-                android:paddingTop="10dp" >
+                android:orientation="vertical">
             </LinearLayout>
 
             <Button
@@ -104,6 +103,7 @@
                  android:shadowColor="#000000"
                             android:shadowDx="2"
                             android:shadowDy="2"
+                            
                             android:shadowRadius="1"
                 android:text="@string/button"
                 android:textAppearance="?android:attr/textAppearanceLarge"

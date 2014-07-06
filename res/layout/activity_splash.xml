@@ -2,9 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:background="#017d6c"
     android:layout_height="match_parent"
+    android:background="#017d6c"
+    android:orientation="vertical"
     tools:context="com.jmv.codigociudadano.resistenciarte.SplashActivity"
     tools:ignore="MergeRootFrame" >
 
@@ -23,35 +23,29 @@
             android:id="@+id/image"
             android:layout_width="140dp"
             android:layout_height="140dp"
-            android:layout_marginTop="23dp"
+            android:layout_marginTop="10dp"
             android:src="@drawable/ic_launcher_web" />
-        
-         <ImageView
+
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="23dp"
-            android:background="#FFFFFF"
-            android:padding="10dp"
-            android:src="@drawable/resistenciarte_text_color" />
-
+            android:layout_marginTop="10dp"
+            android:src="@drawable/resistenciarte_text_white" />
     </LinearLayout>
-    
+
     <FrameLayout
-        android:layout_width="match_parent"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
-                    android:scaleX="0.5"
-            android:scaleY="0.5"
         android:layout_gravity="bottom|center_horizontal"
         android:gravity="bottom|center_horizontal"
         android:orientation="vertical">
 
-         <ImageView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-
-            android:src="@drawable/cc_logo" />
-
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/cc_logo" 
+            android:alpha="0.5"/>
     </FrameLayout>
 
 </FrameLayout>

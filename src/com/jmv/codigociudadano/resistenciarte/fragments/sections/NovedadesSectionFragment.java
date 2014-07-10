@@ -1,51 +1,72 @@
 package com.jmv.codigociudadano.resistenciarte.fragments.sections;
 
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Locale;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-import android.text.Html;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.common.base.Function;
+import com.google.android.gms.internal.bt;
+import com.google.android.gms.internal.di;
 import com.jmv.codigociudadano.resistenciarte.HomeActivity;
-import com.jmv.codigociudadano.resistenciarte.ObraActivity;
 import com.jmv.codigociudadano.resistenciarte.R;
 import com.jmv.codigociudadano.resistenciarte.comps.TextViewEx;
 import com.jmv.codigociudadano.resistenciarte.fragments.PlaceholderFragment;
-import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Escultura;
-import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Foto;
-import com.jmv.codigociudadano.resistenciarte.net.IRequester;
-import com.jmv.codigociudadano.resistenciarte.net.RestClientResistenciarte;
+import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Evento;
+
+import com.jmv.codigociudadano.resistenciarte.utils.CalendarUtil;
 import com.jmv.codigociudadano.resistenciarte.utils.Constants;
 import com.jmv.codigociudadano.resistenciarte.utils.Utils;
 
 public class NovedadesSectionFragment extends PlaceholderFragment {
 
+	private SharedPreferences prefs;
+
+	public static final String CALENDAR_ID = "CALENDAR_ID";
+	public static final String CALENDAR_TITLE = "CALENDAR_TITLE";
+	public static final String CALENDAR_START_DATE = "CALENDAR_START_DATE";
+	public static final String CALENDAR_END_DATE = "CALENDAR_END_DATE";
+
 	ProgressDialog pDialog;
 	private LinearLayout myLinearLayout;
-	private int currentPage = 0;
-	private Button button2;
-	private Button button;
+
 	private LinearLayout mOpps;
 
+	private ArrayList<Evento> esculturas;
+	private Button button;
+
+	private boolean isAModification;
+	private Long eventIDForModification;
+
+	private ProgressBar progressBar1;
+
+	private TextView loading_status_message;
 
 	public NovedadesSectionFragment(Context context) {
 		super(context);
@@ -54,381 +75,294 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
+
 		setFragmentId(R.layout.fragment_home3);
 
 		super.onCreateView(inflater, container, savedInstanceState);
-	
+
 		showProgress(true);
-		
-		myLinearLayout = (LinearLayout) rootView.findViewById(R.id.text_view_place);
-		
+
+		myLinearLayout = (LinearLayout) rootView
+				.findViewById(R.id.text_view_place);
+
 		mOpps = (LinearLayout) rootView.findViewById(R.id.no_novedades);
 		mOpps.setVisibility(View.GONE);
 		
-		RestClientResistenciarte client = new RestClientResistenciarte(this);
-		client.makeJsonRestRequest();
+
+		progressBar1 = (ProgressBar) rootView.findViewById(R.id.progressBar1);
+		loading_status_message = (TextView) rootView.findViewById(R.id.loading_status_message);
 		
-		
-		button = (Button) rootView.findViewById(R.id.btn_load);
-		button.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				currentPage++;
-				new loadMoreListView().execute();
-			}
-		});
-		
-		button2 = (Button) rootView.findViewById(R.id.btn_load_before);
-		button2.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				currentPage--;
-				if (currentPage < 0){
-					currentPage = 0;
-				}
-				new loadMoreListView().execute();
-			}
-		});
-		button2.setVisibility(View.GONE);
+		new DownloadTask().execute();
 
 		return rootView;
 	}
 
+	
+	
 	@Override
 	public String getRequestURI() {
-		//http://dev.resistenciarte.org/api/v1/node?page=0&parameters[type]=eventos
-		return Constants.BASE_URL + "/api/v1/node?page="+currentPage+"&pagesize=5&parameters[type]=eventos";
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public void onResponse(String response) {
-		JSONArray jsonArray;
-		
-		ArrayList<Escultura> esculturas = new ArrayList<Escultura>();
-		try {
-			jsonArray = new JSONArray(response);
-			int max = jsonArray.length();
-			
-			if(max == 0){
-				//no more results
-				mOpps.setVisibility(View.VISIBLE);
-				button.setVisibility(View.GONE);
-				showProgress(false);
-				return;
-			}
-			
-			if (max < Constants.MAX_NUMBER_ITEMS){
-				button.setVisibility(View.GONE);
-			}
-			
-			for (int i = 0; i < max; i++) {
-				JSONObject jsonObject = jsonArray.optJSONObject(i);
+		// TODO Auto-generated method stub
 
-				Escultura localReg = new Escultura();
-
-				EsculturaItem item = new EsculturaItem();
-				Utils.extractFromResponseToObject(localReg, jsonObject);
-
-				item.setEscultura(localReg);
-				
-				esculturas.add(localReg);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-
-		myLinearLayout.removeAllViewsInLayout();
-
-
-		int number = 1;
-		for (Escultura item : esculturas) {
-
-			Escultura distancias2 = item;
-			
-			View v = View.inflate(HomeActivity.getInstance(),
-					R.layout.fragment_novedades, null);
-
-			addIMage(v, distancias2);
-			
-			final TextViewEx texto = (TextViewEx) v.findViewById(R.id.tittle);
-			texto.setText(distancias2.getTitle(), true);
-
-			final Button btn = (Button) v.findViewById(R.id.novedad);
-			btn.setText(Constants.NOVEDAD+" "+(currentPage + 1)+" - "+number);
-			number++;
-			myLinearLayout.addView(v);
-
-		}
-
-		if (esculturas.isEmpty() && currentPage == 0){
-			RestClientResistenciarte client = new RestClientResistenciarte(this);
-			client.makeJsonRestRequest();
-		} else {
-			showProgress(false);
-		}
 	}
-	
-	private void addIMage(final View view, final Escultura distancias2) {
-		IRequester r = new IRequester() {
 
-			@Override
-			public void onResponse(String response) {
-				try {
-					JSONObject jsonObject = new JSONObject(response);
-					
-					setDescription(jsonObject, (Button) view.findViewById(R.id.description));
-					
-					if (!jsonObject.isNull("field_fotos")) {
-						try {
-							jsonObject.getJSONArray("field_fotos");
-							ImageView viewImg = (ImageView) view
-									.findViewById(R.id.image);
-							viewImg.setBackgroundResource(R.drawable.ic_launcher_custom);
-							setInvisibleToDefaultImages();
-							return;
-						} catch (Exception e) {
-							//everything goes well!
-						}
-					} else {
-						ImageView viewImg = (ImageView) view
-								.findViewById(R.id.image);
-						viewImg.setBackgroundResource(R.drawable.ic_launcher_custom);
-						setInvisibleToDefaultImages();
-						return;
-					}
-					
-					JSONArray fotosArrays = jsonObject.getJSONObject(
-							"field_fotos").getJSONArray("und");
-					
-					ArrayList<Foto> fotos = new ArrayList<Foto>();
-					for (int i = 0; i < fotosArrays.length(); i++) {
-						Foto foto = new Foto();
-						JSONObject jsonObjectFoto = fotosArrays
-								.getJSONObject(i);
-						Utils.extractFromResponseToObject(foto, jsonObjectFoto);
-						fotos.add(foto);
-					}
-
-					// Image url
-					String image_url = Constants.BASE_URL
-							+ "/sites/default/files/"
-							+ fotos.get(0).getUri()
-									.replaceFirst("public://", "");
-					;
-
-					Function<Bitmap, Void> afterLogin = new Function<Bitmap, Void>() {
-						@Override
-						public Void apply(Bitmap bmap) {
-							setInvisibleToDefaultImages();
-							return null;
-						}
-					};
-
-					HomeActivity
-							.getInstance()
-							.getImageLoaderService()
-							.DisplayImage(image_url,
-									(ImageView) view.findViewById(R.id.image),
-									afterLogin);
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			
-			private void setDescription(JSONObject jsonObject,
-					Button descriptionBtn) {
-				/*
-				 * "":{"und":[{"lat":"-27.4492586","lon":"-58.9922044",
-				 * "map_width":null,"map_height":null,"zoom":"17","name":""}]}
-				 * 
-				 * field_ubicacion":{"und":[{"value":"Perón, Juan Domingo Nº
-				 * 454\t\t\t\t",
-				 * "safe_value":"Perón, Juan Domingo Nº 454\t\t\t\t"
-				 * ,"format":null}]}
-				 */
-				JSONArray aYs;
-				try {
-					if (jsonObject.isNull("body")) {
-						descriptionBtn.setVisibility(View.GONE);
-						return;
-					}
-					JSONObject auhtorObject;
-					auhtorObject = jsonObject.getJSONObject("body");
-
-					aYs = auhtorObject.isNull("und") ? null : auhtorObject
-							.getJSONArray("und");
-
-					if (aYs == null) {
-						descriptionBtn.setVisibility(View.GONE);
-					} else {
-						final String value = String
-								.valueOf(
-										aYs.getJSONObject(0).getString("value"))
-								.trim().substring(0, 50).concat("... <b>[Leer mas..]</b>");
-						descriptionBtn.setText(value.contains("Fuente :")?Html.fromHtml("<b>[Leer mas...]</b>"):Html.fromHtml(value));
-						descriptionBtn.setOnClickListener(new OnClickListener() {
-							
-							@Override
-							public void onClick(View v) {
-								ObraActivity.showHome(HomeActivity.getInstance(), distancias2.getNid(), distancias2.getTitle().trim());
-							}
-						});
-					}
-				} catch (JSONException e) {
-					// the author is null
-					descriptionBtn.setVisibility(View.GONE);
-					return;
-				}
-
-			}
-			
-			private void setInvisibleToDefaultImages() {
-				View p = view.findViewById(R.id.progress);
-				p.setVisibility(View.GONE);
-				View iV = view.findViewById(R.id.default_image);
-				iV.setVisibility(View.GONE);
-			}
-
-			@Override
-			public String getRequestURI() {
-				return Constants.BASE_URL + "/api/v1/node/"
-						+ distancias2.getNid();
-			}
-
-			@Override
-			public void onResponse(InputStream result) {
-			}
-		};
-
-		RestClientResistenciarte internalCall = new RestClientResistenciarte(r);
-		internalCall.makeJsonRestRequest();
-	}
 	@Override
 	public void onResponse(InputStream result) {
 		// TODO Auto-generated method stub
 
 	}
 
-	/**
-	 * Async Task that send a request to url Gets new list view data Appends to
-	 * list view
-	 * */
-	private class loadMoreListView extends AsyncTask<Void, Void,  ArrayList<EsculturaItem> > {
+	// usually, subclasses of AsyncTask are declared inside the activity class.
+	// that way, you can easily modify the UI thread from here
+	private class DownloadTask extends
+			AsyncTask<String, Integer, ArrayList<Evento>> {
+
+		public DownloadTask() {
+
+		}
 
 		@Override
 		protected void onPreExecute() {
-			// Showing progress dialog before sending http request
-			showProgress(true);
-			if (currentPage == 0){
-				button2.setVisibility(View.GONE);
-			} else {
-				button2.setVisibility(View.VISIBLE);
+			// Get the Drawable custom_progressbar                     
+		    Drawable draw=context.getResources().getDrawable(R.drawable.customprogressbar);
+		// set the drawable as progress drawable
+		    progressBar1.setProgressDrawable(draw);
+			progressBar1.setMax(100);
+		}
+		
+		@Override
+		protected ArrayList<Evento> doInBackground(String... sUrl) {
+
+			esculturas = esculturas == null ? Utils
+					.getWebLocations(NovedadesSectionFragment.this.context)
+					: esculturas;
+
+			if (myLinearLayout.getChildCount() == 0) {
+				myLinearLayout.removeAllViewsInLayout();
+
+				String currentDate = "";
+
+				Collections.sort(esculturas);
+
+				int number = 0;
+				for (Evento item : esculturas) {
+
+					final Evento distancias2 = item;
+
+					number++;
+					publishProgress((int) ((number / (float) esculturas.size()) * 100));
+					
+					View v = View.inflate(HomeActivity.getInstance(),
+							R.layout.fragment_novedades, null);
+
+					View heView = View.inflate(HomeActivity.getInstance(),
+							R.layout.header, null);
+
+					final TextView texto = (TextView) v
+							.findViewById(R.id.tittle);
+					texto.setText(distancias2.getNombre());
+
+					StringBuilder builder = new StringBuilder();
+					builder.append("Duracion: " + distancias2.getHora_inicio());
+					builder.append(" a ");
+					builder.append(distancias2.getHora_fin());
+
+					final TextView descEx = (TextView) v
+							.findViewById(R.id.date);
+					descEx.setText(builder.toString());
+
+					final TextView descEx1 = (TextView) v
+							.findViewById(R.id.lugar);
+					descEx1.setText("Lugar: " + distancias2.getLugar());
+
+					final TextView descEx2 = (TextView) v
+							.findViewById(R.id.organizador);
+					descEx2.setText("Organiza: " + distancias2.getOrganizador());
+
+					Button shareButton = (Button) v.findViewById(R.id.share);
+					shareButton.setEnabled(true);
+					shareButton.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							Utils.shareNovedad(HomeActivity.getInstance(),
+									distancias2);
+						}
+					});
+
+					DateTimeFormatter dateStringFormat = DateTimeFormat
+							.forPattern("dd-MM-yyyy HH:mm");
+					DateTime time = dateStringFormat.parseDateTime(String.valueOf(
+							distancias2.getDate().replaceAll("\\s+", "")
+									+ " "
+									+ distancias2.getHora_inicio().replaceAll("\\s+",
+											"")).trim());
+
+					Calendar cal = Calendar.getInstance();
+
+					cal.setTime(time.toDate());
+
+					DateTime timeEnd = dateStringFormat.parseDateTime(String.valueOf(
+							distancias2.getDate().replaceAll("\\s+", "") + " "
+									+ distancias2.getHora_fin().replaceAll("\\s+", ""))
+							.trim());
+
+					Calendar untilCal = Calendar.getInstance();
+					untilCal.setTime(timeEnd.toDate());
+					
+					final boolean alreadyInCalendar = CalendarUtil.isAlreadyAtCalendar(context, cal.getTimeInMillis(), untilCal.getTimeInMillis(), distancias2.getNombre());
+					
+					final Button calendarBtn = (Button) v.findViewById(R.id.asistir);
+					
+					if (alreadyInCalendar){
+						calendarBtn.setText(context.getString(R.string.asistirOK));
+						Drawable img = context.getResources().getDrawable( R.drawable.ic_assits_ok );
+						img.setBounds( 0, 0, 60, 60 );
+						calendarBtn.setCompoundDrawables( img, null, null, null );
+					}
+					
+					
+					calendarBtn.setEnabled(true);
+					calendarBtn.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							if (alreadyInCalendar){
+								Toast.makeText(
+										HomeActivity.getInstance().getApplicationContext(),
+										R.string.calendar_event_already_added_message,
+										Toast.LENGTH_LONG).show();
+							} else {
+								calendarBtn.setText(context.getString(R.string.asistirOK));
+								Drawable img = context.getResources().getDrawable( R.drawable.ic_assits_ok );
+								img.setBounds( 0, 0, 60, 60 );
+								calendarBtn.setCompoundDrawables( img, null, null, null );
+								addToCalendar(distancias2);
+							}
+						}
+					});
+
+					if (!currentDate.equalsIgnoreCase(distancias2.getDate())) {
+						final Button btn = (Button) heView
+								.findViewById(R.id.novedad);
+
+						// First convert to Date. This is one of the many ways.
+						String dateString = distancias2.getDate();
+						Date date = null;
+						try {
+							date = new SimpleDateFormat("dd-MM-yyyy")
+									.parse(dateString);
+						} catch (ParseException e) {
+
+						}
+
+						// Then get the day of week from the Date based on
+						// specific locale.
+						String dayOfWeek = new SimpleDateFormat("EEEE",
+								Locale.getDefault()).format(date);
+
+						btn.setText(Utils.toCamelCase(dayOfWeek).trim() + ", "
+								+ distancias2.getDate());
+						currentDate = distancias2.getDate();
+						number++;
+						myLinearLayout.addView(heView);
+					}
+
+					myLinearLayout.addView(v);
+
+				}
+
 			}
 			
-		}
+			
+			
+			return esculturas;
+			 
+		 }
 
-		protected ArrayList<EsculturaItem> doInBackground(Void... unused) {
-			try {
-				IRequester r = new IRequester() {
-					
-					@Override
-					public void onResponse(InputStream result) {
-						// TODO Auto-generated method stub
-						
-					}
-					
-					@Override
-					public String getRequestURI() {
-						return Constants.BASE_URL + "/api/v1/node?page="+currentPage+"&pagesize=5&parameters[type]=eventos";
-					}
+		 @Override
+		 protected void onProgressUpdate(Integer... progress) {
+		     //setProgressPercent(progress[0]);
+			 progressBar1.setProgress(progress[0]);
+			 if (progress[0] >=99){
+				 loading_status_message.setText(context.getString(R.string.sync_finish));
+			 }
+		 }
 
-					@Override
-					public void onResponse(String response) {
-						JSONArray jsonArray;
-						
-						ArrayList<Escultura> esculturas = new ArrayList<Escultura>();
-						try {
-							jsonArray = new JSONArray(response);
-							int max = jsonArray.length();
-											
-							if(max == 0){
-								//no more results
-								currentPage--;
-								if (currentPage == 0){
-									button2.setVisibility(View.GONE);
-								}
-								button.setVisibility(View.GONE);
-								showProgress(false);
-								return;
-							}
-							
-							myLinearLayout.removeAllViewsInLayout();
-							for (int i = 0; i < max; i++) {
-								JSONObject jsonObject = jsonArray.optJSONObject(i);
+		private void addToCalendar(Evento distancias2) {
 
-								Escultura localReg = new Escultura();
+			DateTimeFormatter dateStringFormat = DateTimeFormat
+					.forPattern("dd-MM-yyyy HH:mm");
+			DateTime time = dateStringFormat.parseDateTime(String.valueOf(
+					distancias2.getDate().replaceAll("\\s+", "")
+							+ " "
+							+ distancias2.getHora_inicio().replaceAll("\\s+",
+									"")).trim());
 
-								EsculturaItem item = new EsculturaItem();
-								Utils.extractFromResponseToObject(localReg, jsonObject);
+			Calendar cal = Calendar.getInstance();
 
-								item.setEscultura(localReg);
-								
-								esculturas.add(localReg);
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						
-						int number = 1;
-						for (Escultura item : esculturas) {
+			cal.setTime(time.toDate());
 
-							Escultura distancias2 = item;
-							
-							View v = View.inflate(HomeActivity.getInstance(),
-									R.layout.fragment_novedades, null);
+			DateTime timeEnd = dateStringFormat.parseDateTime(String.valueOf(
+					distancias2.getDate().replaceAll("\\s+", "") + " "
+							+ distancias2.getHora_fin().replaceAll("\\s+", ""))
+					.trim());
 
-							final TextViewEx texto = (TextViewEx) v.findViewById(R.id.tittle);
-							texto.setText(distancias2.getTitle(), true);
-							
-							final Button btn = (Button) v.findViewById(R.id.novedad);
-							
-							btn.setText(Constants.NOVEDAD+" "+(currentPage + 1)+" - "+number);
+			Calendar untilCal = Calendar.getInstance();
+			untilCal.setTime(timeEnd.toDate());
 
-							number++;
-							myLinearLayout.addView(v);
-
-						}
-						
-						
-						final ScrollView scroll = (ScrollView) mLoginFormView;
-						scroll.postDelayed(new Runnable() {
-							@Override
-							public void run() {
-								scroll.smoothScrollTo(0, 0);
-								scroll.fullScroll(ScrollView.FOCUS_UP);
-								showProgress(false);
-							}
-						}, 600);
-						
-					}
-
-				};
-				RestClientResistenciarte client = new RestClientResistenciarte(r);
-				client.makeJsonRestRequest();
-
-			} catch (Exception e) {
-				return null;
+			if (cal.getTimeInMillis() >= untilCal.getTimeInMillis()) {
+				Toast.makeText(
+						HomeActivity.getInstance().getApplicationContext(),
+						R.string.calendar_event_wrong_message,
+						Toast.LENGTH_LONG).show();
+				return;
 			}
-			return new ArrayList<EsculturaItem>();
+
+			StringBuilder changeType = new StringBuilder();
+
+			if (Build.VERSION.SDK_INT >= 8) {
+				try {
+					CalendarUtil.pushAppointmentsToCalender(
+							HomeActivity.getInstance(),
+							distancias2.getNombre(), distancias2.toString(),
+							-1L, cal.getTimeInMillis(),
+							untilCal.getTimeInMillis(), true, true, true);
+				} catch (Exception e) {
+					Toast.makeText(
+							HomeActivity.getInstance().getApplicationContext(),
+							R.string.calendar_event_undefined_error,
+							Toast.LENGTH_LONG).show();
+					return;
+				}
+			} else {
+				Intent intent = new Intent(Intent.ACTION_EDIT);
+				intent.setType("vnd.android.cursor.item/event");
+				intent.putExtra("beginTime", cal.getTimeInMillis());
+				intent.putExtra("allDay", false);
+				intent.putExtra("rrule", "FREQ=DAILY;COUNT=1");
+				intent.putExtra("endTime", untilCal.getTimeInMillis());
+				intent.putExtra("title", distancias2.toString());
+				startActivity(intent);
+			}
+
+			Toast.makeText(HomeActivity.getInstance().getApplicationContext(),
+					R.string.calendar_event_added_message, Toast.LENGTH_LONG)
+					.show();
+
 		}
 
-		protected void onPostExecute( ArrayList<EsculturaItem>  unused) {
-		
+		@Override
+		protected void onPostExecute(ArrayList<Evento> result) {
+			progressBar1.setProgress(100);
+			showProgress(false);
+
 		}
 	}
+
 }

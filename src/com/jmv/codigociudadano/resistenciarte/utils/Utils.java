@@ -1,5 +1,9 @@
 package com.jmv.codigociudadano.resistenciarte.utils;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -17,11 +21,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.jmv.codigociudadano.resistenciarte.fragments.sections.EsculturaItem;
+import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Evento;
 import com.jmv.codigociudadano.resistenciarte.net.FileCache;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -37,6 +43,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore.Images;
 import android.view.MotionEvent;
 import android.view.View;
@@ -52,8 +59,8 @@ public class Utils {
 	public static final String LONG2 = "long2";
 
 	public static final int GPS_NOT_TURNED_FF = 3;
-	public static final String TARJEBUS_APP = "com.jmv.tarje_bus_nea.";
-	public static final String FIRST_TIME = TARJEBUS_APP + "first_time";
+	public static final String RESISTENCIARTE_APP = "com.jmv.codigociudadano.resistenciarte";
+	public static final String FIRST_TIME = RESISTENCIARTE_APP + "first_time";
 	public static final String LAST_UPDATE = "last_update";
 	public static final String LAST_PAGE = "last_page";
 	public static final String FILE_NAME = "systemTB";
@@ -64,6 +71,62 @@ public class Utils {
 	public static final int GPS_NOT_TURNED_ON = 2;
 	public static final String LAST_NID = "last_nid";
 
+	public static ArrayList<Evento> getWebLocations(Context context) {
+		ArrayList<Evento> list = new ArrayList<Evento>();
+
+		try {
+
+			// Find the directory for the SD Card using the API
+			// *Don't* hardcode "/sdcard"
+			File sdcard = Environment.getExternalStorageDirectory();
+			File dir = new File(sdcard.getAbsolutePath() + "/resistenciarte");
+			// Get the text file
+			File file = new File(dir, FILE_NAME);
+
+			StringBuilder text = new StringBuilder();
+			String contents;
+			if (file.exists()) {
+				try {
+					BufferedReader br = new BufferedReader(new FileReader(file));
+					String line;
+					while ((line = br.readLine()) != null) {
+						text.append(line);
+						text.append('\n');
+					}
+				} catch (IOException e) {
+					// You'll need to add proper error handling here
+				}
+				contents = text.toString();
+			} else {
+				SharedPreferences prefs = context.getSharedPreferences(
+						Utils.RESISTENCIARTE_APP, 0);
+				contents = prefs.getString(Utils.CONTENTS, "error");
+			}
+
+			if (contents.equalsIgnoreCase("error")) {
+				return list;
+			}
+
+			String[] linesText = contents.split("\n");
+
+			int size = linesText.length;
+			for (int i = 0; i < size; i++) {
+				String string = linesText[i];
+				if (string.indexOf("#")==-1){
+					String[] eventData = string.split(",");
+					Evento event = new Evento(eventData[0],eventData[1], eventData[2], eventData[3], eventData[4], eventData[5]);
+					list.add(event);
+				}
+				
+			}
+
+		} catch (Exception e) {
+			return new ArrayList<Evento>();
+		}
+
+		return list;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static <T> T tranformAccordingType(Class<T> type, Object object) {
 
@@ -203,6 +266,19 @@ public class Utils {
 		activity.startActivity(Intent.createChooser(sharingIntent,
 				"Compartilo en..."));
 	}
+	
+	public static void shareNovedad(Activity activity, Evento evento) {
+		Intent sharingIntent = new Intent(
+				android.content.Intent.ACTION_SEND);
+		sharingIntent.setType("text/plain");
+		String shareBody = "Voy a ir al evento:"+evento.getNombre()+", Vos venis? #codigociudadano #resistenciarte";
+		sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+				"La mejor forma de encontrar esculturas en Resistencia! Usa esta app!!");
+		sharingIntent
+				.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+		activity.startActivity(Intent.createChooser(sharingIntent,
+				"Compartilo en..."));
+	}
 
 	public static Uri getImageUri(Context inContext, Bitmap image) {
 		String path = Images.Media.insertImage(inContext.getContentResolver(),
@@ -313,4 +389,30 @@ public class Utils {
 							jsonObject.get(f.getName())));
 		}
 	}
+
+	public static String toCamelCase(String s){
+        String[] parts = s.split(" ");
+        String camelCaseString = "";
+        for (String part : parts){
+            if(part!=null && part.trim().length()>0)
+           camelCaseString = camelCaseString + toProperCase(part);
+            else
+                camelCaseString=camelCaseString+part+" ";   
+        }
+        return camelCaseString;
+     }
+
+     static String toProperCase(String s) {
+         String temp=s.trim();
+         String spaces="";
+         if(temp.length()!=s.length())
+         {
+         int startCharIndex=s.charAt(temp.indexOf(0));
+         spaces=s.substring(0,startCharIndex);
+         }
+         temp=temp.substring(0, 1).toUpperCase() +
+         spaces+temp.substring(1).toLowerCase()+" ";
+         return temp;
+
+     }
 }

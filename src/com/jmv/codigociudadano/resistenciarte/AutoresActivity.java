@@ -299,10 +299,8 @@ public class AutoresActivity extends ActionBarCustomActivity implements
 						descriptionBtn.setVisibility(View.GONE);
 					} else {
 						final String value = String
-								.valueOf(
-										aYs.getJSONObject(0).getString("value"))
-								.trim().substring(0, 50).concat("... <b>[Leer mas..]</b>");
-						descriptionBtn.setText(value.contains("Fuente :")?Html.fromHtml("<b>[Leer mas...]</b>"):Html.fromHtml(value));
+								.valueOf("<b>[Leer mas..]</b>");
+						descriptionBtn.setText(Html.fromHtml(value));
 					}
 				} catch (JSONException e) {
 					// the author is null

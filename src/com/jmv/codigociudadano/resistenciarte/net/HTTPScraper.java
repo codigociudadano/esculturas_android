@@ -38,9 +38,6 @@ public class HTTPScraper {
 	
 	private static HTTPScraper instance;
 
-	private HTTPScraper(){
-		
-	}
 	
 	public static HTTPScraper getScraper(){
 		if (instance == null){

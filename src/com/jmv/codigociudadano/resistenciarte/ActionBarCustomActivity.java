@@ -11,6 +11,9 @@ public class ActionBarCustomActivity extends ActionBarActivity {
 	
 	private boolean active;
 	
+	public ActionBarCustomActivity() {
+	    super();
+	}
 	
 	public boolean isActive() {
 		return active;

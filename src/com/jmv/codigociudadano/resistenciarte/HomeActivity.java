@@ -54,6 +54,11 @@ public class HomeActivity extends ActionBarCustomActivity implements
 		return instance;
 	}
 
+    public HomeActivity() {
+    	super();
+		instance = this;
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -214,7 +219,7 @@ public class HomeActivity extends ActionBarCustomActivity implements
 			Intent sharingIntent = new Intent(
 					android.content.Intent.ACTION_SEND);
 			sharingIntent.setType("text/plain");
-			String shareBody = "Buscala en el Market! https://play.google.com/store/apps/details?id=com.jmv.codigociudadano.resistenciarte";
+			String shareBody = "Buscala en el Market! http://goo.gl/yxLS47 Te copas? #codigociudadano #resistenciarte";
 			sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
 					"La mejor forma de encontrar esculturas en Resistencia! Usa esta app!!");
 			sharingIntent

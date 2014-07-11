@@ -7,12 +7,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -21,21 +23,31 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.google.android.gms.internal.bt;
 import com.google.android.gms.internal.di;
 import com.jmv.codigociudadano.resistenciarte.HomeActivity;
 import com.jmv.codigociudadano.resistenciarte.R;
+import com.jmv.codigociudadano.resistenciarte.comps.ArrayAdapterSearchView;
 import com.jmv.codigociudadano.resistenciarte.comps.TextViewEx;
 import com.jmv.codigociudadano.resistenciarte.fragments.PlaceholderFragment;
 import com.jmv.codigociudadano.resistenciarte.logic.esculturas.Evento;
@@ -59,14 +71,16 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 	private LinearLayout mOpps;
 
 	private ArrayList<Evento> esculturas;
-	private Button button;
-
-	private boolean isAModification;
-	private Long eventIDForModification;
 
 	private ProgressBar progressBar1;
 
 	private TextView loading_status_message;
+
+	private ArrayList<String> titles;
+
+	private HashMap<String, View> mapaPos;
+
+	private ScrollView sc;
 
 	public NovedadesSectionFragment(Context context) {
 		super(context);
@@ -85,20 +99,33 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 		myLinearLayout = (LinearLayout) rootView
 				.findViewById(R.id.text_view_place);
 
+		sc = (ScrollView) rootView.findViewById(R.id.login_form);
+
 		mOpps = (LinearLayout) rootView.findViewById(R.id.no_novedades);
 		mOpps.setVisibility(View.GONE);
-		
 
 		progressBar1 = (ProgressBar) rootView.findViewById(R.id.progressBar1);
-		loading_status_message = (TextView) rootView.findViewById(R.id.loading_status_message);
+		loading_status_message = (TextView) rootView
+				.findViewById(R.id.loading_status_message);
+
+		// Get the Drawable custom_progressbar
+		Drawable draw = context.getResources().getDrawable(
+				R.drawable.customprogressbar);
+		// set the drawable as progress drawable
+		progressBar1.setProgressDrawable(draw);
+		progressBar1.setMax(100);
+		progressBar1.setProgress(0);
+
+		titles = new ArrayList<String>();
+
+		mapaPos = new HashMap<String, View>();
+
 		
 		new DownloadTask().execute();
 
 		return rootView;
 	}
 
-	
-	
 	@Override
 	public String getRequestURI() {
 		// TODO Auto-generated method stub
@@ -128,21 +155,22 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 
 		@Override
 		protected void onPreExecute() {
-			// Get the Drawable custom_progressbar                     
-		    Drawable draw=context.getResources().getDrawable(R.drawable.customprogressbar);
-		// set the drawable as progress drawable
-		    progressBar1.setProgressDrawable(draw);
+			// Get the Drawable custom_progressbar
+			Drawable draw = context.getResources().getDrawable(
+					R.drawable.customprogressbar);
+			// set the drawable as progress drawable
+			progressBar1.setProgressDrawable(draw);
 			progressBar1.setMax(100);
+			progressBar1.setProgress(0);
 		}
-		
+
 		@Override
 		protected ArrayList<Evento> doInBackground(String... sUrl) {
 
-			esculturas = esculturas == null ? Utils
-					.getWebLocations(NovedadesSectionFragment.this.context)
-					: esculturas;
+			esculturas = Utils
+					.getWebLocations(NovedadesSectionFragment.this.context);
 
-			if (myLinearLayout.getChildCount() == 0) {
+			if (esculturas.size() != 0) {
 				myLinearLayout.removeAllViewsInLayout();
 
 				String currentDate = "";
@@ -150,13 +178,14 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 				Collections.sort(esculturas);
 
 				int number = 0;
+
 				for (Evento item : esculturas) {
 
 					final Evento distancias2 = item;
 
 					number++;
 					publishProgress((int) ((number / (float) esculturas.size()) * 100));
-					
+
 					View v = View.inflate(HomeActivity.getInstance(),
 							R.layout.fragment_novedades, null);
 
@@ -173,8 +202,12 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 					builder.append(distancias2.getHora_fin());
 
 					final TextView descEx = (TextView) v
-							.findViewById(R.id.date);
+							.findViewById(R.id.time);
 					descEx.setText(builder.toString());
+
+					final TextView descEx5 = (TextView) v
+							.findViewById(R.id.date);
+					descEx5.setText(distancias2.getDate());
 
 					final TextView descEx1 = (TextView) v
 							.findViewById(R.id.lugar);
@@ -197,51 +230,68 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 
 					DateTimeFormatter dateStringFormat = DateTimeFormat
 							.forPattern("dd-MM-yyyy HH:mm");
-					DateTime time = dateStringFormat.parseDateTime(String.valueOf(
-							distancias2.getDate().replaceAll("\\s+", "")
-									+ " "
-									+ distancias2.getHora_inicio().replaceAll("\\s+",
-											"")).trim());
+					DateTime time = dateStringFormat.parseDateTime(String
+							.valueOf(
+									distancias2.getDate()
+											.replaceAll("\\s+", "")
+											+ " "
+											+ distancias2.getHora_inicio()
+													.replaceAll("\\s+", ""))
+							.trim());
 
 					Calendar cal = Calendar.getInstance();
 
 					cal.setTime(time.toDate());
 
-					DateTime timeEnd = dateStringFormat.parseDateTime(String.valueOf(
-							distancias2.getDate().replaceAll("\\s+", "") + " "
-									+ distancias2.getHora_fin().replaceAll("\\s+", ""))
+					DateTime timeEnd = dateStringFormat.parseDateTime(String
+							.valueOf(
+									distancias2.getDate()
+											.replaceAll("\\s+", "")
+											+ " "
+											+ distancias2.getHora_fin()
+													.replaceAll("\\s+", ""))
 							.trim());
 
 					Calendar untilCal = Calendar.getInstance();
 					untilCal.setTime(timeEnd.toDate());
-					
-					final boolean alreadyInCalendar = CalendarUtil.isAlreadyAtCalendar(context, cal.getTimeInMillis(), untilCal.getTimeInMillis(), distancias2.getNombre());
-					
-					final Button calendarBtn = (Button) v.findViewById(R.id.asistir);
-					
-					if (alreadyInCalendar){
-						calendarBtn.setText(context.getString(R.string.asistirOK));
-						Drawable img = context.getResources().getDrawable( R.drawable.ic_assits_ok );
-						img.setBounds( 0, 0, 60, 60 );
-						calendarBtn.setCompoundDrawables( img, null, null, null );
+
+					final boolean alreadyInCalendar = CalendarUtil
+							.isAlreadyAtCalendar(context,
+									cal.getTimeInMillis(),
+									untilCal.getTimeInMillis(),
+									distancias2.getNombre());
+
+					final Button calendarBtn = (Button) v
+							.findViewById(R.id.asistir);
+
+					if (alreadyInCalendar) {
+						calendarBtn.setText(context
+								.getString(R.string.asistirOK));
+						Drawable img = context.getResources().getDrawable(
+								R.drawable.ic_assits_ok);
+						img.setBounds(0, 0, 60, 60);
+						calendarBtn.setCompoundDrawables(img, null, null, null);
 					}
-					
-					
+
 					calendarBtn.setEnabled(true);
 					calendarBtn.setOnClickListener(new OnClickListener() {
 
 						@Override
 						public void onClick(View v) {
-							if (alreadyInCalendar){
+							if (alreadyInCalendar) {
 								Toast.makeText(
-										HomeActivity.getInstance().getApplicationContext(),
+										HomeActivity.getInstance()
+												.getApplicationContext(),
 										R.string.calendar_event_already_added_message,
 										Toast.LENGTH_LONG).show();
 							} else {
-								calendarBtn.setText(context.getString(R.string.asistirOK));
-								Drawable img = context.getResources().getDrawable( R.drawable.ic_assits_ok );
-								img.setBounds( 0, 0, 60, 60 );
-								calendarBtn.setCompoundDrawables( img, null, null, null );
+								calendarBtn.setText(context
+										.getString(R.string.asistirOK));
+								Drawable img = context.getResources()
+										.getDrawable(R.drawable.ic_assits_ok);
+								img.setBounds(0, 0, 60, 60);
+								calendarBtn.setCompoundDrawables(img, null,
+										null, null);
 								addToCalendar(distancias2);
 							}
 						}
@@ -275,24 +325,25 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 
 					myLinearLayout.addView(v);
 
+					mapaPos.put(distancias2.getNombre(), v);
+
+					titles.add(distancias2.getNombre());
 				}
 
 			}
-			
-			
-			
-			return esculturas;
-			 
-		 }
 
-		 @Override
-		 protected void onProgressUpdate(Integer... progress) {
-		     //setProgressPercent(progress[0]);
-			 progressBar1.setProgress(progress[0]);
-			 if (progress[0] >=99){
-				 loading_status_message.setText(context.getString(R.string.sync_finish));
-			 }
-		 }
+			return esculturas;
+
+		}
+
+		@Override
+		protected void onProgressUpdate(Integer... progress) {
+			progressBar1.setProgress(progress[0]);
+			if (progress[0] >= 99) {
+				loading_status_message.setText(context
+						.getString(R.string.sync_finish));
+			}
+		}
 
 		private void addToCalendar(Evento distancias2) {
 
@@ -360,9 +411,77 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 		@Override
 		protected void onPostExecute(ArrayList<Evento> result) {
 			progressBar1.setProgress(100);
-			showProgress(false);
 
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
+					R.layout.dropdown, titles);
+
+			HomeActivity.getInstance().getSearchView().setAdapter(adapter);
+			showProgress(false);
+			if (result.size() == 0) {
+				mOpps.setVisibility(View.VISIBLE);
+			} else {
+
+				final ArrayAdapterSearchView searchView = HomeActivity
+						.getInstance().getSearchView();
+
+				searchView.setOnItemClickListener(new OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
+
+						String query = searchView.getAdapter()
+								.getItem(position).toString();
+						
+						searchView.setText(query);
+						
+						onQuerySubmit(searchView, query);
+
+					}
+				});
+
+				searchView.setOnQueryTextListener(new OnQueryTextListener() {
+					@Override
+					public boolean onQueryTextChange(String newText) {
+						if (newText.length() > 0) {
+							// Search
+
+						} else {
+							// Do something when there's no input
+						}
+						return false;
+					}
+
+					@Override
+					public boolean onQueryTextSubmit(final String query) {
+						return onQuerySubmit(searchView, query);
+					}
+				});
+
+			}
 		}
+	}
+
+	private boolean onQuerySubmit(ArrayAdapterSearchView searchView,
+			final String query) {
+		InputMethodManager imm = (InputMethodManager) context
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+
+		if (mapaPos.get(query) != null) {
+			sc.post(new Runnable() {
+				public void run() {
+					if (!HomeActivity.getInstance().isFinishing()) {
+						sc.scrollTo(0, mapaPos.get(query).getTop());
+					}
+				}
+			});
+		} else {
+			Toast.makeText(context, "Evento No Encontrado!", Toast.LENGTH_SHORT)
+					.show();
+		}
+
+		return false;
+
 	}
 
 }

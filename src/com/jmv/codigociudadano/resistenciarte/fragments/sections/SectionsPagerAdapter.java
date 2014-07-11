@@ -42,10 +42,10 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 				LocatorFragment f = (LocatorFragment) new HighlightsSectionFragment(context);
 				p = f;
 				break;
-			case 1:
+			case 2:
 				p = new EsculturasSectionFragment(context);
 				break;
-			case 2:
+			case 1:
 				p = new NovedadesSectionFragment(context);
 				break;
 			}
@@ -72,9 +72,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 		switch (position) {
 		case 0:
 			return context.getString(R.string.title_section1).toUpperCase(l);
-		case 1:
-			return context.getString(R.string.title_section2).toUpperCase(l);
 		case 2:
+			return context.getString(R.string.title_section2).toUpperCase(l);
+		case 1:
 			return context.getString(R.string.title_section3).toUpperCase(l);
 		}
 		return null;

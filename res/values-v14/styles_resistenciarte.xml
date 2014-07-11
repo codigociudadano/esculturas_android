@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- File created by the Android Action Bar Style Generator
+<!--
+     File created by the Android Action Bar Style Generator
 
      Copyright (C) 2011 The Android Open Source Project
      Copyright (C) 2012 readyState Software Ltd
@@ -29,10 +30,9 @@
         <item name="android:actionModeBackground">@drawable/cab_background_top_resistenciarte</item>
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_resistenciarte</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Resistenciarte</item>
-        
-                <!-- Light.DarkActionBar specific -->
-        <item name="android:actionBarWidgetTheme">@style/Theme.Resistenciarte.Widget</item>
 
+        <!-- Light.DarkActionBar specific -->
+        <item name="android:actionBarWidgetTheme">@style/Theme.Resistenciarte.Widget</item>
     </style>
 
     <style name="ActionBar.Solid.Resistenciarte" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
@@ -40,13 +40,29 @@
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_resistenciarte</item>
         <item name="android:backgroundSplit">@drawable/ab_bottom_solid_resistenciarte</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Resistenciarte</item>
+        <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
+        <item name="android:actionMenuTextAppearance">@style/MyActionBarMenuText</item>
+        <item name="android:actionMenuTextColor">@style/MyActionBarMenuText</item>
+        <item name="android:actionOverflowButtonStyle">@style/MyActionButtonOverFlow</item>
+    </style>
+
+    <style name="MyActionBarTitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/green</item>
+    </style>
+
+    <style name="MyActionBarMenuText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Menu">
+        <item name="android:textColor">@color/green</item>
+    </style>
+
+    <style name="MyActionButtonOverFlow" parent="@style/Widget.AppCompat.Light.Base.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_action_search</item>
     </style>
 
     <style name="ActionBar.Transparent.Resistenciarte" parent="@style/Widget.AppCompat.ActionBar">
         <item name="android:background">@drawable/ab_transparent_resistenciarte</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Resistenciarte</item>
     </style>
-    
+
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->
     <style name="Theme.Resistenciarte.Widget" parent="@style/Theme.AppCompat">
         <item name="android:popupMenuStyle">@style/PopupMenu.Resistenciarte</item>

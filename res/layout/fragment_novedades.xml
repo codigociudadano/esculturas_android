@@ -77,6 +77,19 @@
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                        />
+                    
+                    <TextView
+                        android:id="@+id/time"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:focusable="true"
+                        android:gravity="left|center_vertical"
+                        android:text="@string/title_obra"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                       />
 
                     <TextView
                         android:id="@+id/lugar"

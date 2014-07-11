@@ -17,6 +17,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -115,7 +118,21 @@ public class Utils {
 				if (string.indexOf("#")==-1){
 					String[] eventData = string.split(",");
 					Evento event = new Evento(eventData[0],eventData[1], eventData[2], eventData[3], eventData[4], eventData[5]);
-					list.add(event);
+					DateTimeFormatter dateStringFormat = DateTimeFormat
+							.forPattern("dd-MM-yyyy HH:mm");
+					DateTime time = dateStringFormat.parseDateTime(String
+							.valueOf(
+									event.getDate()
+											.replaceAll("\\s+", "")
+											+ " "
+											+ event.getHora_inicio()
+													.replaceAll("\\s+", ""))
+							.trim());
+					
+					DateTime current = new DateTime();
+					if (time.isAfter(current.getMillis())){
+						list.add(event);
+					}
 				}
 				
 			}

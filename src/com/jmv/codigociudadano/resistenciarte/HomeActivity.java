@@ -3,6 +3,7 @@ package com.jmv.codigociudadano.resistenciarte;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jmv.codigociudadano.resistenciarte.comps.ArrayAdapterSearchView;
 import com.jmv.codigociudadano.resistenciarte.comps.ConfirmationDialog;
 import com.jmv.codigociudadano.resistenciarte.drawercomps.CustomDrawerAdapter;
 import com.jmv.codigociudadano.resistenciarte.drawercomps.DrawerItem;
@@ -12,27 +13,40 @@ import com.jmv.codigociudadano.resistenciarte.utils.AppRater;
 import com.jmv.codigociudadano.resistenciarte.utils.Utils;
 
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.Dialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.ConfigurationInfo;
 import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MenuItem.OnActionExpandListener;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+@SuppressLint("NewApi")
 public class HomeActivity extends ActionBarCustomActivity implements
 		ActionBar.TabListener {
 
@@ -44,21 +58,25 @@ public class HomeActivity extends ActionBarCustomActivity implements
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ViewPager mViewPager;
 
+	private String global_variable;
+
 	protected Dialog currentDialog;
-	
+
 	private static HomeActivity instance;
 
 	private ImageLoader imageLoaderService;
+	private ArrayAdapterSearchView searchView;
+	private MenuItem itemSearch;
 
 	public static HomeActivity getInstance() {
 		return instance;
 	}
 
-    public HomeActivity() {
-    	super();
+	public HomeActivity() {
+		super();
 		instance = this;
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -192,12 +210,57 @@ public class HomeActivity extends ActionBarCustomActivity implements
 		this.imageLoaderService = imageLoaderService;
 	}
 
+	public ArrayAdapterSearchView getSearchView() {
+		return searchView;
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
+		super.onCreateOptionsMenu(menu);
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.home, menu);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.home, menu);
+
+		// Create the search view
+		searchView = new ArrayAdapterSearchView(getSupportActionBar()
+				.getThemedContext());
+		searchView.setQueryHint("Buscar Eventos");
+
+		itemSearch = menu.add(Menu.NONE, Menu.NONE, 1, "Buscar");
+		itemSearch.setVisible(false);
+		itemSearch
+				.setIcon(R.drawable.ic_search)
+				.setActionView(searchView)
+				.setShowAsAction(
+						MenuItem.SHOW_AS_ACTION_ALWAYS
+								| MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+
+		searchView
+				.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+					@Override
+					public void onFocusChange(View view,
+							boolean queryTextFocused) {
+						if (!queryTextFocused) {
+							disableSearchView();
+						}
+					}
+				});
+
+		
+
 		return true;
+	}
+	
+	@Override
+	public void onStop(){
+		super.onStop();
+		this.finish();
+	}
+
+	private void disableSearchView() {
+		itemSearch.collapseActionView();
+		searchView.setQuery("", false);
 	}
 
 	@Override
@@ -220,8 +283,9 @@ public class HomeActivity extends ActionBarCustomActivity implements
 					android.content.Intent.ACTION_SEND);
 			sharingIntent.setType("text/plain");
 			String shareBody = "Buscala en el Market! http://goo.gl/yxLS47 Te copas? #codigociudadano #resistenciarte";
-			sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-					"La mejor forma de encontrar esculturas en Resistencia! Usa esta app!!");
+			sharingIntent
+					.putExtra(android.content.Intent.EXTRA_SUBJECT,
+							"La mejor forma de encontrar esculturas en Resistencia! Usa esta app!!");
 			sharingIntent
 					.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
 			startActivity(Intent.createChooser(sharingIntent,
@@ -238,6 +302,13 @@ public class HomeActivity extends ActionBarCustomActivity implements
 		// When the given tab is selected, switch to the corresponding page in
 		// the ViewPager.
 		mViewPager.setCurrentItem(tab.getPosition());
+		if (itemSearch != null) {
+			itemSearch.setVisible(tab.getPosition() == 1);
+			if (tab.getPosition() != 1) {
+				disableSearchView();
+			}
+		}
+		
 	}
 
 	@Override
@@ -319,10 +390,10 @@ public class HomeActivity extends ActionBarCustomActivity implements
 		// Pass any configuration change to the drawer toggls
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
-	
+
 	@Override
 	public Dialog onCreateDialog(int id) {
-		
+
 		final Context context = this;
 		switch (id) {
 		case Utils.GPS_NOT_TURNED_ON:
@@ -339,10 +410,10 @@ public class HomeActivity extends ActionBarCustomActivity implements
 					});
 			return currentDialog;
 		case Utils.GPS_NOT_TURNED_FF:
-			currentDialog =  ConfirmationDialog.create(this, id,
+			currentDialog = ConfirmationDialog.create(this, id,
 					R.string.gps_not_turned_on_yet,
 					getString(R.string.gps_not_turned_on_details),
-					R.string.confirm,R.string.cancel, new Runnable() {
+					R.string.confirm, R.string.cancel, new Runnable() {
 						@Override
 						public void run() {
 							Intent intent = new Intent(

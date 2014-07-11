@@ -186,34 +186,33 @@ public class HighlightsSectionFragment extends LocatorFragment {
 							} catch (JSONException e) {
 								//text = "";
 							}
-
 							
-							
-							DisplayMetrics metrics = new DisplayMetrics();
-							HomeActivity.getInstance().getWindowManager()
-									.getDefaultDisplay().getMetrics(metrics);
-							int height = metrics.heightPixels;
-							int width = metrics.widthPixels;
+							if (bmap != null){
+								DisplayMetrics metrics = new DisplayMetrics();
+								HomeActivity.getInstance().getWindowManager()
+										.getDefaultDisplay().getMetrics(metrics);
+								int height = metrics.heightPixels;
+								int width = metrics.widthPixels;
 
-							float bmapWidth = bmap.getWidth();
-							float bmapHeight = bmap.getHeight();
+								float bmapWidth = bmap.getWidth();
+								float bmapHeight = bmap.getHeight();
 
-							float wRatio = width / bmapWidth;
-							float hRatio = height / bmapHeight;
+								float wRatio = width / bmapWidth;
+								float hRatio = height / bmapHeight;
 
-							float ratioMultiplier = wRatio;
-							// Untested conditional though I expect this might work
-							// for landscape mode
-							if (hRatio < wRatio) {
-								ratioMultiplier = hRatio;
+								float ratioMultiplier = wRatio;
+								// Untested conditional though I expect this might work
+								// for landscape mode
+								if (hRatio < wRatio) {
+									ratioMultiplier = hRatio;
+								}
+
+								int newBmapWidth = (int) (bmapWidth * ratioMultiplier);
+								int newBmapHeight = (int) (bmapHeight * ratioMultiplier);
+
+								img.setLayoutParams(new LinearLayout.LayoutParams(
+										newBmapWidth, newBmapHeight));
 							}
-
-							int newBmapWidth = (int) (bmapWidth * ratioMultiplier);
-							int newBmapHeight = (int) (bmapHeight * ratioMultiplier);
-
-							img.setLayoutParams(new LinearLayout.LayoutParams(
-									newBmapWidth, newBmapHeight));
-							
 							
 							showProgress(false);
 							mDeatailedView.setVisibility(View.VISIBLE);

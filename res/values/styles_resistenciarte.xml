@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- File created by the Android Action Bar Style Generator
+<!--
+     File created by the Android Action Bar Style Generator
 
      Copyright (C) 2011 The Android Open Source Project
      Copyright (C) 2012 readyState Software Ltd
@@ -33,22 +34,35 @@
         <!-- Light.DarkActionBar specific -->
         <item name="actionBarWidgetTheme">@style/Theme.Resistenciarte.Widget</item>
     </style>
-    
-    
+
+    <style name="MyActionBarTitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/green</item>
+    </style>
+
+    <style name="MyActionBarMenuText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Menu">
+        <item name="android:textColor">@color/green</item>
+    </style>
+
+    <style name="MyActionButtonOverFlow" parent="@style/Widget.AppCompat.Light.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_action_search</item>
+    </style>
 
     <style name="ActionBar.Solid.Resistenciarte" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="background">@drawable/ab_solid_resistenciarte</item>
         <item name="backgroundStacked">@drawable/ab_stacked_solid_resistenciarte</item>
         <item name="backgroundSplit">@drawable/ab_bottom_solid_resistenciarte</item>
         <item name="android:icon">@drawable/ic_launcher_custom</item>
-         <item name="titleTextStyle">@style/titleStyle</item>
         <item name="progressBarStyle">@style/ProgressBar.Resistenciarte</item>
+        <item name="titleTextStyle">@style/MyActionBarTitleText</item>
+        <item name="actionMenuTextAppearance">@style/MyActionBarMenuText</item>
+        <item name="actionMenuTextColor">@style/MyActionBarMenuText</item>
+        <item name="actionOverflowButtonStyle">@style/MyActionButtonOverFlow</item>
     </style>
 
-     <style name="titleStyle" parent="@style/TextAppearance.AppCompat.Widget.Base.ActionBar.Title">
+    <style name="titleStyle" parent="@style/TextAppearance.AppCompat.Widget.Base.ActionBar.Title">
         <item name="android:textColor">@color/green</item>
     </style>
-    
+
     <style name="ActionBar.Transparent.Resistenciarte" parent="@style/Widget.AppCompat.ActionBar">
         <item name="background">@drawable/ab_transparent_resistenciarte</item>
         <item name="progressBarStyle">@style/ProgressBar.Resistenciarte</item>

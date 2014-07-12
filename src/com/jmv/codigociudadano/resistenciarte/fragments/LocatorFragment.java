@@ -25,31 +25,30 @@ import android.location.LocationListener;
 
 public abstract class LocatorFragment extends PlaceholderFragment implements
 		IRequester, LocationListener {
-	
+
 	protected LocationManager locationManager;
 	protected String provider;
 
 	protected Dialog currentDialog;
-	
+
 	protected TextView mAddress;
 	protected TextView mAddressGPS;
-	
+
 	protected LatLng currentLocation;
-	
+
 	protected boolean activeActivity = true;
-	
+
 	protected final int RETRY_COUNT_MAX = 3;
-	
+
 	protected int retries = 0;
-	
-	
-	
+
 	public LocatorFragment(Context act) {
 		super(act);
 	}
 
-	protected void init(){
-		LocationManager service = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
+	protected void init() {
+		LocationManager service = (LocationManager) context
+				.getSystemService(context.LOCATION_SERVICE);
 		boolean enabledGPS = service
 				.isProviderEnabled(LocationManager.GPS_PROVIDER);
 		boolean enabledWiFi = service
@@ -62,28 +61,69 @@ public abstract class LocatorFragment extends PlaceholderFragment implements
 			((Activity) context).showDialog(Utils.GPS_NOT_TURNED_ON);
 		}
 
-		locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+		locationManager = (LocationManager) context
+				.getSystemService(Context.LOCATION_SERVICE);
 		// Define the criteria how to select the locatioin provider -> use
 		// default
-		provider = enabledGPS?LocationManager.GPS_PROVIDER:LocationManager.NETWORK_PROVIDER;
+		provider = enabledGPS ? LocationManager.GPS_PROVIDER
+				: LocationManager.NETWORK_PROVIDER;
 		Location location = locationManager.getLastKnownLocation(provider);
 
-		if (location == null){
-			provider = !enabledGPS?LocationManager.GPS_PROVIDER:LocationManager.NETWORK_PROVIDER;
+		if (location == null) {
+			provider = !enabledGPS ? LocationManager.GPS_PROVIDER
+					: LocationManager.NETWORK_PROVIDER;
 			location = locationManager.getLastKnownLocation(provider);
 		}
-		if (location != null){
+		if (location != null) {
 			onLocationChanged(location);
-		} else {
-			if (locationManager != null){
-				locationManager.requestLocationUpdates(provider, 2500, 100, this);
-			}
 		}
 	}
-	
 
-	
-	
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		if (locationManager != null) {
+			tryToGetBestLocationProvider();
+		}
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		if (locationManager != null) {
+			locationManager.removeUpdates(this);
+		}
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		if (locationManager != null) {
+			locationManager.removeUpdates(this);
+		}
+	}
+
+	private void tryToGetBestLocationProvider() {
+		LocationManager service = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
+		boolean enabledGPS = service
+				.isProviderEnabled(LocationManager.GPS_PROVIDER);
+		boolean enabledWiFi = service
+				.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+		// Check if enabled and if not send user to the GSP settings
+		// Better solution would be to display a dialog and suggesting to
+		// go to the settings
+		if (!enabledGPS && !enabledWiFi) {
+			if (currentDialog == null || !currentDialog.isShowing()) {
+				((Activity) context).showDialog(Utils.GPS_NOT_TURNED_FF);
+			}
+		}
+
+		if (locationManager != null) {
+			locationManager.requestLocationUpdates(provider, 2500, 100, this);
+		}
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -92,10 +132,10 @@ public abstract class LocatorFragment extends PlaceholderFragment implements
 				rootView = inflater.inflate(getFragmentId(), container, false);
 				mLoginFormView = rootView.findViewById(R.id.login_form);
 				mLoginStatusView = rootView.findViewById(R.id.login_status);
-				
+
 				showProgress(true);
 			} catch (InflateException e) {
-				
+
 			}
 		} else {
 			ViewGroup parent = (ViewGroup) rootView.getParent();
@@ -119,7 +159,6 @@ public abstract class LocatorFragment extends PlaceholderFragment implements
 		init();
 	}
 
-
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 		init();
@@ -129,6 +168,7 @@ public abstract class LocatorFragment extends PlaceholderFragment implements
 	public void onProviderEnabled(String provider) {
 		init();
 	}
+
 	/**
 	 * Shows the progress UI and hides the login form.
 	 */
@@ -136,6 +176,5 @@ public abstract class LocatorFragment extends PlaceholderFragment implements
 		mLoginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
 		mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 	}
-
 
 }

@@ -80,6 +80,8 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 
 	private HashMap<String, View> mapaPos;
 
+	private HashMap<String, Long> mapaCal;
+
 	private ScrollView sc;
 
 	public NovedadesSectionFragment(Context context) {
@@ -119,8 +121,8 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 		titles = new ArrayList<String>();
 
 		mapaPos = new HashMap<String, View>();
+		mapaCal = new HashMap<String, Long>();
 
-		
 		new DownloadTask().execute();
 
 		return rootView;
@@ -162,6 +164,10 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 			progressBar1.setProgressDrawable(draw);
 			progressBar1.setMax(100);
 			progressBar1.setProgress(0);
+
+			if (HomeActivity.getInstance().getItemSearch() != null) {
+				HomeActivity.getInstance().getItemSearch().setVisible(false);
+			}
 		}
 
 		@Override
@@ -207,7 +213,7 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 
 					final TextView descEx5 = (TextView) v
 							.findViewById(R.id.date);
-					descEx5.setText(distancias2.getDate());
+					descEx5.setText("Fecha: " + distancias2.getDate());
 
 					final TextView descEx1 = (TextView) v
 							.findViewById(R.id.lugar);
@@ -228,49 +234,19 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 						}
 					});
 
-					DateTimeFormatter dateStringFormat = DateTimeFormat
-							.forPattern("dd-MM-yyyy HH:mm");
-					DateTime time = dateStringFormat.parseDateTime(String
-							.valueOf(
-									distancias2.getDate()
-											.replaceAll("\\s+", "")
-											+ " "
-											+ distancias2.getHora_inicio()
-													.replaceAll("\\s+", ""))
-							.trim());
-
-					Calendar cal = Calendar.getInstance();
-
-					cal.setTime(time.toDate());
-
-					DateTime timeEnd = dateStringFormat.parseDateTime(String
-							.valueOf(
-									distancias2.getDate()
-											.replaceAll("\\s+", "")
-											+ " "
-											+ distancias2.getHora_fin()
-													.replaceAll("\\s+", ""))
-							.trim());
-
-					Calendar untilCal = Calendar.getInstance();
-					untilCal.setTime(timeEnd.toDate());
-
-					final boolean alreadyInCalendar = CalendarUtil
-							.isAlreadyAtCalendar(context,
-									cal.getTimeInMillis(),
-									untilCal.getTimeInMillis(),
-									distancias2.getNombre());
+					final long alreadyInCalendar = getEventID(distancias2);
 
 					final Button calendarBtn = (Button) v
 							.findViewById(R.id.asistir);
 
-					if (alreadyInCalendar) {
+					if (alreadyInCalendar != -1) {
 						calendarBtn.setText(context
 								.getString(R.string.asistirOK));
 						Drawable img = context.getResources().getDrawable(
 								R.drawable.ic_assits_ok);
 						img.setBounds(0, 0, 60, 60);
 						calendarBtn.setCompoundDrawables(img, null, null, null);
+						mapaCal.put(distancias2.getNombre(), alreadyInCalendar);
 					}
 
 					calendarBtn.setEnabled(true);
@@ -278,12 +254,25 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 
 						@Override
 						public void onClick(View v) {
-							if (alreadyInCalendar) {
+							if (mapaCal.get(distancias2.getNombre()) != null) {
+								
+								CalendarUtil.deleteEventWithID(context,
+										mapaCal.get(distancias2.getNombre()) );
+								
+								mapaCal.remove(distancias2.getNombre());
+								
 								Toast.makeText(
 										HomeActivity.getInstance()
 												.getApplicationContext(),
 										R.string.calendar_event_already_added_message,
 										Toast.LENGTH_LONG).show();
+								Drawable img = context.getResources()
+										.getDrawable(R.drawable.ic_calendar);
+								img.setBounds(0, 0, 60, 60);
+								calendarBtn.setCompoundDrawables(img, null,
+										null, null);
+								calendarBtn.setText(context
+										.getString(R.string.asistir));
 							} else {
 								calendarBtn.setText(context
 										.getString(R.string.asistirOK));
@@ -292,7 +281,8 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 								img.setBounds(0, 0, 60, 60);
 								calendarBtn.setCompoundDrawables(img, null,
 										null, null);
-								addToCalendar(distancias2);
+								mapaCal.put(distancias2.getNombre(),
+										addToCalendar(distancias2));
 							}
 						}
 					});
@@ -336,6 +326,32 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 
 		}
 
+		private long getEventID(Evento distancias2) {
+			DateTimeFormatter dateStringFormat = DateTimeFormat
+					.forPattern("dd-MM-yyyy HH:mm");
+			DateTime time = dateStringFormat.parseDateTime(String.valueOf(
+					distancias2.getDate().replaceAll("\\s+", "")
+							+ " "
+							+ distancias2.getHora_inicio().replaceAll("\\s+",
+									"")).trim());
+
+			Calendar cal = Calendar.getInstance();
+
+			cal.setTime(time.toDate());
+
+			DateTime timeEnd = dateStringFormat.parseDateTime(String.valueOf(
+					distancias2.getDate().replaceAll("\\s+", "") + " "
+							+ distancias2.getHora_fin().replaceAll("\\s+", ""))
+					.trim());
+
+			Calendar untilCal = Calendar.getInstance();
+			untilCal.setTime(timeEnd.toDate());
+
+			return CalendarUtil.isAlreadyAtCalendar(context,
+					cal.getTimeInMillis(), untilCal.getTimeInMillis(),
+					distancias2.getNombre());
+		}
+
 		@Override
 		protected void onProgressUpdate(Integer... progress) {
 			progressBar1.setProgress(progress[0]);
@@ -345,7 +361,7 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 			}
 		}
 
-		private void addToCalendar(Evento distancias2) {
+		private long addToCalendar(Evento distancias2) {
 
 			DateTimeFormatter dateStringFormat = DateTimeFormat
 					.forPattern("dd-MM-yyyy HH:mm");
@@ -372,10 +388,8 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 						HomeActivity.getInstance().getApplicationContext(),
 						R.string.calendar_event_wrong_message,
 						Toast.LENGTH_LONG).show();
-				return;
+				return -1;
 			}
-
-			StringBuilder changeType = new StringBuilder();
 
 			if (Build.VERSION.SDK_INT >= 8) {
 				try {
@@ -384,12 +398,14 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 							distancias2.getNombre(), distancias2.toString(),
 							-1L, cal.getTimeInMillis(),
 							untilCal.getTimeInMillis(), true, true, true);
+					
+					return getEventID(distancias2);
 				} catch (Exception e) {
 					Toast.makeText(
 							HomeActivity.getInstance().getApplicationContext(),
 							R.string.calendar_event_undefined_error,
 							Toast.LENGTH_LONG).show();
-					return;
+					return -1;
 				}
 			} else {
 				Intent intent = new Intent(Intent.ACTION_EDIT);
@@ -406,6 +422,8 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 					R.string.calendar_event_added_message, Toast.LENGTH_LONG)
 					.show();
 
+			return -1;
+
 		}
 
 		@Override
@@ -421,6 +439,9 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 				mOpps.setVisibility(View.VISIBLE);
 			} else {
 
+				HomeActivity.getInstance().getItemSearch().setVisible(true);
+				HomeActivity.getInstance().setCanShowSearch(true);
+
 				final ArrayAdapterSearchView searchView = HomeActivity
 						.getInstance().getSearchView();
 
@@ -431,9 +452,9 @@ public class NovedadesSectionFragment extends PlaceholderFragment {
 
 						String query = searchView.getAdapter()
 								.getItem(position).toString();
-						
+
 						searchView.setText(query);
-						
+
 						onQuerySubmit(searchView, query);
 
 					}

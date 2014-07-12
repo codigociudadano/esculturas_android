@@ -2,7 +2,7 @@
 <resources>
 
     <string name="calendar_event_added_message">"Evento Agregado al Calendario!"</string>
-    <string name="calendar_event_already_added_message">"Evento Ya fue Agregado al Calendario antes!!!"</string>
+    <string name="calendar_event_already_added_message">"Evento borrado del Calendario!!!"</string>
     <string name="calendar_event_wrong_message">"Fechas Incorrectas!!"</string>
     <string name="calendar_event_undefined_error">"Se produjo un error!"</string>
      <string name="calendar_event_deleted_error">"Error:"</string>
@@ -44,8 +44,8 @@
     <string name="button_before">Cargar Anteriores&#8230;</string>
     <string name="ver_en_galeria">Galeria de Fotos</string>
     <string name="title_obra">---</string>
-    <string name="asistirOK">Agendado!</string>
-    <string name="asistir">Asistir</string>
+    <string name="asistirOK">Eliminar recordatorio</string>
+    <string name="asistir">Añadir recordatorio</string>
     <string name="detalles_obra">Ver Detalles&#8230;</string>
     <string name="title_share">Compartir</string>
     <string name="sync_finish">Sincronizacion Terminada!</string>

@@ -125,7 +125,7 @@ public class Utils {
 									event.getDate()
 											.replaceAll("\\s+", "")
 											+ " "
-											+ event.getHora_inicio()
+											+ event.getHora_fin()
 													.replaceAll("\\s+", ""))
 							.trim());
 					

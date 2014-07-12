@@ -27,7 +27,7 @@ public class CalendarUtil {
 	public static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(
 			"dd-MMM-yyyy 'at' HH:mm", Locale.ENGLISH);
 
-	public static void deleteEventWithID(Activity curActivity, Long id) {
+	public static void deleteEventWithID(Context curActivity, Long id) {
 
 		ContentResolver cr = curActivity.getContentResolver();
 		Uri EVENTS_URI = Uri.parse("content://com.android.calendar/events");
@@ -103,7 +103,7 @@ public class CalendarUtil {
 			ContentValues reminderValues = new ContentValues();
 
 			reminderValues.put("event_id", eventID);
-			reminderValues.put("minutes", 20); // Default value of the
+			reminderValues.put("minutes", 45); // Default value of the
 												// system. Minutes is a
 												// integer
 			reminderValues.put("method", 1); // Alert Methods: Default(0),
@@ -113,6 +113,7 @@ public class CalendarUtil {
 			Uri reminderUri = curActivity.getApplicationContext()
 					.getContentResolver()
 					.insert(Uri.parse(reminderUriString), reminderValues);
+			
 		}
 
 		/***************** Event: Meeting(without alert) Adding Attendies to the meeting *******************/
@@ -122,7 +123,7 @@ public class CalendarUtil {
 		return eventID;
 	}
 	
-	public static boolean isAlreadyAtCalendar(Context context,
+	public static long isAlreadyAtCalendar(Context context,
 			long stTime, long enTime, String tittleP) {
 		Cursor cursor = context.getContentResolver()
 				.query(Uri.parse("content://com.android.calendar/events"),
@@ -151,14 +152,14 @@ public class CalendarUtil {
 			if (stTime <= mTime && enTime >= lTime
 					&& tittleP.contains(title.trim())) {
 				cursor.close();
-				return true;
+				return Long.valueOf(eid);
 			}
 
 			CNames[i] = cursor.getString(1);
 			cursor.moveToNext();
 		}
 		cursor.close();
-		return false;
+		return -1;
 	}
 
 }

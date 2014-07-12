@@ -67,6 +67,7 @@ public class HomeActivity extends ActionBarCustomActivity implements
 	private ImageLoader imageLoaderService;
 	private ArrayAdapterSearchView searchView;
 	private MenuItem itemSearch;
+	private boolean canShowSearch;
 
 	public static HomeActivity getInstance() {
 		return instance;
@@ -214,6 +215,14 @@ public class HomeActivity extends ActionBarCustomActivity implements
 		return searchView;
 	}
 
+	public boolean isCanShowSearch() {
+		return canShowSearch;
+	}
+
+	public void setCanShowSearch(boolean canShowSearch) {
+		this.canShowSearch = canShowSearch;
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -255,10 +264,15 @@ public class HomeActivity extends ActionBarCustomActivity implements
 	@Override
 	public void onStop(){
 		super.onStop();
-		this.finish();
 	}
 
-	private void disableSearchView() {
+	
+	public MenuItem getItemSearch() {
+		return itemSearch;
+	}
+
+
+	public void disableSearchView() {
 		itemSearch.collapseActionView();
 		searchView.setQuery("", false);
 	}
@@ -303,7 +317,7 @@ public class HomeActivity extends ActionBarCustomActivity implements
 		// the ViewPager.
 		mViewPager.setCurrentItem(tab.getPosition());
 		if (itemSearch != null) {
-			itemSearch.setVisible(tab.getPosition() == 1);
+			itemSearch.setVisible(tab.getPosition() == 1 && canShowSearch);
 			if (tab.getPosition() != 1) {
 				disableSearchView();
 			}
